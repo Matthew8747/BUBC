@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colour */
+  --color-ink:    #0A1B2E;
+  --color-navy:   #0E2A47;
+  --color-paper:  #F5F1EA;
+  --color-bone:   #ECE5D8;
+  --color-gold:   #B8924A;
+  --color-avon:   #2D4A3E;
+  --color-blade:  #C8312A;
+
+  /* Typography */
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body:    "Geist", system-ui, sans-serif;
+  --font-mono:    "Geist Mono", ui-monospace, monospace;
+}
