@@ -37,7 +37,10 @@ v5 + React 19, project ID `j7zcx618`, env-driven config, custom structure + sing
 
 ### T03 — Tooling ✅
 
-ESLint 9 flat config, Prettier 3 with Astro plugin, Husky v9 + lint-staged pre-commit hook.
+ESLint 9 flat config, Prettier 3 with Astro plugin, Husky v9 + lint-staged.
+
+- **pre-commit** (`.husky/pre-commit`): runs `lint-staged` — ESLint + Prettier on staged files only. Fast.
+- **pre-push** (`.husky/pre-push`): runs `format:check && lint && typecheck` across the whole repo. Blocks the push if any check fails, so CI never sees a bad push.
 
 ### T04 — Vercel ✅ (manual, done)
 
@@ -237,7 +240,8 @@ I haven't added any of these this session because the testing skeleton + CI alre
 ```
 bubc-site/
 ├── .github/workflows/ci.yml      # lint, typecheck, unit, build, e2e
-├── .husky/pre-commit             # lint-staged
+├── .husky/pre-commit             # lint-staged (staged files only)
+├── .husky/pre-push               # format:check + lint + typecheck (full repo)
 ├── apps/
 │   ├── web/                      # @bubc/web — Astro 6 frontend
 │   │   ├── playwright.config.ts
