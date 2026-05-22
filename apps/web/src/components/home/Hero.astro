@@ -1,0 +1,86 @@
+---
+/**
+ * Hero — full-bleed photographic hero for the home page.
+ *
+ * 70vh mobile, 80vh desktop. Image sits in the background; headline + sub +
+ * CTAs sit in a left-aligned column over a subtle navy gradient for legibility.
+ * Reduced-motion respected via the global stylesheet.
+ */
+import Picture from '../content/Picture.astro';
+import Button from '../ui/Button.astro';
+import Container from '../ui/Container.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import type { Cta, SanityImage } from '../../lib/types';
+
+interface Props {
+  headline?: string;
+  subhead?: string;
+  image?: SanityImage | null;
+  ctas?: Cta[];
+}
+
+const {
+  headline = 'Rowing fast from the Avon.',
+  subhead = 'University of Bath Boat Club is a high-performance student rowing club. We race the BUCS, Henley and Head circuits — and we welcome novices every September.',
+  image,
+  ctas = [
+    { label: 'Come and trial', variant: 'gold', link: { label: 'Trial', url: '/squads/trial/' } },
+    { label: 'Find your squad', variant: 'ghost', link: { label: 'Squads', url: '/squads/' } },
+  ],
+} = Astro.props;
+---
+
+<section
+  class="relative isolate min-h-[70vh] sm:min-h-[80vh] flex flex-col justify-end overflow-hidden"
+>
+  <div class="absolute inset-0 -z-10">
+    <Picture
+      image={image}
+      ratio="21/9"
+      sizes="100vw"
+      priority
+      fallbackLabel="Bath crew on the Avon"
+      decorative
+      class="h-full w-full"
+    />
+    <div
+      class="absolute inset-0 bg-gradient-to-t from-[--color-ink]/85 via-[--color-ink]/45 to-transparent"
+    >
+    </div>
+  </div>
+
+  <Container class="pb-16 sm:pb-24 pt-24 text-[--color-paper]">
+    <Eyebrow tone="paper">Founded 1965 · Bath, UK</Eyebrow>
+    <h1
+      class="mt-6 max-w-4xl text-4xl sm:text-5xl md:text-[5.5rem] leading-[1.05] text-[--color-paper]"
+    >
+      {headline}
+    </h1>
+    {
+      subhead && (
+        <p class="mt-6 max-w-2xl text-base sm:text-lg text-[--color-paper]/85">{subhead}</p>
+      )
+    }
+    {
+      ctas.length > 0 && (
+        <div class="mt-10 flex flex-wrap gap-4">
+          {ctas.map((cta) => (
+            <Button
+              href={cta.link.url}
+              variant={cta.variant}
+              size="lg"
+              external={cta.link.external}
+              class={
+                cta.variant === 'ghost'
+                  ? '!border-[--color-paper] !text-[--color-paper] hover:!bg-[--color-paper] hover:!text-[--color-ink]'
+                  : ''
+              }
+            >
+              {cta.label}
+            </Button>
+          ))}
+        </div>
+      )
+    }
+  </Container>
+</section>

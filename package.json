@@ -15,6 +15,9 @@
     "format": "prettier --write \".\"",
     "format:check": "prettier --check \".\"",
     "typecheck": "pnpm --filter @bubc/web typecheck && pnpm --filter @bubc/studio typecheck",
+    "test:unit": "pnpm --filter @bubc/web test:unit",
+    "test:e2e": "pnpm --filter @bubc/web test:e2e",
+    "test": "pnpm test:unit && pnpm test:e2e",
     "prepare": "husky"
   },
   "lint-staged": {

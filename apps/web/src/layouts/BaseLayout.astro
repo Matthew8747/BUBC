@@ -22,6 +22,11 @@ interface Props {
 
 const { seo = {}, lang = 'en-GB', bodyClass = '' } = Astro.props;
 const meta = resolveSeo(seo, Astro.url);
+
+// Cloudflare Web Analytics — only render the beacon if the token is set so we
+// don't ship the script on local/dev builds. Set PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN
+// in Vercel after creating a "Web Analytics" site at <https://dash.cloudflare.com>.
+const cfAnalyticsToken = import.meta.env.PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN;
 ---
 
 <!doctype html>
@@ -66,5 +71,16 @@ const meta = resolveSeo(seo, Astro.url);
   <body class={`min-h-screen bg-[--color-paper] text-[--color-ink] font-body ${bodyClass}`}>
     <a class="skip-link" href="#main">Skip to main content</a>
     <slot />
+
+    {
+      cfAnalyticsToken && (
+        <script
+          is:inline
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={`{"token": "${cfAnalyticsToken}"}`}
+        />
+      )
+    }
   </body>
 </html>

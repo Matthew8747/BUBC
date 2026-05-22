@@ -1,66 +1,39 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
-import Section from '../components/ui/Section.astro';
-import Container from '../components/ui/Container.astro';
-import Button from '../components/ui/Button.astro';
-import Eyebrow from '../components/ui/Eyebrow.astro';
-import Stat from '../components/ui/Stat.astro';
+import Hero from '../components/home/Hero.astro';
+import StatStrip from '../components/home/StatStrip.astro';
+import NewsRail from '../components/home/NewsRail.astro';
+import SquadPathway from '../components/home/SquadPathway.astro';
+import SponsorStrip from '../components/home/SponsorStrip.astro';
+import ClosingCtas from '../components/home/ClosingCtas.astro';
+import { safeFetch } from '../lib/sanity';
+import { homePageQuery } from '../lib/queries';
+import type { HomePage } from '../lib/types';
 
-/**
- * Home page — currently a placeholder hero + stat strip so the site has
- * *something* meaningful at /. The real hero (Sanity-driven, full-bleed
- * photography) is built in Phase 3 task T17.
- */
+// Pulls the homePage singleton if it exists in Sanity. When the dataset is
+// empty (early development), `data` is null and each section falls back to its
+// sensible defaults so the page still looks finished.
+const data = (await safeFetch<HomePage>(homePageQuery)) ?? null;
+
+const seo = {
+  title: data?.seo?.title,
+  description:
+    data?.seo?.description ??
+    'University of Bath Boat Club — performance student rowing from the River Avon since 1965.',
+  noIndex: data?.seo?.noIndex,
+};
 ---
 
-<PageLayout
-  seo={{
-    title: undefined,
-    description:
-      'University of Bath Boat Club — performance student rowing from the River Avon since 1965.',
-  }}
->
-  <Section spacing="lg" tone="paper" class="relative">
-    <Container>
-      <Eyebrow>Founded 1965 · Bath, UK</Eyebrow>
-      <h1 class="mt-6 max-w-4xl text-4xl sm:text-5xl md:text-[5.5rem] leading-[1.05]">
-        Rowing fast<br />
-        from the&nbsp;Avon.
-      </h1>
-      <p class="mt-8 max-w-prose text-lg text-[--color-mute]">
-        University of Bath Boat Club is a high-performance student rowing club. We race the BUCS,
-        Henley and Head circuits — and we welcome novices every September.
-      </p>
-      <div class="mt-10 flex flex-wrap gap-4">
-        <Button href="/squads/trial/" variant="gold" size="lg">Come and trial</Button>
-        <Button href="/squads/" variant="ghost" size="lg">Find your squad</Button>
-      </div>
-    </Container>
-  </Section>
-
-  <Section tone="ink" spacing="md">
-    <Container>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-10 text-[--color-paper]">
-        <Stat value="60" suffix="yrs" label="Founded 1965" />
-        <Stat value="9" label="BUBC Olympians" />
-        <Stat value="14" label="Henley wins" />
-        <Stat value="200" suffix="+" label="Members" />
-      </div>
-    </Container>
-  </Section>
-
-  <Section spacing="md">
-    <Container>
-      <p class="text-sm text-[--color-mute]">
-        Site under construction —
-        <a
-          href="/styleguide"
-          class="underline decoration-[--color-gold] underline-offset-4 hover:text-[--color-navy]"
-        >
-          view the styleguide
-        </a>
-        for the design system in progress.
-      </p>
-    </Container>
-  </Section>
+<PageLayout seo={seo}>
+  <Hero
+    headline={data?.heroHeadline}
+    subhead={data?.heroSubhead}
+    image={data?.heroImage}
+    ctas={data?.heroCtas}
+  />
+  <StatStrip stats={data?.stats} />
+  <NewsRail posts={data?.featuredNews} />
+  <SquadPathway intro={data?.pathwayIntro} squads={data?.pathwaySquads} />
+  <SponsorStrip heading={data?.sponsorStripHeading} sponsors={data?.sponsorStrip ?? []} />
+  <ClosingCtas ctas={data?.closingCtas} />
 </PageLayout>

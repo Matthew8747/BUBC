@@ -1,0 +1,70 @@
+---
+/**
+ * Field — labelled text input with optional hint + accessible error wiring.
+ *
+ *   <Field name="email" type="email" label="Email address" required hint="We'll only use this to confirm your slot." />
+ */
+interface Props {
+  name: string;
+  label: string;
+  type?: 'text' | 'email' | 'tel' | 'date' | 'number' | 'url';
+  hint?: string;
+  placeholder?: string;
+  required?: boolean;
+  autocomplete?: string;
+  inputmode?: 'text' | 'email' | 'tel' | 'numeric' | 'decimal' | 'url';
+  pattern?: string;
+  min?: string | number;
+  max?: string | number;
+}
+
+const {
+  name,
+  label,
+  type = 'text',
+  hint,
+  placeholder,
+  required,
+  autocomplete,
+  inputmode,
+  pattern,
+  min,
+  max,
+} = Astro.props;
+
+const id = `f-${name}`;
+const hintId = hint ? `${id}-hint` : undefined;
+---
+
+<div class="flex flex-col gap-1.5">
+  <label for={id} class="text-sm font-medium text-[--color-ink]">
+    {label}{
+      required && (
+        <span aria-hidden="true" class="text-[--color-blade] ml-0.5">
+          *
+        </span>
+      )
+    }
+  </label>
+  <input
+    id={id}
+    name={name}
+    type={type}
+    placeholder={placeholder}
+    required={required}
+    autocomplete={autocomplete}
+    inputmode={inputmode}
+    pattern={pattern}
+    min={min}
+    max={max}
+    aria-describedby={hintId}
+    class="h-12 px-3.5 border border-[--color-line] bg-[--color-paper] text-[--color-ink] rounded-sm placeholder:text-[--color-mute] focus:border-[--color-navy] focus:outline-2 focus:outline-[--color-gold] focus:outline-offset-2"
+  />
+  {
+    hint && (
+      <p id={hintId} class="text-xs text-[--color-mute]">
+        {hint}
+      </p>
+    )
+  }
+</div>

@@ -1,0 +1,37 @@
+---
+/**
+ * StatStrip — dark band of 4 big-number stats. Driven by Sanity if present,
+ * sensible defaults otherwise.
+ */
+import Stat from '../ui/Stat.astro';
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+import type { Stat as StatType } from '../../lib/types';
+
+interface Props {
+  stats?: StatType[];
+}
+
+const defaults: StatType[] = [
+  { value: '60', suffix: 'yrs', label: 'Founded 1965' },
+  { value: '9', label: 'BUBC Olympians' },
+  { value: '14', label: 'Henley wins' },
+  { value: '200', suffix: '+', label: 'Members' },
+];
+
+const { stats = defaults } = Astro.props;
+---
+
+<Section tone="ink" spacing="md">
+  <Container>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-10 text-[--color-paper]">
+      {
+        stats.map((s) => (
+          <div class="text-[--color-paper]">
+            <Stat value={s.value} suffix={s.suffix} label={s.label} />
+          </div>
+        ))
+      }
+    </div>
+  </Container>
+</Section>

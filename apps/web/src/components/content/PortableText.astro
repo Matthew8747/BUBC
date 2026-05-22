@@ -1,0 +1,61 @@
+---
+/**
+ * PortableText — renders Sanity body content as HTML via @portabletext/to-html.
+ *
+ * Custom serializers map our `lead` decorator to a `.lead` class and our
+ * embedded `imageBlock` to a Picture component (rendered as HTML inline).
+ */
+import { toHTML, type PortableTextComponents } from '@portabletext/to-html';
+import { urlFor } from '../../lib/sanity';
+import type { SanityImage } from '../../lib/types';
+
+interface Props {
+  value: unknown;
+  class?: string;
+}
+
+const { value, class: className } = Astro.props;
+
+const components: PortableTextComponents = {
+  marks: {
+    lead: ({ children }) => `<span class="lead">${children}</span>`,
+    link: ({ value, children }) => {
+      const href = value?.href ?? '#';
+      const external = !!value?.external;
+      const rel = external ? ' rel="noopener noreferrer"' : '';
+      const target = external ? ' target="_blank"' : '';
+      return `<a href="${href}"${target}${rel}>${children}</a>`;
+    },
+  },
+  types: {
+    imageBlock: ({ value }) => {
+      const img = value as SanityImage;
+      if (!img?.asset) return '';
+      const isDecorative = !!img.decorative;
+      const alt = isDecorative ? '' : (img.alt ?? '');
+      const src = urlFor(img).width(1024).quality(82).auto('format').url();
+      const srcset = [640, 1024, 1440]
+        .map((w) => `${urlFor(img).width(w).quality(82).auto('format').url()} ${w}w`)
+        .join(', ');
+      const caption = img.caption
+        ? `<figcaption>${img.caption}${img.credit ? ` <span class="opacity-60">— ${img.credit}</span>` : ''}</figcaption>`
+        : '';
+      const ariaHidden = isDecorative ? ' aria-hidden="true"' : '';
+      return `<figure class="my-8"><img src="${src}" srcset="${srcset}" sizes="(min-width: 768px) 65ch, 100vw" alt="${alt}"${ariaHidden} loading="lazy" decoding="async" class="w-full" />${caption}</figure>`;
+    },
+    embed: ({ value }) => {
+      const url = (value as { url?: string }).url;
+      if (!url) return '';
+      const youtube = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
+      if (youtube) {
+        return `<div class="my-8 aspect-video"><iframe src="https://www.youtube-nocookie.com/embed/${youtube[1]}" title="Embedded video" loading="lazy" allow="picture-in-picture" allowfullscreen class="h-full w-full"></iframe></div>`;
+      }
+      return `<p><a href="${url}">${url}</a></p>`;
+    },
+  },
+};
+
+const html = value ? toHTML(value as Parameters<typeof toHTML>[0], { components }) : '';
+---
+
+<div class:list={['prose', className]} set:html={html} />

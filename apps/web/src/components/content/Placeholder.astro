@@ -1,0 +1,62 @@
+---
+/**
+ * Placeholder — styled rectangle used in place of real photography.
+ *
+ * Use this anywhere we'd later drop a Sanity image but don't have one yet.
+ * Identifiable at a glance as a placeholder so editors can spot them.
+ *
+ *   <Placeholder ratio="16/9" label="Senior men in training" />
+ */
+import clsx from 'clsx';
+
+interface Props {
+  ratio?: '16/9' | '4/5' | '1/1' | '3/2' | '21/9';
+  label?: string;
+  tone?: 'navy' | 'avon' | 'gold' | 'bone';
+  class?: string;
+}
+
+const { ratio = '16/9', label, tone = 'navy', class: className } = Astro.props;
+
+const toneClass: Record<NonNullable<Props['tone']>, string> = {
+  navy: 'bg-[--color-navy]/85 text-[--color-paper]',
+  avon: 'bg-[--color-avon]/85 text-[--color-paper]',
+  gold: 'bg-[--color-gold]/85 text-[--color-ink]',
+  bone: 'bg-[--color-bone] text-[--color-mute]',
+};
+
+const aspectClass: Record<NonNullable<Props['ratio']>, string> = {
+  '16/9': 'aspect-[16/9]',
+  '4/5': 'aspect-[4/5]',
+  '1/1': 'aspect-square',
+  '3/2': 'aspect-[3/2]',
+  '21/9': 'aspect-[21/9]',
+};
+---
+
+<div
+  class={clsx(
+    'relative overflow-hidden flex items-end',
+    aspectClass[ratio],
+    toneClass[tone],
+    className,
+  )}
+  aria-hidden="true"
+  data-placeholder
+>
+  <div
+    class="absolute inset-0 opacity-30"
+    style={`background-image: repeating-linear-gradient(135deg, transparent 0 14px, currentColor 14px 15px);`}
+  >
+  </div>
+  {
+    label && (
+      <div class="relative z-10 m-4 sm:m-6">
+        <span class="block text-[10px] uppercase tracking-[0.18em] opacity-70 mb-1">
+          Photo to come
+        </span>
+        <span class="block font-display text-sm sm:text-base">{label}</span>
+      </div>
+    )
+  }
+</div>
