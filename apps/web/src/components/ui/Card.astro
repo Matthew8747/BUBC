@@ -1,0 +1,38 @@
+---
+/**
+ * Card — base hover-card primitive used by news, crew, boat etc.
+ *
+ * Pass `href` to make the whole card a link (announced as one to screen
+ * readers via the inner overlay). The image inside gets a subtle scale on
+ * hover when the card is interactive.
+ */
+import clsx from 'clsx';
+
+interface Props {
+  href?: string;
+  external?: boolean;
+  class?: string;
+}
+
+const { href, external = false, class: className } = Astro.props;
+const interactive = !!href;
+---
+
+<article
+  class={clsx('group relative flex flex-col', interactive && 'transition-colors', className)}
+>
+  {
+    interactive && (
+      <a
+        href={href}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noopener noreferrer' : undefined}
+        class="absolute inset-0 z-10"
+        aria-label="Open"
+      >
+        <span class="sr-only">Open</span>
+      </a>
+    )
+  }
+  <slot />
+</article>

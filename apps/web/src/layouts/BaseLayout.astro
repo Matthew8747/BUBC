@@ -1,0 +1,70 @@
+---
+/**
+ * BaseLayout — every page on the site eventually goes through here.
+ *
+ * Responsibilities:
+ *   - Inject <head>: SEO meta, OG tags, canonical URL, favicon, theme color.
+ *   - Render the skip-to-main accessibility link.
+ *   - Provide a default <body> wrapper with the brand background.
+ *   - Slot for page content (the layout itself is chrome-free; PageLayout
+ *     wraps this and adds the Header / Footer).
+ */
+import '../styles/global.css';
+import { resolveSeo, SITE, type SeoInput } from '../lib/seo';
+
+interface Props {
+  seo?: SeoInput;
+  /** Override the <html lang> for translated content if we ever add it. */
+  lang?: string;
+  /** Optional body class hook (used for hero-overlay pages). */
+  bodyClass?: string;
+}
+
+const { seo = {}, lang = 'en-GB', bodyClass = '' } = Astro.props;
+const meta = resolveSeo(seo, Astro.url);
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#0E2A47" />
+
+    <title>{meta.title}</title>
+    <meta name="description" content={meta.description} />
+    <link rel="canonical" href={meta.canonical} />
+
+    {meta.noIndex && <meta name="robots" content="noindex,nofollow" />}
+
+    {/* Open Graph */}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={meta.title} />
+    <meta property="og:description" content={meta.description} />
+    <meta property="og:image" content={new URL(meta.image, SITE.url).toString()} />
+    <meta property="og:url" content={meta.canonical} />
+    <meta property="og:locale" content="en_GB" />
+
+    {/* Twitter */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={meta.title} />
+    <meta name="twitter:description" content={meta.description} />
+    <meta name="twitter:image" content={new URL(meta.image, SITE.url).toString()} />
+
+    {/* Favicons */}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    {/* RSS — wired up in Phase 4 */}
+    <link rel="alternate" type="application/rss+xml" title="BUBC News" href="/news/rss.xml" />
+
+    <slot name="head" />
+  </head>
+  <body class={`min-h-screen bg-[--color-paper] text-[--color-ink] font-body ${bodyClass}`}>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <slot />
+  </body>
+</html>

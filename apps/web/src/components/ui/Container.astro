@@ -1,0 +1,29 @@
+---
+/**
+ * Container — horizontal max-width wrapper with consistent gutters.
+ *
+ * Three widths:
+ *   prose  — 65ch, for long-form editorial body content
+ *   narrow — 48rem, for forms, single-column features
+ *   wide   — 80rem, default — section grids, hero content
+ */
+import clsx from 'clsx';
+
+interface Props {
+  width?: 'prose' | 'narrow' | 'wide';
+  as?: keyof HTMLElementTagNameMap;
+  class?: string;
+}
+
+const { width = 'wide', as: Tag = 'div', class: className } = Astro.props;
+
+const widthClass: Record<NonNullable<Props['width']>, string> = {
+  prose: 'max-w-[65ch]',
+  narrow: 'max-w-3xl',
+  wide: 'max-w-7xl',
+};
+---
+
+<Tag class={clsx('mx-auto w-full px-4 sm:px-6 lg:px-8', widthClass[width], className)}>
+  <slot />
+</Tag>

@@ -1,0 +1,32 @@
+---
+/**
+ * Eyebrow — short kicker line above a heading. Gold by default.
+ * Decorative: includes a leading hairline.
+ */
+import clsx from 'clsx';
+
+interface Props {
+  class?: string;
+  tone?: 'gold' | 'paper' | 'navy';
+}
+
+const { class: className, tone = 'gold' } = Astro.props;
+const toneClass = {
+  gold: 'text-[--color-gold]',
+  paper: 'text-[--color-paper]/80',
+  navy: 'text-[--color-navy]',
+}[tone];
+
+const lineClass = {
+  gold: 'bg-[--color-gold]',
+  paper: 'bg-[--color-paper]/60',
+  navy: 'bg-[--color-navy]',
+}[tone];
+---
+
+<span class={clsx('inline-flex items-center gap-3', className)}>
+  <span class={clsx('block h-px w-8', lineClass)} aria-hidden="true"></span>
+  <span class={clsx('text-xs uppercase tracking-[0.15em] font-medium', toneClass)}>
+    <slot />
+  </span>
+</span>

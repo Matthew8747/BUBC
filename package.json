@@ -8,6 +8,35 @@
   "scripts": {
     "dev": "pnpm --filter @bubc/web dev",
     "build": "pnpm --filter @bubc/web build",
-    "preview": "pnpm --filter @bubc/web preview"
+    "preview": "pnpm --filter @bubc/web preview",
+    "studio": "pnpm --filter @bubc/studio dev",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \".\"",
+    "format:check": "prettier --check \".\"",
+    "typecheck": "pnpm --filter @bubc/web typecheck && pnpm --filter @bubc/studio typecheck",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,mjs,astro}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@typescript-eslint/eslint-plugin": "^8.59.4",
+    "@typescript-eslint/parser": "^8.59.4",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-astro": "^1.7.0",
+    "globals": "^17.6.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.5",
+    "prettier": "^3.8.3",
+    "prettier-plugin-astro": "^0.14.1"
   }
 }
