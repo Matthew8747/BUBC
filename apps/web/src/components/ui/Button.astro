@@ -1,0 +1,70 @@
+---
+/**
+ * Button — link or button element with two visual variants.
+ *
+ *   solid — navy background, paper text. Primary action.
+ *   ghost — navy border on transparent, navy text. Secondary action.
+ *
+ * Pass `href` to render an <a>, omit it for a <button>.
+ */
+import clsx from 'clsx';
+
+interface Props {
+  href?: string;
+  variant?: 'solid' | 'ghost' | 'gold';
+  size?: 'sm' | 'md' | 'lg';
+  type?: 'button' | 'submit' | 'reset';
+  external?: boolean;
+  disabled?: boolean;
+  class?: string;
+}
+
+const {
+  href,
+  variant = 'solid',
+  size = 'md',
+  type = 'button',
+  external = false,
+  disabled = false,
+  class: className,
+} = Astro.props;
+
+const base =
+  'inline-flex items-center justify-center font-body font-medium tracking-wide transition-colors duration-200 ease-out';
+const focus =
+  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--color-gold]';
+
+const variantClass: Record<NonNullable<Props['variant']>, string> = {
+  solid:
+    'bg-[--color-navy] text-[--color-paper] hover:bg-[--color-ink] disabled:bg-[--color-mute] disabled:cursor-not-allowed',
+  ghost:
+    'border border-[--color-navy] text-[--color-navy] hover:bg-[--color-navy] hover:text-[--color-paper]',
+  gold: 'bg-[--color-gold] text-[--color-paper] hover:bg-[#a08040] disabled:bg-[--color-mute] disabled:cursor-not-allowed',
+};
+
+const sizeClass: Record<NonNullable<Props['size']>, string> = {
+  sm: 'h-9 px-3 text-sm gap-1.5',
+  md: 'h-11 px-5 text-base gap-2',
+  lg: 'h-14 px-7 text-lg gap-2.5',
+};
+
+const classes = clsx(base, focus, variantClass[variant], sizeClass[size], className);
+---
+
+{
+  href ? (
+    <a
+      href={href}
+      class={classes}
+      target={external ? '_blank' : undefined}
+      rel={external ? 'noopener noreferrer' : undefined}
+      aria-disabled={disabled || undefined}
+    >
+      <slot />
+    </a>
+  ) : (
+    <button type={type} class={classes} disabled={disabled}>
+      <slot />
+    </button>
+  )
+}

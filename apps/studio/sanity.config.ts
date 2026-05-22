@@ -1,19 +1,35 @@
-import { defineConfig } from 'sanity';
-import { structureTool } from 'sanity/structure';
-import { visionTool } from '@sanity/vision';
-import { schema } from './schemas/index';
+import {defineConfig} from 'sanity'
+import {structureTool} from 'sanity/structure'
+import {visionTool} from '@sanity/vision'
+import {schemaTypes, SINGLETON_TYPES} from './schemaTypes'
+import {structure} from './structure'
+
+const projectId = process.env.SANITY_STUDIO_PROJECT_ID ?? 'j7zcx618'
+const dataset = process.env.SANITY_STUDIO_DATASET ?? 'production'
 
 export default defineConfig({
-  name: 'bubc-studio',
-  title: 'BUBC Studio',
+  name: 'default',
+  title: 'BUBC',
 
-  projectId: process.env.SANITY_STUDIO_PROJECT_ID!,
-  dataset: process.env.SANITY_STUDIO_DATASET ?? 'production',
+  projectId,
+  dataset,
 
-  plugins: [
-    structureTool(),
-    visionTool(),
-  ],
+  plugins: [structureTool({structure}), visionTool()],
 
-  schema,
-});
+  schema: {
+    types: schemaTypes,
+  },
+
+  document: {
+    // Prevent duplicate/delete on singletons so editors can't accidentally
+    // create a second Site Settings or a second Home Page document.
+    actions: (prev, {schemaType}) =>
+      SINGLETON_TYPES.has(schemaType)
+        ? prev.filter(({action}) => action !== 'duplicate' && action !== 'delete')
+        : prev,
+
+    // Hide singletons from the global "New document" menu — they're created
+    // automatically and accessed from the left-nav.
+    newDocumentOptions: (prev) => prev.filter((opt) => !SINGLETON_TYPES.has(opt.templateId)),
+  },
+})

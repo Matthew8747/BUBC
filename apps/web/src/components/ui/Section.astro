@@ -1,0 +1,40 @@
+---
+/**
+ * Section — vertical rhythm wrapper. Pairs with Container for horizontal.
+ *
+ * Tones:
+ *   paper — default warm off-white background
+ *   bone  — slightly warmer, used to separate sections
+ *   navy  — dark navy with paper text, for emphasis blocks
+ *   ink   — even darker, footer-adjacent
+ */
+import clsx from 'clsx';
+
+interface Props {
+  tone?: 'paper' | 'bone' | 'navy' | 'ink' | 'transparent';
+  spacing?: 'sm' | 'md' | 'lg';
+  as?: keyof HTMLElementTagNameMap;
+  id?: string;
+  class?: string;
+}
+
+const { tone = 'paper', spacing = 'md', as: Tag = 'section', id, class: className } = Astro.props;
+
+const toneClass: Record<NonNullable<Props['tone']>, string> = {
+  paper: 'bg-[--color-paper] text-[--color-ink]',
+  bone: 'bg-[--color-bone] text-[--color-ink]',
+  navy: 'bg-[--color-navy] text-[--color-paper]',
+  ink: 'bg-[--color-ink] text-[--color-paper]',
+  transparent: '',
+};
+
+const spacingClass: Record<NonNullable<Props['spacing']>, string> = {
+  sm: 'py-10 sm:py-14',
+  md: 'py-16 sm:py-24',
+  lg: 'py-24 sm:py-32',
+};
+---
+
+<Tag id={id} class={clsx(toneClass[tone], spacingClass[spacing], className)}>
+  <slot />
+</Tag>

@@ -2,24 +2,42 @@
   "name": "@bubc/studio",
   "private": true,
   "version": "0.0.1",
-  "type": "module",
+  "main": "package.json",
+  "license": "UNLICENSED",
   "engines": {
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "sanity dev",
     "build": "sanity build",
     "deploy": "sanity deploy",
-    "manage": "sanity manage"
+    "deploy-graphql": "sanity graphql deploy",
+    "dev": "sanity dev",
+    "start": "sanity start",
+    "manage": "sanity manage",
+    "typecheck": "tsc --noEmit",
+    "typegen": "sanity typegen generate"
   },
+  "keywords": [
+    "sanity"
+  ],
   "dependencies": {
     "@sanity/vision": "^5.26.0",
-    "sanity": "^3.75.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "sanity": "^5.26.0",
     "styled-components": "^6.1.18"
   },
   "devDependencies": {
-    "@sanity/cli": "^3.75.1",
-    "@types/node": "^25.9.1",
-    "typescript": "^5.8.3"
+    "@sanity/eslint-config-studio": "^6.0.0",
+    "@types/react": "^19.2.14",
+    "eslint": "^9.28",
+    "prettier": "^3.5",
+    "typescript": "^5.8"
+  },
+  "prettier": {
+    "bracketSpacing": false,
+    "printWidth": 100,
+    "semi": false,
+    "singleQuote": true
   }
 }

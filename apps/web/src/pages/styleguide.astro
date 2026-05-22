@@ -1,0 +1,302 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import Container from '../components/ui/Container.astro';
+import Section from '../components/ui/Section.astro';
+import Button from '../components/ui/Button.astro';
+import Tag from '../components/ui/Tag.astro';
+import Stat from '../components/ui/Stat.astro';
+import Card from '../components/ui/Card.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+
+const colours = [
+  { name: 'Ink', token: '--color-ink', hex: '#0A1B2E' },
+  { name: 'Navy', token: '--color-navy', hex: '#0E2A47' },
+  { name: 'Paper', token: '--color-paper', hex: '#F5F1EA' },
+  { name: 'Bone', token: '--color-bone', hex: '#ECE5D8' },
+  { name: 'Gold', token: '--color-gold', hex: '#B8924A' },
+  { name: 'Avon', token: '--color-avon', hex: '#2D4A3E' },
+  { name: 'Blade', token: '--color-blade', hex: '#C8312A' },
+  { name: 'Mute', token: '--color-mute', hex: '#5A6878' },
+  { name: 'Line', token: '--color-line', hex: '#D8D0C2' },
+];
+
+const typeScale = [
+  { name: 'Display 5xl', size: 'text-5xl', sample: 'Bath rowing' },
+  { name: 'Display 4xl', size: 'text-4xl', sample: 'Bath rowing' },
+  { name: 'Display 3xl', size: 'text-3xl', sample: 'Bath rowing' },
+  { name: 'Display 2xl', size: 'text-2xl', sample: 'Bath rowing' },
+  { name: 'Display xl', size: 'text-xl', sample: 'Bath rowing' },
+];
+---
+
+<PageLayout
+  seo={{
+    title: 'Styleguide',
+    description: 'Visual reference for the BUBC design system — colours, type, components.',
+    noIndex: true,
+  }}
+>
+  {/* Page intro ---------------------------------------------------------- */}
+  <Section spacing="md">
+    <Container>
+      <Eyebrow>Internal · v0.1</Eyebrow>
+      <h1 class="mt-4 max-w-3xl text-4xl sm:text-5xl">Design system</h1>
+      <p class="mt-6 max-w-prose text-lg text-[--color-mute]">
+        Every component the site is built from. Use this page to spot regressions before they ship,
+        and as a reference when assembling new templates.
+      </p>
+    </Container>
+  </Section>
+
+  {/* Colour palette ------------------------------------------------------ */}
+  <Section tone="bone" spacing="md">
+    <Container>
+      <h2 class="text-3xl">Colour</h2>
+      <p class="mt-2 text-[--color-mute] max-w-prose">
+        Minimal palette — no decorative additions. Blade is reserved for race-day live indicators.
+      </p>
+
+      <div class="mt-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
+        {
+          colours.map((c) => (
+            <div>
+              <div
+                class="aspect-[4/3] w-full border border-[--color-line] rounded-sm"
+                style={`background:${c.hex}`}
+                aria-hidden="true"
+              />
+              <div class="mt-2">
+                <div class="font-medium text-sm">{c.name}</div>
+                <div class="text-xs text-[--color-mute] font-mono">{c.hex}</div>
+                <div class="text-xs text-[--color-mute] font-mono">{c.token}</div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  {/* Type scale ---------------------------------------------------------- */}
+  <Section spacing="md">
+    <Container>
+      <h2 class="text-3xl">Typography</h2>
+      <p class="mt-2 text-[--color-mute] max-w-prose">
+        Fraunces for display, Geist for body. Headlines never centred. Body line-height 1.6, display
+        1.1. Tabular numerals for stats and results.
+      </p>
+
+      <div class="mt-10 space-y-6 divide-y divide-[--color-line]">
+        {
+          typeScale.map((t) => (
+            <div class="pb-6 flex flex-col sm:flex-row gap-4 sm:items-baseline">
+              <div class="text-xs uppercase tracking-[0.1em] text-[--color-mute] w-32 shrink-0">
+                {t.name}
+              </div>
+              <div class={`font-display ${t.size}`}>{t.sample}</div>
+            </div>
+          ))
+        }
+        <div class="pt-6 grid sm:grid-cols-2 gap-8">
+          <div>
+            <div class="text-xs uppercase tracking-[0.1em] text-[--color-mute] mb-2">
+              Body — Geist
+            </div>
+            <p class="text-base leading-relaxed">
+              Bath University Boat Club is a high-performance student rowing club based on the River
+              Avon. The senior squad trains six days a week through Michaelmas and Hilary term,
+              racing the BUCS, Henley and Head circuits.
+            </p>
+          </div>
+          <div>
+            <div class="text-xs uppercase tracking-[0.1em] text-[--color-mute] mb-2">
+              Mono — Geist Mono
+            </div>
+            <p class="font-mono text-base">06:12.4 · 5:38.9 · 19:42.1</p>
+            <p class="font-mono tabular text-xs mt-2 text-[--color-mute]">
+              Tabular numerals align in stat rows.
+            </p>
+          </div>
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  {/* Buttons ------------------------------------------------------------- */}
+  <Section tone="bone" spacing="md">
+    <Container>
+      <h2 class="text-3xl">Buttons</h2>
+      <div class="mt-10 flex flex-wrap gap-4 items-center">
+        <Button variant="solid">Solid primary</Button>
+        <Button variant="ghost">Ghost secondary</Button>
+        <Button variant="gold">Trial with us</Button>
+        <Button variant="solid" size="sm">Small</Button>
+        <Button variant="solid" size="lg">Large</Button>
+        <Button variant="solid" disabled>Disabled</Button>
+      </div>
+    </Container>
+  </Section>
+
+  {/* Tags + Eyebrows ----------------------------------------------------- */}
+  <Section spacing="md">
+    <Container>
+      <h2 class="text-3xl">Tags & eyebrows</h2>
+      <div class="mt-8 space-y-6">
+        <div class="flex flex-wrap gap-4 items-center">
+          <Tag tone="navy">Race report</Tag>
+          <Tag tone="gold">Featured</Tag>
+          <Tag tone="blade">Live</Tag>
+        </div>
+        <div class="space-y-3">
+          <Eyebrow>Editorial · 2 min read</Eyebrow>
+          <div><Eyebrow tone="navy">Squad pathway</Eyebrow></div>
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  {/* Stat strip ---------------------------------------------------------- */}
+  <Section tone="ink" spacing="md">
+    <Container>
+      <h2 class="text-3xl text-[--color-paper]">Stat strip</h2>
+      <div class="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-10">
+        <div class="text-[--color-paper]">
+          <Stat value="1965" label="Founded" />
+        </div>
+        <div class="text-[--color-paper]">
+          <Stat value="9" label="BUBC Olympians" />
+        </div>
+        <div class="text-[--color-paper]">
+          <Stat value="14" label="Henley wins" />
+        </div>
+        <div class="text-[--color-paper]">
+          <Stat value="200" suffix="+" label="Members" />
+        </div>
+      </div>
+      <p class="mt-6 text-xs text-[--color-paper]/60">
+        Note: stat copy adapts to inherited text colour. Pass a tone container.
+      </p>
+    </Container>
+  </Section>
+
+  {/* Card example -------------------------------------------------------- */}
+  <Section spacing="md">
+    <Container>
+      <h2 class="text-3xl">Cards</h2>
+      <p class="mt-2 text-[--color-mute] max-w-prose">
+        Base hover card. Pass `href` to make it interactive (whole-card click target).
+      </p>
+
+      <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <Card href="#" class="bg-[--color-bone]">
+          <div
+            class="aspect-[4/5] bg-[--color-navy]/10 group-hover:bg-[--color-navy]/20 transition-colors"
+          >
+          </div>
+          <div class="p-5">
+            <Tag tone="gold">Race report</Tag>
+            <h3
+              class="mt-3 text-xl group-hover:underline decoration-[--color-gold] underline-offset-4"
+            >
+              Bath senior men win Temple at Henley
+            </h3>
+            <p class="mt-2 text-sm text-[--color-mute]">3 July 2025</p>
+          </div>
+        </Card>
+
+        <Card href="#" class="bg-[--color-bone]">
+          <div
+            class="aspect-[4/5] bg-[--color-avon]/15 group-hover:bg-[--color-avon]/30 transition-colors"
+          >
+          </div>
+          <div class="p-5">
+            <Tag>Squad update</Tag>
+            <h3
+              class="mt-3 text-xl group-hover:underline decoration-[--color-gold] underline-offset-4"
+            >
+              Novice intake opens 18 September
+            </h3>
+            <p class="mt-2 text-sm text-[--color-mute]">12 August 2025</p>
+          </div>
+        </Card>
+
+        <Card href="#" class="bg-[--color-bone]">
+          <div
+            class="aspect-[4/5] bg-[--color-gold]/15 group-hover:bg-[--color-gold]/30 transition-colors"
+          >
+          </div>
+          <div class="p-5">
+            <Tag tone="gold">Fundraising</Tag>
+            <h3
+              class="mt-3 text-xl group-hover:underline decoration-[--color-gold] underline-offset-4"
+            >
+              The new eight is on its way — naming details inside
+            </h3>
+            <p class="mt-2 text-sm text-[--color-mute]">1 October 2025</p>
+          </div>
+        </Card>
+      </div>
+    </Container>
+  </Section>
+
+  {/* Prose preview ------------------------------------------------------- */}
+  <Section tone="bone" spacing="md">
+    <Container width="narrow">
+      <h2 class="text-3xl">Editorial prose</h2>
+      <article class="prose mt-8">
+        <p class="lead">
+          A lead paragraph stands proud of the rest. We use Fraunces here only for blockquotes;
+          everything else is Geist, set at a comfortable reading size.
+        </p>
+        <p>
+          The senior men's squad has spent the autumn focused on long pieces — twice-weekly 5k ergos
+          and Sunday water sessions of 80 minutes or more. The aim: enough aerobic capacity to
+          handle the 2k repeats that arrive in January.
+        </p>
+        <h3>Training week</h3>
+        <ul>
+          <li>Monday — UT2 water</li>
+          <li>Wednesday — 5k ergo / weights</li>
+          <li>Friday — UT1 water</li>
+        </ul>
+        <blockquote>
+          "Winning at Henley is about the small things — at Bath we obsess over them."
+        </blockquote>
+        <p>
+          The new eight, donated by an alumni syndicate, arrives in February. The naming ceremony
+          will take place at the boathouse, immediately before the BUCS head racing weekend.
+        </p>
+      </article>
+    </Container>
+  </Section>
+
+  {/* Containers / sections live demo ------------------------------------ */}
+  <Section spacing="md">
+    <Container>
+      <h2 class="text-3xl">Layout helpers</h2>
+      <p class="mt-2 text-[--color-mute] max-w-prose">
+        <code class="font-mono text-sm">Container</code> handles horizontal max-widths; <code
+          class="font-mono text-sm">Section</code
+        > handles vertical spacing and background tone.
+      </p>
+      <div class="mt-8 space-y-4 text-sm">
+        <div class="border border-[--color-line] p-4 rounded-sm">
+          <div class="font-mono text-xs text-[--color-mute] mb-2">
+            {'<Container width="prose">'}
+          </div>
+          <div class="bg-[--color-bone] py-3 px-4 max-w-[65ch]">prose · 65ch</div>
+        </div>
+        <div class="border border-[--color-line] p-4 rounded-sm">
+          <div class="font-mono text-xs text-[--color-mute] mb-2">
+            {'<Container width="narrow">'}
+          </div>
+          <div class="bg-[--color-bone] py-3 px-4 max-w-3xl">narrow · 48rem</div>
+        </div>
+        <div class="border border-[--color-line] p-4 rounded-sm">
+          <div class="font-mono text-xs text-[--color-mute] mb-2">{'<Container width="wide">'}</div>
+          <div class="bg-[--color-bone] py-3 px-4 max-w-7xl">wide · 80rem (default)</div>
+        </div>
+      </div>
+    </Container>
+  </Section>
+</PageLayout>

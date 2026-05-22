@@ -1,0 +1,35 @@
+---
+/**
+ * Tag — small caps category / metadata label.
+ *
+ *   navy (default) — neutral, used for categories
+ *   gold           — accent, used for "featured" / race day
+ *   blade          — race day live indicator only
+ */
+import clsx from 'clsx';
+
+interface Props {
+  tone?: 'navy' | 'gold' | 'blade' | 'paper';
+  as?: keyof HTMLElementTagNameMap;
+  class?: string;
+}
+
+const { tone = 'navy', as: Tag = 'span', class: className } = Astro.props;
+
+const toneClass: Record<NonNullable<Props['tone']>, string> = {
+  navy: 'text-[--color-navy]',
+  gold: 'text-[--color-gold]',
+  blade: 'text-[--color-blade]',
+  paper: 'text-[--color-paper]',
+};
+---
+
+<Tag
+  class={clsx(
+    'inline-block text-xs font-medium uppercase tracking-[0.12em] leading-none',
+    toneClass[tone],
+    className,
+  )}
+>
+  <slot />
+</Tag>

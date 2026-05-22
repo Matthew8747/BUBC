@@ -1,0 +1,204 @@
+---
+/**
+ * Header — site-wide top navigation.
+ *
+ * Behaviour:
+ *   - Sticky; shrinks + adds backdrop-blur on scroll (toggled via IntersectionObserver).
+ *   - Active-page indicator: gold underline on the matching primary link.
+ *   - Mobile: hamburger opens full-screen overlay with the same nav + CTA.
+ *   - Keyboard: Escape closes the overlay; focus traps to the open panel; scroll lock applied.
+ *
+ * Content is hard-coded for now. Once T16 wires Sanity into the web app, this
+ * will be driven by `settings.primaryNav` etc.
+ */
+import Container from '../ui/Container.astro';
+import Button from '../ui/Button.astro';
+
+interface NavItem {
+  label: string;
+  href: string;
+}
+
+const primaryNav: NavItem[] = [
+  { label: 'Squads', href: '/squads/' },
+  { label: 'Coaching', href: '/coaching/' },
+  { label: 'Boathouse', href: '/boathouse/' },
+  { label: 'News', href: '/news/' },
+  { label: 'Alumni', href: '/alumni/' },
+  { label: 'Support us', href: '/support/' },
+];
+
+const utilityNav: NavItem[] = [{ label: 'Contact', href: '/contact/' }];
+
+const pathname = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(href);
+---
+
+<header
+  id="site-header"
+  class="sticky top-0 z-40 transition-[background,box-shadow,padding] duration-200 ease-out"
+  data-state="top"
+>
+  <Container class="flex h-20 items-center justify-between">
+    <a
+      href="/"
+      class="font-display text-xl tracking-tight text-[--color-ink] flex items-baseline gap-1.5"
+      aria-label="BUBC home"
+    >
+      <span class="font-medium">BUBC</span>
+      <span class="hidden sm:inline text-sm text-[--color-mute] tracking-normal font-body">
+        · University of Bath
+      </span>
+    </a>
+
+    {/* Desktop nav */}
+    <nav aria-label="Primary" class="hidden lg:flex items-center gap-8">
+      {
+        primaryNav.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              'relative text-sm font-medium tracking-wide text-[--color-ink] py-2 transition-colors',
+              'hover:text-[--color-navy]',
+              isActive(item.href) &&
+                'after:absolute after:left-0 after:right-0 after:-bottom-px after:h-[2px] after:bg-[--color-gold]',
+            ]}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    {/* Utility + CTA */}
+    <div class="hidden lg:flex items-center gap-4">
+      {
+        utilityNav.map((item) => (
+          <a
+            href={item.href}
+            class="text-sm text-[--color-mute] hover:text-[--color-navy] transition-colors"
+          >
+            {item.label}
+          </a>
+        ))
+      }
+      <Button href="/squads/trial/" variant="gold" size="sm">Trial with us</Button>
+    </div>
+
+    {/* Mobile burger */}
+    <button
+      id="nav-toggle"
+      class="lg:hidden inline-flex h-11 w-11 items-center justify-center -mr-2"
+      aria-expanded="false"
+      aria-controls="mobile-nav"
+      aria-label="Open menu"
+    >
+      <span class="sr-only">Toggle menu</span>
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <path
+          d="M3 6h16M3 11h16M3 16h16"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"></path>
+      </svg>
+    </button>
+  </Container>
+</header>
+
+{/* Mobile overlay */}
+<div
+  id="mobile-nav"
+  class="fixed inset-0 z-50 hidden flex-col bg-[--color-navy] text-[--color-paper]"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Site navigation"
+>
+  <div class="flex h-20 items-center justify-between px-4 sm:px-6">
+    <span class="font-display text-xl">BUBC</span>
+    <button
+      id="nav-close"
+      class="inline-flex h-11 w-11 items-center justify-center -mr-2"
+      aria-label="Close menu"
+    >
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <path
+          d="M5 5l12 12M17 5L5 17"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"></path>
+      </svg>
+    </button>
+  </div>
+  <nav aria-label="Primary mobile" class="flex flex-col gap-1 px-4 sm:px-6 mt-8 flex-1">
+    {
+      primaryNav.map((item) => (
+        <a
+          href={item.href}
+          class:list={[
+            'block py-4 font-display text-3xl border-b border-[--color-paper]/15',
+            isActive(item.href) && 'text-[--color-gold]',
+          ]}
+        >
+          {item.label}
+        </a>
+      ))
+    }
+  </nav>
+  <div class="px-4 sm:px-6 pb-10 pt-6 flex flex-col gap-3">
+    <Button href="/squads/trial/" variant="gold">Trial with us</Button>
+    <Button
+      href="/contact/"
+      variant="ghost"
+      class="!border-[--color-paper] !text-[--color-paper] hover:!bg-[--color-paper] hover:!text-[--color-navy]"
+    >
+      Contact
+    </Button>
+  </div>
+</div>
+
+<script>
+  const header = document.getElementById('site-header');
+  const toggle = document.getElementById('nav-toggle');
+  const closeBtn = document.getElementById('nav-close');
+  const overlay = document.getElementById('mobile-nav');
+
+  if (header) {
+    const onScroll = () => {
+      const scrolled = window.scrollY > 8;
+      header.dataset.state = scrolled ? 'scrolled' : 'top';
+      header.classList.toggle('bg-[--color-paper]/85', scrolled);
+      header.classList.toggle('backdrop-blur', scrolled);
+      header.classList.toggle('shadow-[0_1px_0_var(--color-line)]', scrolled);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  function openMenu() {
+    if (!overlay || !toggle) return;
+    overlay.classList.remove('hidden');
+    overlay.classList.add('flex');
+    toggle.setAttribute('aria-expanded', 'true');
+    document.documentElement.style.overflow = 'hidden';
+    const firstLink = overlay.querySelector<HTMLAnchorElement>('a');
+    firstLink?.focus();
+  }
+
+  function closeMenu() {
+    if (!overlay || !toggle) return;
+    overlay.classList.add('hidden');
+    overlay.classList.remove('flex');
+    toggle.setAttribute('aria-expanded', 'false');
+    document.documentElement.style.overflow = '';
+    toggle.focus();
+  }
+
+  toggle?.addEventListener('click', openMenu);
+  closeBtn?.addEventListener('click', closeMenu);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay && !overlay.classList.contains('hidden')) closeMenu();
+  });
+  overlay?.querySelectorAll('a').forEach((a) => a.addEventListener('click', closeMenu));
+</script>

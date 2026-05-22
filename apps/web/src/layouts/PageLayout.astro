@@ -1,0 +1,28 @@
+---
+/**
+ * PageLayout — standard page chrome: BaseLayout + Header + <main> + Footer.
+ *
+ * Use this for every page except the home page (which gets the hero rendered
+ * underneath a transparent header) and the future 404. Pages that need a
+ * different shell can compose BaseLayout directly.
+ */
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import type { SeoInput } from '../lib/seo';
+
+interface Props {
+  seo?: SeoInput;
+  bodyClass?: string;
+}
+
+const { seo, bodyClass } = Astro.props;
+---
+
+<BaseLayout seo={seo} bodyClass={bodyClass}>
+  <Header />
+  <main id="main">
+    <slot />
+  </main>
+  <Footer />
+</BaseLayout>
