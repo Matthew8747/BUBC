@@ -1,0 +1,18 @@
+# Enforce LF line endings in the repo so Windows git doesn't convert to CRLF.
+# Prettier, CI (Linux), and Husky all expect LF — this keeps them in sync.
+* text=auto eol=lf
+
+# Binary files — no line-ending conversion
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.svg binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.otf binary
+*.pdf binary
+*.zip binary
