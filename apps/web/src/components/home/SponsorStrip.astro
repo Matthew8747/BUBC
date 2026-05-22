@@ -37,28 +37,42 @@ const hasSponsors = sponsors.length > 0;
     <div class="mt-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-8 gap-y-10 items-center">
       {
         hasSponsors
-          ? sponsors.map((s) => (
-              <a
-                href={s.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="flex items-center justify-center grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all"
-                aria-label={s.name}
-              >
-                {s.logo?.asset ? (
-                  <img
-                    src={urlFor(s.logo).height(80).fit('max').auto('format').url()}
-                    alt={s.name}
-                    width={160}
-                    height={48}
-                    class="h-12 w-auto object-contain"
-                    loading="lazy"
-                  />
-                ) : (
-                  <span class="font-display text-base text-[--color-mute]">{s.name}</span>
-                )}
-              </a>
-            ))
+          ? sponsors.map((s) => {
+              const content = (
+                <>
+                  {s.logo?.asset ? (
+                    <img
+                      src={urlFor(s.logo).height(80).fit('max').auto('format').url()}
+                      alt={s.name}
+                      width={160}
+                      height={48}
+                      class="h-12 w-auto object-contain"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span class="font-display text-base text-[--color-mute]">{s.name}</span>
+                  )}
+                </>
+              );
+
+              if (s.website) {
+                return (
+                  <a
+                    href={s.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex items-center justify-center grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all"
+                    aria-label={s.name}
+                  >
+                    {content}
+                  </a>
+                );
+              }
+
+              return (
+                <div class="flex items-center justify-center grayscale opacity-70">{content}</div>
+              );
+            })
           : placeholderSponsors.map((name) => (
               <span class="flex items-center justify-center font-display text-base text-[--color-mute]">
                 {name}

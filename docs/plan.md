@@ -151,7 +151,7 @@ Set up via `astro:redirects` so SEO and bookmarks survive.
 
 | Layer                 | Choice                           | Why                                                                       |
 | --------------------- | -------------------------------- | ------------------------------------------------------------------------- |
-| **Framework**         | Astro 5                          | Static-first, fast, content-collection-friendly, partial hydration        |
+| **Framework**         | Astro 6                          | Static-first, fast, content-collection-friendly, partial hydration        |
 | **Language**          | TypeScript (strict)              | Type safety for schemas + components                                      |
 | **Styling**           | Tailwind CSS v4                  | Utility-first, no build step in v4, design tokens via CSS vars            |
 | **CMS**               | Sanity (free tier)               | Real-time editor, structured content, generous free tier, great image CDN |
