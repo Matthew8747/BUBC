@@ -12,24 +12,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  install:
-    name: Install
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
-          run_install: false
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-
   lint:
     name: Lint + format
-    needs: install
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -46,7 +30,6 @@ jobs:
 
   typecheck:
     name: Typecheck
-    needs: install
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -62,7 +45,6 @@ jobs:
 
   unit:
     name: Unit tests
-    needs: install
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -78,7 +60,6 @@ jobs:
 
   build:
     name: Build
-    needs: install
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

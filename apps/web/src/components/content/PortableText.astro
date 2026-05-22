@@ -7,6 +7,7 @@
  */
 import { toHTML, type PortableTextComponents } from '@portabletext/to-html';
 import { urlFor } from '../../lib/sanity';
+import { escapeHtml, sanitizeUrl } from '../../lib/html';
 import type { SanityImage } from '../../lib/types';
 
 interface Props {
@@ -20,7 +21,7 @@ const components: PortableTextComponents = {
   marks: {
     lead: ({ children }) => `<span class="lead">${children}</span>`,
     link: ({ value, children }) => {
-      const href = value?.href ?? '#';
+      const href = sanitizeUrl(value?.href);
       const external = !!value?.external;
       const rel = external ? ' rel="noopener noreferrer"' : '';
       const target = external ? ' target="_blank"' : '';
@@ -32,13 +33,13 @@ const components: PortableTextComponents = {
       const img = value as SanityImage;
       if (!img?.asset) return '';
       const isDecorative = !!img.decorative;
-      const alt = isDecorative ? '' : (img.alt ?? '');
+      const alt = isDecorative ? '' : escapeHtml(img.alt ?? '');
       const src = urlFor(img).width(1024).quality(82).auto('format').url();
       const srcset = [640, 1024, 1440]
         .map((w) => `${urlFor(img).width(w).quality(82).auto('format').url()} ${w}w`)
         .join(', ');
       const caption = img.caption
-        ? `<figcaption>${img.caption}${img.credit ? ` <span class="opacity-60">— ${img.credit}</span>` : ''}</figcaption>`
+        ? `<figcaption>${escapeHtml(img.caption)}${img.credit ? ` <span class="opacity-60">— ${escapeHtml(img.credit)}</span>` : ''}</figcaption>`
         : '';
       const ariaHidden = isDecorative ? ' aria-hidden="true"' : '';
       return `<figure class="my-8"><img src="${src}" srcset="${srcset}" sizes="(min-width: 768px) 65ch, 100vw" alt="${alt}"${ariaHidden} loading="lazy" decoding="async" class="w-full" />${caption}</figure>`;
@@ -50,7 +51,12 @@ const components: PortableTextComponents = {
       if (youtube) {
         return `<div class="my-8 aspect-video"><iframe src="https://www.youtube-nocookie.com/embed/${youtube[1]}" title="Embedded video" loading="lazy" allow="picture-in-picture" allowfullscreen class="h-full w-full"></iframe></div>`;
       }
-      return `<p><a href="${url}">${url}</a></p>`;
+      const vimeo = url.match(/(?:vimeo\.com\/)([\d]+)/);
+      if (vimeo) {
+        return `<div class="my-8 aspect-video"><iframe src="https://player.vimeo.com/video/${vimeo[1]}" title="Embedded video" loading="lazy" allow="picture-in-picture" allowfullscreen class="h-full w-full"></iframe></div>`;
+      }
+      const sanitized = escapeHtml(url);
+      return `<p><a href="${sanitizeUrl(url)}">${sanitized}</a></p>`;
     },
   },
 };

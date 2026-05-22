@@ -64,6 +64,7 @@ export interface Settings {
   charityNumber?: string;
   contactEmail?: string;
   address?: string;
+  boathouseLocation?: { lat: number; lng: number };
   primaryNav?: Link[];
   utilityNav?: Link[];
   primaryCta?: Cta;
