@@ -7,3 +7,9 @@ pnpm-lock.yaml
 **/.next
 **/.vercel
 **/coverage
+
+# Python virtualenvs and local tool output
+.venv
+venv
+__pycache__
+graphify-out

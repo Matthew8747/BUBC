@@ -1,1 +1,16 @@
-pnpm format:check && pnpm lint && pnpm typecheck
+# Pre-push gate — runs the same checks CI runs, in the same order, so a
+# failure here means the push would have failed in CI anyway.
+#
+# Skip with --no-verify ONLY if you know what you're doing (e.g. pushing
+# a docs-only fix that genuinely needs no build).
+echo "→ format:check"
+pnpm format:check || exit 1
+echo "→ lint"
+pnpm lint || exit 1
+echo "→ typecheck"
+pnpm typecheck || exit 1
+echo "→ unit tests"
+pnpm test:unit || exit 1
+echo "→ build"
+pnpm build || exit 1
+echo "✓ pre-push checks passed"
