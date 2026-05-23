@@ -1,0 +1,64 @@
+---
+/**
+ * Coaching page — head coach down through the squad coaching team.
+ *
+ * Pulls every coach via coachesQuery (already ordered by `order`). When
+ * Sanity is empty we render an honest "coaches being announced" notice
+ * rather than fake placeholder bios.
+ */
+import PageLayout from '../layouts/PageLayout.astro';
+import PageHero from '../components/layout/PageHero.astro';
+import Section from '../components/ui/Section.astro';
+import Container from '../components/ui/Container.astro';
+import CoachCard from '../components/coach/CoachCard.astro';
+import { safeFetch } from '../lib/sanity';
+import { coachesQuery } from '../lib/queries';
+import type { CoachData } from '../lib/types';
+
+const coaches = (await safeFetch<CoachData[]>(coachesQuery)) ?? [];
+
+const seo = {
+  title: 'Coaching',
+  description:
+    'The coaching team at the University of Bath Boat Club — head coach, squad coaches, and the standards they hold athletes to.',
+};
+---
+
+<PageLayout seo={seo}>
+  <PageHero
+    eyebrow="Coaching"
+    headline="The people in the launches."
+    lead="Coaching at Bath sits between sport and education. Our coaches set the technical and physical standard; they also write the references that put rowers into national teams and graduate programmes."
+  />
+
+  <Section spacing="lg">
+    <Container width="narrow">
+      {
+        coaches.length === 0 ? (
+          <div class="border-l-2 border-[--color-gold] pl-6 py-2">
+            <p class="text-lg">Coaching team for the 2026/27 season is being confirmed.</p>
+            <p class="mt-3 text-[--color-mute]">
+              Profiles will appear here as soon as the appointments are finalised. In the meantime,
+              squad-specific coach contacts live on each{' '}
+              <a
+                href="/squads/"
+                class="underline decoration-[--color-gold] underline-offset-4 hover:text-[--color-gold]"
+              >
+                squad page
+              </a>
+              .
+            </p>
+          </div>
+        ) : (
+          <ul class="flex flex-col gap-16">
+            {coaches.map((c) => (
+              <li>
+                <CoachCard coach={c} />
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </Container>
+  </Section>
+</PageLayout>

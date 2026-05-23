@@ -1,27 +1,29 @@
 # BUBC Site — Build Progress & Handoff Notes
 
-> Last updated: 2026-05-22 (session 2). Pick up from **"Where we left off"** below.
+> Last updated: 2026-05-23 (session 3). Pick up from **"Where we left off"** below.
+>
+> Related docs: [plan.md](plan.md) (build phases, single source of truth) · [FEATURES.md](FEATURES.md) (idea backlog with status flags + open decisions).
 
 ---
 
 ## Snapshot
 
-| Layer                                          | State                                                                          |
-| ---------------------------------------------- | ------------------------------------------------------------------------------ |
-| Monorepo (pnpm)                                | ✅                                                                             |
-| Astro frontend (`apps/web`)                    | ✅ scaffolded · design system + chrome · Sanity wired · home page · trial form |
-| Sanity Studio (`apps/studio`)                  | ✅ v5, project `j7zcx618`, all schemas defined                                 |
-| Tooling (ESLint, Prettier, Husky, lint-staged) | ✅                                                                             |
-| CI workflow (GitHub Actions)                   | ✅ lint + typecheck + unit + build + e2e                                       |
-| Testing (Vitest + Playwright)                  | ✅ skeleton + 5 smoke specs + 6 unit tests                                     |
-| Vercel                                         | ✅ live at <https://bubc-web.vercel.app/>                                      |
-| Cloudflare DNS / email                         | ⏸ deferred to launch (Phase 6)                                                 |
-| Cloudflare Web Analytics                       | ⏸ ready to wire (beacon code in BaseLayout, gated on env var)                  |
-| Formspree                                      | ⏸ account ready; form ID needs adding to Vercel env                            |
-| Sanity Studio deploy                           | ❌ not deployed (manual `pnpm --filter @bubc/studio deploy`)                   |
-| Custom domain on prod                          | ❌ Phase 6 cutover                                                             |
-| Photos                                         | ⏸ being gathered; placeholder system covers the gap                            |
-| Build / typecheck / lint / unit tests          | ✅ all green                                                                   |
+| Layer                                          | State                                                                                                                                                                                  |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Monorepo (pnpm)                                | ✅                                                                                                                                                                                     |
+| Astro frontend (`apps/web`)                    | ✅ scaffolded · design system + chrome · Sanity wired · home, trial, **all P0 pages** (squads, coaching, boathouse, about+history, committee, welfare, support, 404, contact, privacy) |
+| Sanity Studio (`apps/studio`)                  | ✅ v5, project `j7zcx618`, all schemas defined                                                                                                                                         |
+| Tooling (ESLint, Prettier, Husky, lint-staged) | ✅                                                                                                                                                                                     |
+| CI workflow (GitHub Actions)                   | ✅ lint + typecheck + unit + build + e2e                                                                                                                                               |
+| Testing (Vitest + Playwright)                  | ✅ skeleton + **11 smoke specs (22 runs across desktop + mobile)** + 6 unit tests                                                                                                      |
+| Vercel                                         | ✅ live at <https://bubc-web.vercel.app/>                                                                                                                                              |
+| Cloudflare DNS / email                         | ⏸ deferred to launch (Phase 6)                                                                                                                                                         |
+| Cloudflare Web Analytics                       | ⏸ ready to wire (beacon code in BaseLayout, gated on env var)                                                                                                                          |
+| Formspree                                      | ⏸ account ready; form ID needs adding to Vercel env                                                                                                                                    |
+| Sanity Studio deploy                           | ❌ not deployed (manual `pnpm --filter @bubc/studio deploy`)                                                                                                                           |
+| Custom domain on prod                          | ❌ Phase 6 cutover                                                                                                                                                                     |
+| Photos                                         | ⏸ being gathered; placeholder system covers the gap                                                                                                                                    |
+| Build / typecheck / lint / format / unit / e2e | ✅ all green                                                                                                                                                                           |
 
 ---
 
@@ -142,51 +144,115 @@ Sticky scroll, active-page indicator, mobile overlay with ESC + focus management
 
 ---
 
-## Where we left off — Phase 3 continues
+## Session 3 — Phase 3 P0 pages ✅
 
-Home + trial done. Next biggest visible wins are the rest of Phase 3 (P0 pages):
+Built every Phase 3 must-launch page. 19 routes total, build clean, all gates green.
+
+### T20 — Squads index + dynamic detail pages ✅
+
+- `/squads/` — sorted card grid, three default cards when Sanity is empty, trial CTA strip
+- `/squads/[slug].astro` — `getStaticPaths` from Sanity `squad` docs, fallback to senior-men / senior-women / novice slugs pre-data
+- New components: `PageHero` (reusable across all interior pages), `TrainingScheduleTable`, `CoachStrip`, `PhotoGallery`
+- Full page composes: hero → captain callout → training week → expected standards (PortableText) → coaches → recent achievements → photo gallery → CTA strip
+
+### T22 — Coaching ✅
+
+- `/coaching/` — uses `coachesQuery`, renders CoachCard per coach (portrait, role, qualifications, bio via PortableText, email)
+- Honest "team being confirmed" placeholder when Sanity is empty
+
+### T23 — Boathouse ✅
+
+- `/boathouse/` — facilities checklist + OpenStreetMap iframe (driven by `settings.boathouseLocation` lat/lng/what3words) + fleet teaser (6 boats from `fleetQuery`)
+- Map links to OSM + Google Directions; what3words rendered if configured
+
+### T24 — About + History ✅
+
+- `/about/` — landing page linking to history, henley honours, olympians, chairs, blazers
+- `/about/history/` — pulls Sanity `page` doc with slug `history`, renders PortableText body + new `Timeline` component
+- `Timeline` component: year-anchored vertical list, sortable, accessible `<ol>`
+
+### T25 — Committee ✅
+
+- `/committee/` — uses `committeeQuery` keyed on current academic year (helper in `lib/academicYear.ts` handles Sept rollover); falls back to most recent year with data when nothing matches; honest "being elected" placeholder otherwise
+- Card grid: portrait + role + name + course + bio + email
+
+### T26 — Welfare & safeguarding ✅
+
+- `/welfare/` — named officer callout (welfare@bubc.co.uk) + Sanity `page` doc body (optional) + 5 policy cards + 4 reporting routes (BUBC officer, Bath Wellbeing, British Rowing Safeguarding, NSPCC) + inclusion & accessibility section
+
+### T27 — Support pages ✅
+
+- `/support/` — landing page (donate / buy-a-boat / sponsor / campaigns)
+- `/support/donate/` — hero + "why donate" + ways-to-give grid + active campaigns with `DonationThermometer` + closing CTA
+- `/support/buy-a-boat/` — 4-step process narrative + semantic price-range table from `boatForSale` docs (replaces the broken WordPress JS form)
+- New component: `DonationThermometer` — accessible progress bar, GBP-formatted, clamped 0–100%
+
+### Plus ✅
+
+- `/404.astro` — branded, links back to four main routes
+- `/contact.astro` — direct-email list per role + safeguarding callout + Sanity-driven postal address
+- `/privacy.astro` — UK GDPR-compliant privacy notice (what we collect, why, retention, rights, ICO link)
+- Smoke specs expanded: home, styleguide, mobile menu, trial, squads index, senior-men detail, boathouse map, welfare officer, donate Hubbub link, 404 — **22 specs passing (11 across two device profiles)**
+
+### Types & query additions
+
+- `lib/types.ts` — added `SquadDetail`, `CoachData`, `CommitteeMemberData`, `BoatCardData`, `CampaignData`, `BoatForSaleData`, `PageDoc`, `PersonRef`, `CoachRef`, `TrainingSession`, `Achievement` (with `what3words` on `Settings.boathouseLocation`)
+- `lib/queries.ts` — added `allSquadSlugsQuery`, `pageBySlugQuery`, `latestCommitteeYearQuery`
+- `lib/academicYear.ts` — new helper, computes current UK academic year (Sept rollover)
+
+### Backlog captured
+
+- New `docs/FEATURES.md` — comprehensive idea pool with status flags (✅ built / 📋 planned / 🟡 under consideration / ❓ needs decision / 🚫 out of scope). Locked-in design decisions this session: structured-page `What's it like`, separate `crew` document for crew lists, `olympian` → `alumniProfile` schema extension for the broader alumni grid.
+
+---
+
+## Where we left off — Phase 4 next
+
+Phase 3 P0 is complete. Phase 4 dynamic content is the obvious next move:
 
 ### Immediate next steps (in order)
 
-#### T20 — Squads index + 3 detail pages
+#### T28 — News index + post template + RSS
 
-- `/squads/` — index card grid
-- `/squads/[slug].astro` — getStaticPaths from Sanity squad docs
-- Components needed: SquadDetail layout, TrainingScheduleTable, CoachCardRow, CrewPhotos gallery
+- `/news/` paginated index, category filtering
+- `/news/[slug].astro` post template (heroImage, PortableText body, related athletes/squads, share)
+- `/news/rss.xml` feed via `@astrojs/rss` (not yet installed — 10-min add)
+- Sanity webhook → Vercel deploy hook so editors see posts within ~60s
 
-#### T22 — Coaching
+#### T29 — Pagefind static search
 
-- `/coaching/` — uses `coachesQuery`, renders cards ordered by `order`
+- Global `/` keyboard shortcut to open search
+- Index covers posts, athletes, boats, squads
 
-#### T23 — Boathouse
+#### T30 — Henley Honours
 
-- `/boathouse/` — facilities + embedded map (OpenStreetMap iframe or static image) + fleet teaser
+- `/about/henley-honours/` — sortable table by year, full crew lists, opposition, finish
 
-#### T24 — About + History
+#### T31 — Olympians & Internationals
 
-- `/about/` (short overview), `/about/history/` (timeline component — design needed)
+- `/about/olympians/` index + `/about/olympians/[slug]/` detail
+- Decision locked: schema extends to `alumniProfile` with category enum — implement when this lands
 
-#### T25 — Committee
+#### After Phase 4
 
-- `/committee/` — uses `committeeQuery`, current academic year filter
+- T32 Fleet visualiser SVG
+- T33 Campaign thermometer (component already built — needs `/support/campaigns/` listing + detail pages)
+- T34 OG image generation with satori
+- T35 Structured data injection
+- Sponsor index page (P1)
+- Alumni section (P1) — `/alumni/`, `/alumni/meles/`, `/alumni/events/`
 
-#### T26 — Welfare & safeguarding
+### Backlog decisions still open
 
-- `/welfare/` — generic `page` doc + safeguarding contact callout
+See [FEATURES.md § Decision queue — Still open](FEATURES.md). The unblocked items waiting for user input:
 
-#### T27 — Support pages
-
-- `/support/donate/` — hero + ways to give + Hubbub button
-- `/support/buy-a-boat/` — uses `buyABoatQuery` for the price-range table
-
-#### T28–T29 — News + search
-
-- `/news/` index (paginated), `/news/[slug].astro` post, `/news/rss.xml`, Pagefind search
-
-### Hooks worth wiring once content exists
-
-- **Sanity webhook → Vercel deploy hook** — so editors see published changes in ~60s without us touching anything
-- **Sanity Presentation** — live preview in the Studio (T-late)
+- **C4** — Parent info page (Cambridge-style). Same structured-page approach as "What's it like"?
+- **C7** — Inclusion & accessibility: section of `/welfare/` (currently is) or its own page?
+- **R5** — Live race tracker: banner-only or hosted embed?
+- **A6** — Newsletter: Buttondown vs Beehiiv (recommendation: Buttondown).
+- **W2** — Erg leaderboard: source + maintainer commitment.
+- **F5** — Sponsorship pack PDF — needs draft content from the club.
+- **F6** — Erg-athon / Crew Boat Race templates — only when a real event is scheduled.
 
 ---
 
@@ -202,7 +268,9 @@ Home + trial done. Next biggest visible wins are the rest of Phase 3 (P0 pages):
 | **M6**  | Cloudflare DNS for bubc.co.uk                                                                                                                                                                                                    | Domain registrar nameservers must point at Cloudflare first                     | Phase 6 (launch)                                                                   |
 | **M7**  | Cloudflare Email Routing                                                                                                                                                                                                         | Requires #M6 done                                                               | Phase 6                                                                            |
 | **M8**  | DNS cutover to Vercel                                                                                                                                                                                                            | Add CNAME in Cloudflare DNS                                                     | Phase 6 (launch day)                                                               |
-| **M9**  | Real photography upload to Sanity                                                                                                                                                                                                | User is gathering tomorrow; placeholders handle the gap                         | Whenever ready                                                                     |
+| **M9**  | Real photography upload to Sanity                                                                                                                                                                                                | User is gathering; placeholders handle the gap                                  | Whenever ready                                                                     |
+| **M11** | Seed Sanity with at least one `page` doc per slug used by the site (`history`, `welfare`, future `parent-info` / `whats-it-like`). Each page falls back gracefully when missing, but real copy is the win.                       | Editorial decision + Sanity write                                               | When committee has content                                                         |
+| **M12** | Add committee `committeeMember` docs for 2025/26 (and 2026/27 when elected). Without these the `/committee/` page shows a placeholder.                                                                                           | Editorial decision + Sanity write                                               | After committee handover                                                           |
 | **M10** | ⚠ **If a Cloudflare Pages project was created by accident**, delete it. Hosting belongs to Vercel; Cloudflare's role is DNS + email + analytics only.                                                                            | Avoid running two hosts in parallel                                             | Now                                                                                |
 
 ### What to do _right now_ on Cloudflare
@@ -248,27 +316,34 @@ bubc-site/
 │   │   ├── vitest.config.ts
 │   │   ├── src/
 │   │   │   ├── components/
-│   │   │   │   ├── content/      # Picture, Placeholder, PortableText
+│   │   │   │   ├── coach/        # CoachCard
+│   │   │   │   ├── content/      # Picture, Placeholder, PortableText, PhotoGallery, Timeline
 │   │   │   │   ├── form/         # Field, Textarea, RadioGroup, Checkbox
 │   │   │   │   ├── home/         # Hero, StatStrip, NewsRail, SquadPathway, SponsorStrip, ClosingCtas
-│   │   │   │   ├── layout/       # Header, Footer
+│   │   │   │   ├── layout/       # Header, Footer, PageHero
+│   │   │   │   ├── squad/        # TrainingScheduleTable, CoachStrip
+│   │   │   │   ├── support/      # DonationThermometer
 │   │   │   │   └── ui/           # Button, Card, Container, Eyebrow, Section, Stat, Tag
 │   │   │   ├── layouts/          # BaseLayout, PageLayout
-│   │   │   ├── lib/              # sanity.ts, queries.ts, types.ts, seo.ts
+│   │   │   ├── lib/              # sanity.ts, queries.ts, types.ts, seo.ts, academicYear.ts
 │   │   │   ├── pages/
 │   │   │   │   ├── index.astro
 │   │   │   │   ├── styleguide.astro
-│   │   │   │   └── squads/trial.astro
+│   │   │   │   ├── 404.astro · contact.astro · privacy.astro · welfare.astro · coaching.astro · committee.astro
+│   │   │   │   ├── about/        # index, history
+│   │   │   │   ├── boathouse/    # index
+│   │   │   │   ├── squads/       # index, trial, [slug]
+│   │   │   │   └── support/      # index, donate, buy-a-boat
 │   │   │   ├── styles/global.css
 │   │   │   └── env.d.ts
 │   │   └── tests/
-│   │       ├── e2e/smoke.spec.ts
+│   │       ├── e2e/smoke.spec.ts # 11 specs across desktop + mobile
 │   │       └── unit/seo.test.ts
 │   └── studio/                   # @bubc/studio — Sanity Studio v5
 │       ├── schemaTypes/{documents,objects,singletons}/
 │       ├── structure.ts
 │       └── sanity.config.ts
-├── docs/{plan.md, PROGRESS.md}
+├── docs/{plan.md, PROGRESS.md, FEATURES.md}
 ├── eslint.config.mjs / .prettierrc / .prettierignore
 └── package.json / pnpm-workspace.yaml
 ```
@@ -322,16 +397,26 @@ pnpm typegen             # generate TS types from schemas
 
 ## Key files
 
-| File                                                                                                      | Purpose                                           |
-| --------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| [docs/plan.md](plan.md)                                                                                   | Full development plan — single source of truth    |
-| [apps/web/src/lib/sanity.ts](../apps/web/src/lib/sanity.ts)                                               | Sanity client + image URL builder + `safeFetch`   |
-| [apps/web/src/lib/queries.ts](../apps/web/src/lib/queries.ts)                                             | GROQ queries                                      |
-| [apps/web/src/lib/types.ts](../apps/web/src/lib/types.ts)                                                 | Hand-maintained types matching GROQ projections   |
-| [apps/web/src/components/content/Picture.astro](../apps/web/src/components/content/Picture.astro)         | Responsive Sanity image with placeholder fallback |
-| [apps/web/src/components/content/Placeholder.astro](../apps/web/src/components/content/Placeholder.astro) | Striped placeholder rectangle                     |
-| [apps/web/src/components/home/](../apps/web/src/components/home/)                                         | Home page sections                                |
-| [apps/web/src/pages/squads/trial.astro](../apps/web/src/pages/squads/trial.astro)                         | Formspree trial form                              |
-| [apps/web/playwright.config.ts](../apps/web/playwright.config.ts)                                         | Playwright config                                 |
-| [apps/web/vitest.config.ts](../apps/web/vitest.config.ts)                                                 | Vitest config                                     |
-| [.github/workflows/ci.yml](../.github/workflows/ci.yml)                                                   | CI pipeline                                       |
+| File                                                                                                                      | Purpose                                                 |
+| ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| [docs/plan.md](plan.md)                                                                                                   | Full development plan — single source of truth          |
+| [docs/FEATURES.md](FEATURES.md)                                                                                           | Feature backlog with status flags + open decision queue |
+| [apps/web/src/lib/sanity.ts](../apps/web/src/lib/sanity.ts)                                                               | Sanity client + image URL builder + `safeFetch`         |
+| [apps/web/src/lib/queries.ts](../apps/web/src/lib/queries.ts)                                                             | GROQ queries                                            |
+| [apps/web/src/lib/types.ts](../apps/web/src/lib/types.ts)                                                                 | Hand-maintained types matching GROQ projections         |
+| [apps/web/src/lib/academicYear.ts](../apps/web/src/lib/academicYear.ts)                                                   | UK academic-year helper (Sept rollover)                 |
+| [apps/web/src/components/content/Picture.astro](../apps/web/src/components/content/Picture.astro)                         | Responsive Sanity image with placeholder fallback       |
+| [apps/web/src/components/content/Placeholder.astro](../apps/web/src/components/content/Placeholder.astro)                 | Striped placeholder rectangle                           |
+| [apps/web/src/components/content/Timeline.astro](../apps/web/src/components/content/Timeline.astro)                       | History-page year-anchored timeline                     |
+| [apps/web/src/components/content/PhotoGallery.astro](../apps/web/src/components/content/PhotoGallery.astro)               | 4:5 photo grid for squad galleries                      |
+| [apps/web/src/components/layout/PageHero.astro](../apps/web/src/components/layout/PageHero.astro)                         | Reusable interior-page hero                             |
+| [apps/web/src/components/squad/TrainingScheduleTable.astro](../apps/web/src/components/squad/TrainingScheduleTable.astro) | Sortable weekly training schedule                       |
+| [apps/web/src/components/squad/CoachStrip.astro](../apps/web/src/components/squad/CoachStrip.astro)                       | Compact coach row for squad pages                       |
+| [apps/web/src/components/coach/CoachCard.astro](../apps/web/src/components/coach/CoachCard.astro)                         | Full coach profile card                                 |
+| [apps/web/src/components/support/DonationThermometer.astro](../apps/web/src/components/support/DonationThermometer.astro) | Accessible campaign progress bar                        |
+| [apps/web/src/components/home/](../apps/web/src/components/home/)                                                         | Home page sections                                      |
+| [apps/web/src/pages/squads/trial.astro](../apps/web/src/pages/squads/trial.astro)                                         | Formspree trial form                                    |
+| [apps/web/src/pages/squads/[slug].astro](../apps/web/src/pages/squads/%5Bslug%5D.astro)                                   | Dynamic squad detail page                               |
+| [apps/web/playwright.config.ts](../apps/web/playwright.config.ts)                                                         | Playwright config                                       |
+| [apps/web/vitest.config.ts](../apps/web/vitest.config.ts)                                                                 | Vitest config                                           |
+| [.github/workflows/ci.yml](../.github/workflows/ci.yml)                                                                   | CI pipeline                                             |

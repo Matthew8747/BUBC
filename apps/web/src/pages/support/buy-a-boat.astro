@@ -1,0 +1,191 @@
+---
+/**
+ * Buy a Boat — emotional pitch + real HTML price table.
+ *
+ * Replaces the old WordPress page that broke with "Please enable JavaScript".
+ * The price table is a proper semantic <table> so screen readers and search
+ * engines can read it. Data comes from Sanity (`boatForSale`) so the club
+ * can update the list without a deploy.
+ */
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/layout/PageHero.astro';
+import Section from '../../components/ui/Section.astro';
+import Container from '../../components/ui/Container.astro';
+import Eyebrow from '../../components/ui/Eyebrow.astro';
+import Button from '../../components/ui/Button.astro';
+import { safeFetch } from '../../lib/sanity';
+import { buyABoatQuery } from '../../lib/queries';
+import type { BoatForSaleData } from '../../lib/types';
+
+const boats = (await safeFetch<BoatForSaleData[]>(buyABoatQuery)) ?? [];
+
+const fallback: BoatForSaleData[] = [
+  {
+    _id: 'ph-8',
+    boatType: 'Heavyweight 8+ (training)',
+    priceRange: '£25,000 – £35,000',
+    status: 'needed',
+    notes: 'Replaces an ageing training eight used daily across senior and novice squads.',
+  },
+  {
+    _id: 'ph-4',
+    boatType: 'Heavyweight 4- (racing)',
+    priceRange: '£18,000 – £24,000',
+    status: 'needed',
+    notes: 'A fast, light racing four for BUCS and the Head circuit.',
+  },
+  {
+    _id: 'ph-1x',
+    boatType: 'Single sculling boat (1x)',
+    priceRange: '£5,000 – £8,000',
+    status: 'needed',
+    notes: 'Sculling boats are vital for technical development and the small-boat racing season.',
+  },
+];
+
+const items = boats.length > 0 ? boats : fallback;
+
+const statusLabel: Record<BoatForSaleData['status'], string> = {
+  needed: 'Needed',
+  funded: 'Funded — on order',
+  delivered: 'Delivered',
+};
+
+const statusClass: Record<BoatForSaleData['status'], string> = {
+  needed: 'text-[--color-blade]',
+  funded: 'text-[--color-gold]',
+  delivered: 'text-[--color-avon]',
+};
+
+const seo = {
+  title: 'Buy a Boat',
+  description:
+    'Fund a new racing shell for the University of Bath Boat Club. Boats are named for their donors and last for a decade. Indicative price ranges by class.',
+};
+---
+
+<PageLayout seo={seo}>
+  <PageHero
+    eyebrow="Buy a Boat"
+    headline="Put your name on the river."
+    lead="Boats are the single biggest determinant of crew speed — and the most lasting kind of gift to BUBC. Each new shell carries the donor's chosen name on its hull for the lifetime of the boat. Many sit on the river for ten seasons or more."
+    ctas={[
+      {
+        label: 'Email the Treasurer',
+        variant: 'gold',
+        link: { label: 'Email', url: 'mailto:treasurer@bubc.co.uk', external: true },
+      },
+    ]}
+  />
+
+  <Section spacing="md">
+    <Container width="narrow">
+      <Eyebrow>How it works</Eyebrow>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl">From pledge to christening.</h2>
+      <ol class="mt-8 space-y-6 text-[--color-ink] leading-relaxed">
+        <li class="grid grid-cols-[2rem_1fr] gap-4">
+          <span class="font-display text-2xl text-[--color-gold] tabular-nums">1.</span>
+          <span>
+            <strong class="font-display">Choose a class.</strong> Single, pair, four, or eight. Class
+            drives both cost and which squad will use the boat first.
+          </span>
+        </li>
+        <li class="grid grid-cols-[2rem_1fr] gap-4">
+          <span class="font-display text-2xl text-[--color-gold] tabular-nums">2.</span>
+          <span>
+            <strong class="font-display">Talk to the Treasurer.</strong> We confirm the exact spec with
+            the coaching team and the current price from manufacturers (typically Empacher, Filippi, or
+            Hudson).
+          </span>
+        </li>
+        <li class="grid grid-cols-[2rem_1fr] gap-4">
+          <span class="font-display text-2xl text-[--color-gold] tabular-nums">3.</span>
+          <span>
+            <strong class="font-display">Name the boat.</strong> Donors choose the name. Names tend to
+            honour the donor, a loved one, or a BUBC figure from the club's history.
+          </span>
+        </li>
+        <li class="grid grid-cols-[2rem_1fr] gap-4">
+          <span class="font-display text-2xl text-[--color-gold] tabular-nums">4.</span>
+          <span>
+            <strong class="font-display">Christen the boat.</strong> A short ceremony at the boathouse
+            with the crew that will row her first. Donors and family invited.
+          </span>
+        </li>
+      </ol>
+    </Container>
+  </Section>
+
+  <Section tone="bone" spacing="md">
+    <Container width="narrow">
+      <Eyebrow>What we need</Eyebrow>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl">Current fleet needs.</h2>
+      <p class="mt-3 text-[--color-mute]">
+        Indicative price ranges in 2026. Final price depends on manufacturer, spec, and exchange
+        rate at the time of purchase.
+      </p>
+
+      <div class="mt-8 overflow-x-auto -mx-4 sm:mx-0">
+        <table class="w-full text-left text-sm">
+          <thead
+            class="border-b border-[--color-ink]/20 text-xs uppercase tracking-[0.12em] text-[--color-mute]"
+          >
+            <tr>
+              <th scope="col" class="py-3 pl-4 sm:pl-0 pr-4 font-medium">Boat</th>
+              <th scope="col" class="py-3 px-4 font-medium">Price range</th>
+              <th scope="col" class="py-3 px-4 font-medium">Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[--color-ink]/10">
+            {
+              items.map((b) => (
+                <tr>
+                  <td class="py-4 pl-4 sm:pl-0 pr-4 align-top">
+                    <p class="font-display text-base text-[--color-ink]">{b.boatType}</p>
+                    {b.notes && <p class="mt-1 text-xs text-[--color-mute]">{b.notes}</p>}
+                  </td>
+                  <td class="py-4 px-4 align-top tabular-nums">{b.priceRange}</td>
+                  <td
+                    class={`py-4 px-4 align-top text-xs uppercase tracking-[0.12em] font-medium ${statusClass[b.status]}`}
+                  >
+                    {statusLabel[b.status]}
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </Container>
+  </Section>
+
+  <Section tone="navy" spacing="md">
+    <Container>
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+        <div class="max-w-xl">
+          <Eyebrow tone="paper">Talk to us</Eyebrow>
+          <h2 class="mt-4 font-display text-3xl sm:text-4xl text-[--color-paper]">
+            Every conversation starts the same way.
+          </h2>
+          <p class="mt-4 text-[--color-paper]/80">
+            A short call with the Treasurer to discuss the class, the spec, and what naming feels
+            right.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <Button href="mailto:treasurer@bubc.co.uk" variant="gold" size="lg" external>
+            Email the Treasurer
+          </Button>
+          <Button
+            href="/support/donate/"
+            variant="ghost"
+            size="lg"
+            class="!border-[--color-paper] !text-[--color-paper] hover:!bg-[--color-paper] hover:!text-[--color-ink]"
+          >
+            Other ways to give
+          </Button>
+        </div>
+      </div>
+    </Container>
+  </Section>
+</PageLayout>

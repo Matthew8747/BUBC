@@ -1,0 +1,41 @@
+---
+/**
+ * CoachStrip — compact horizontal row of coach headshots + names + roles.
+ * Used on squad pages. Falls back to a single line of names when no photos exist.
+ */
+import Picture from '../content/Picture.astro';
+import type { CoachRef } from '../../lib/types';
+
+interface Props {
+  coaches?: CoachRef[];
+}
+
+const { coaches = [] } = Astro.props;
+---
+
+{
+  coaches.length > 0 && (
+    <ul class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 not-prose">
+      {coaches.map((coach) => (
+        <li class="flex items-center gap-4">
+          <div class="h-16 w-16 flex-shrink-0 overflow-hidden rounded-full">
+            <Picture
+              image={coach.photo}
+              ratio="1/1"
+              sizes="64px"
+              fallbackLabel={coach.name
+                .split(' ')
+                .map((p) => p[0])
+                .join('')}
+              class="h-16 w-16"
+            />
+          </div>
+          <div>
+            <p class="font-display text-lg leading-tight">{coach.name}</p>
+            <p class="text-sm text-[--color-mute]">{coach.role}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  )
+}

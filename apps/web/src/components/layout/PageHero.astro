@@ -1,0 +1,93 @@
+---
+/**
+ * PageHero — editorial top-of-page hero used by most interior pages.
+ *
+ * 50vh on desktop, 40vh mobile. Smaller than the home Hero. Carries an
+ * eyebrow, headline, optional kicker paragraph, and optional CTA row over
+ * a photographic backdrop with a navy gradient for legibility. When no
+ * image is provided the navy band stands alone so the page never breaks.
+ */
+import Picture from '../content/Picture.astro';
+import Container from '../ui/Container.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Button from '../ui/Button.astro';
+import type { Cta, SanityImage } from '../../lib/types';
+
+interface Props {
+  eyebrow?: string;
+  headline: string;
+  lead?: string;
+  image?: SanityImage | null;
+  ctas?: Cta[];
+  align?: 'start' | 'center';
+}
+
+const { eyebrow, headline, lead, image, ctas = [], align = 'start' } = Astro.props;
+---
+
+<section
+  class="relative isolate min-h-[44vh] sm:min-h-[52vh] flex flex-col justify-end overflow-hidden bg-[--color-navy]"
+>
+  {
+    image && (
+      <div class="absolute inset-0 -z-10">
+        <Picture
+          image={image}
+          ratio="21/9"
+          sizes="100vw"
+          priority
+          fallbackLabel={headline}
+          decorative
+          class="h-full w-full"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-[--color-ink]/85 via-[--color-ink]/40 to-[--color-ink]/30" />
+      </div>
+    )
+  }
+
+  <Container
+    class={`pb-14 sm:pb-20 pt-24 text-[--color-paper] ${align === 'center' ? 'text-center' : ''}`}
+  >
+    {
+      eyebrow && (
+        <div class={align === 'center' ? 'flex justify-center' : ''}>
+          <Eyebrow tone="paper">{eyebrow}</Eyebrow>
+        </div>
+      )
+    }
+    <h1
+      class={`mt-6 max-w-4xl text-4xl sm:text-5xl md:text-6xl leading-[1.05] text-[--color-paper] ${align === 'center' ? 'mx-auto' : ''}`}
+    >
+      {headline}
+    </h1>
+    {
+      lead && (
+        <p
+          class={`mt-5 max-w-2xl text-base sm:text-lg text-[--color-paper]/85 ${align === 'center' ? 'mx-auto' : ''}`}
+        >
+          {lead}
+        </p>
+      )
+    }
+    {
+      ctas.length > 0 && (
+        <div class={`mt-8 flex flex-wrap gap-3 ${align === 'center' ? 'justify-center' : ''}`}>
+          {ctas.map((cta) => (
+            <Button
+              href={cta.link.url}
+              variant={cta.variant}
+              external={cta.link.external}
+              class={
+                cta.variant === 'ghost'
+                  ? '!border-[--color-paper] !text-[--color-paper] hover:!bg-[--color-paper] hover:!text-[--color-ink]'
+                  : ''
+              }
+            >
+              {cta.label}
+            </Button>
+          ))}
+        </div>
+      )
+    }
+  </Container>
+</section>

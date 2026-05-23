@@ -64,7 +64,7 @@ export interface Settings {
   charityNumber?: string;
   contactEmail?: string;
   address?: string;
-  boathouseLocation?: { lat: number; lng: number };
+  boathouseLocation?: { lat: number; lng: number; what3words?: string };
   primaryNav?: Link[];
   utilityNav?: Link[];
   primaryCta?: Cta;
@@ -115,5 +115,138 @@ export interface HomePage {
   sponsorStripHeading?: string;
   sponsorStrip?: SponsorData[];
   closingCtas?: Cta[];
+  seo?: Seo;
+}
+
+// ---------------------------------------------------------------------------
+// Squad detail
+// ---------------------------------------------------------------------------
+
+export interface PersonRef {
+  name: string;
+  role?: string;
+  photo?: SanityImage;
+}
+
+export interface CoachRef {
+  name: string;
+  role: string;
+  photo?: SanityImage;
+}
+
+export interface TrainingSession {
+  day?: string;
+  startTime?: string;
+  endTime?: string;
+  type?: string;
+  location?: string;
+}
+
+export interface Achievement {
+  year: number;
+  title: string;
+  detail?: string;
+}
+
+export interface SquadDetail {
+  _id: string;
+  name: string;
+  tier: 'senior' | 'development' | 'novice' | 'trial';
+  gender?: 'men' | 'women' | 'mixed';
+  shortDescription: string;
+  heroImage?: SanityImage;
+  captain?: PersonRef;
+  captainBio?: string;
+  coaches?: CoachRef[];
+  trainingSchedule?: TrainingSession[];
+  expectedStandards?: unknown;
+  achievements?: Achievement[];
+  photos?: SanityImage[];
+  contactEmail?: string;
+  seo?: Seo;
+}
+
+// ---------------------------------------------------------------------------
+// Coaches
+// ---------------------------------------------------------------------------
+
+export interface CoachData {
+  _id: string;
+  name: string;
+  slug: string;
+  role: string;
+  qualifications?: string[];
+  email?: string;
+  photo?: SanityImage;
+  bio?: unknown;
+}
+
+// ---------------------------------------------------------------------------
+// Committee
+// ---------------------------------------------------------------------------
+
+export interface CommitteeMemberData {
+  _id: string;
+  name: string;
+  slug: string;
+  role: string;
+  course?: string;
+  email?: string;
+  photo?: SanityImage;
+  bio?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Fleet
+// ---------------------------------------------------------------------------
+
+export interface BoatCardData {
+  _id: string;
+  name: string;
+  slug: string;
+  make: string;
+  class: string;
+  weight?: 'heavy' | 'light';
+  yearBought?: number;
+  donor?: string;
+  status: 'active' | 'reserve' | 'retired' | 'forSale';
+  photo?: SanityImage;
+}
+
+// ---------------------------------------------------------------------------
+// Fundraising
+// ---------------------------------------------------------------------------
+
+export interface CampaignData {
+  _id: string;
+  title: string;
+  slug: string;
+  shortDescription: string;
+  goalAmount: number;
+  raisedAmount: number;
+  donorCount?: number;
+  donateUrl: string;
+  heroImage?: SanityImage;
+}
+
+export interface BoatForSaleData {
+  _id: string;
+  boatType: string;
+  priceRange: string;
+  status: 'needed' | 'funded' | 'delivered';
+  notes?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Pages
+// ---------------------------------------------------------------------------
+
+export interface PageDoc {
+  title: string;
+  slug: string;
+  intro?: string;
+  heroImage?: SanityImage;
+  body?: unknown;
+  ctas?: Cta[];
   seo?: Seo;
 }

@@ -1,0 +1,127 @@
+---
+/**
+ * Privacy policy — minimum required for GDPR / PECR compliance.
+ *
+ * The site collects:
+ *   - Trial form submissions via Formspree
+ *   - Cloudflare Web Analytics (cookieless)
+ *
+ * That's it. This page makes that explicit so we satisfy the lawful-basis
+ * notice and rights-of-the-data-subject requirements of UK GDPR.
+ */
+import PageLayout from '../layouts/PageLayout.astro';
+import PageHero from '../components/layout/PageHero.astro';
+import Section from '../components/ui/Section.astro';
+import Container from '../components/ui/Container.astro';
+
+const seo = {
+  title: 'Privacy policy',
+  description:
+    'How the University of Bath Boat Club handles personal data on bubc.co.uk — what we collect, why, how long we keep it, and your rights under UK GDPR.',
+};
+---
+
+<PageLayout seo={seo}>
+  <PageHero eyebrow="Legal" headline="Privacy policy." />
+
+  <Section spacing="md">
+    <Container width="prose">
+      <article class="prose">
+        <p class="lead">
+          This page explains what personal data the University of Bath Boat Club (BUBC) processes
+          via this website, why we process it, and how long we keep it.
+        </p>
+
+        <h2>Who we are</h2>
+        <p>
+          BUBC is a student-led rowing club affiliated with the University of Bath. For data
+          protection purposes, BUBC is the data controller for personal data submitted via
+          bubc.co.uk. Contact:
+          <a href="mailto:info@bubc.co.uk">info@bubc.co.uk</a>.
+        </p>
+
+        <h2>What we collect</h2>
+        <p>The website collects personal data only when you choose to submit it:</p>
+        <ul>
+          <li>
+            <strong>Trial form.</strong> Your name, email, phone number, course, year, rowing experience,
+            height/weight (optional), 2k erg PB (optional), and any free-text message you include. Submissions
+            are processed via{' '}
+            <a href="https://formspree.io" target="_blank" rel="noopener noreferrer">Formspree</a>{
+              ' '
+            }
+            and delivered to the relevant captain's BUBC email address.
+          </li>
+          <li>
+            <strong>Email enquiries.</strong> If you email an inbox listed on the
+            <a href="/contact/">contact page</a>, the recipient stores your message in their email
+            account for as long as is needed to handle the enquiry.
+          </li>
+        </ul>
+
+        <p>
+          The website does <strong>not</strong> use advertising cookies. Cloudflare Web Analytics is in
+          use for aggregated, cookieless visitor statistics — no personal data is collected by analytics.
+        </p>
+
+        <h2>Why we process it</h2>
+        <ul>
+          <li>
+            To respond to your trial application or enquiry (lawful basis: legitimate interest).
+          </li>
+          <li>To run the club's recruitment process (lawful basis: legitimate interest).</li>
+          <li>
+            To meet our safeguarding and welfare obligations (lawful basis: legitimate interest).
+          </li>
+        </ul>
+
+        <h2>How long we keep it</h2>
+        <ul>
+          <li>
+            Trial form submissions: kept for one academic year, then deleted. Trial-form data is
+            held by Formspree for up to 60 days as part of their service.
+          </li>
+          <li>
+            Email enquiries: kept by the individual recipient until the matter is resolved, then
+            deleted within 12 months.
+          </li>
+        </ul>
+
+        <h2>Who we share it with</h2>
+        <p>
+          We do not sell or rent personal data. Trial-form submissions pass through Formspree (data
+          processor; see <a
+            href="https://formspree.io/legal/privacy-policy"
+            target="_blank"
+            rel="noopener noreferrer">Formspree's privacy policy</a
+          >). Email is hosted via the relevant providers used by the committee members concerned.
+        </p>
+
+        <h2>Your rights</h2>
+        <p>Under UK GDPR you have the right to:</p>
+        <ul>
+          <li>Request a copy of any personal data we hold about you.</li>
+          <li>Ask us to correct inaccurate data.</li>
+          <li>Ask us to erase your data (where we are not legally required to keep it).</li>
+          <li>Object to our processing of your data.</li>
+          <li>
+            Complain to the UK Information Commissioner's Office at{' '}
+            <a href="https://ico.org.uk" target="_blank" rel="noopener noreferrer">ico.org.uk</a>.
+          </li>
+        </ul>
+        <p>
+          To exercise any of these rights, email{' '}
+          <a href="mailto:info@bubc.co.uk">info@bubc.co.uk</a>.
+        </p>
+
+        <h2>Changes</h2>
+        <p>
+          We will update this page if our processing changes. Material changes will be reflected in
+          a revised "last updated" date below.
+        </p>
+
+        <p class="text-sm opacity-75">Last updated: May 2026.</p>
+      </article>
+    </Container>
+  </Section>
+</PageLayout>

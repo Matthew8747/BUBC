@@ -1,0 +1,246 @@
+---
+/**
+ * Squad detail — per-squad public page.
+ *
+ * Build-time strategy:
+ *   1. Fetch every squad slug from Sanity to build static paths.
+ *   2. For each, fetch the full document to compose the page.
+ *
+ * When Sanity has no squads (early development) we fall back to a fixed set
+ * of placeholder slugs (senior-men / senior-women / novice) so the page
+ * structure is still navigable and indexable for early link-checkers.
+ */
+import type { GetStaticPaths } from 'astro';
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/layout/PageHero.astro';
+import Section from '../../components/ui/Section.astro';
+import Container from '../../components/ui/Container.astro';
+import Eyebrow from '../../components/ui/Eyebrow.astro';
+import Button from '../../components/ui/Button.astro';
+import Picture from '../../components/content/Picture.astro';
+import PortableText from '../../components/content/PortableText.astro';
+import PhotoGallery from '../../components/content/PhotoGallery.astro';
+import TrainingScheduleTable from '../../components/squad/TrainingScheduleTable.astro';
+import CoachStrip from '../../components/squad/CoachStrip.astro';
+import { safeFetch } from '../../lib/sanity';
+import { allSquadSlugsQuery, squadBySlugQuery } from '../../lib/queries';
+import type { SquadDetail } from '../../lib/types';
+
+export const getStaticPaths = (async () => {
+  const slugs = (await safeFetch<{ slug: string }[]>(allSquadSlugsQuery)) ?? [];
+  const real = slugs.map((s) => s.slug).filter(Boolean);
+  const fallback = ['senior-men', 'senior-women', 'novice'];
+  const all = real.length > 0 ? real : fallback;
+  return all.map((slug) => ({ params: { slug } }));
+}) satisfies GetStaticPaths;
+
+const { slug } = Astro.params;
+const data = (await safeFetch<SquadDetail>(squadBySlugQuery, { slug })) ?? null;
+
+// Sensible placeholder so the page renders before Sanity content lands.
+const placeholderName: Record<string, string> = {
+  'senior-men': 'Senior men',
+  'senior-women': 'Senior women',
+  novice: 'Novice',
+};
+
+const name = data?.name ?? placeholderName[slug ?? ''] ?? 'Squad';
+const tier = data?.tier ?? 'senior';
+const gender = data?.gender;
+const lead =
+  data?.shortDescription ??
+  "Programme details will be published once the captain and coaches confirm the season's training plan.";
+
+const seo = {
+  title: data?.seo?.title ?? name,
+  description: data?.seo?.description ?? lead,
+  noIndex: data?.seo?.noIndex,
+};
+
+const tierLabel = `${tier}${gender && gender !== 'mixed' ? ` · ${gender}` : ''}`;
+
+const sortedAchievements = (data?.achievements ?? []).slice().sort((a, b) => b.year - a.year);
+---
+
+<PageLayout seo={seo}>
+  <PageHero
+    eyebrow={tierLabel}
+    headline={name}
+    lead={lead}
+    image={data?.heroImage}
+    ctas={[
+      {
+        label: 'Trial with us',
+        variant: 'gold',
+        link: { label: 'Trial', url: '/squads/trial/' },
+      },
+      ...(data?.contactEmail
+        ? [
+            {
+              label: 'Email the captain',
+              variant: 'ghost' as const,
+              link: {
+                label: 'Email',
+                url: `mailto:${data.contactEmail}`,
+                external: true,
+              },
+            },
+          ]
+        : []),
+    ]}
+  />
+
+  {/* Captain callout */}
+  {
+    data?.captainBio && (
+      <Section spacing="md">
+        <Container width="narrow">
+          <div class="border-l-2 border-[--color-gold] pl-6 sm:pl-8 py-2">
+            <Eyebrow>Captain</Eyebrow>
+            {data.captain && (
+              <div class="mt-4 flex items-center gap-4">
+                <div class="h-14 w-14 overflow-hidden rounded-full flex-shrink-0">
+                  <Picture
+                    image={data.captain.photo}
+                    ratio="1/1"
+                    sizes="56px"
+                    fallbackLabel={data.captain.name
+                      .split(' ')
+                      .map((p) => p[0])
+                      .join('')}
+                    class="h-14 w-14"
+                  />
+                </div>
+                <div>
+                  <p class="font-display text-xl leading-tight">{data.captain.name}</p>
+                  {data.captain.role && (
+                    <p class="text-sm text-[--color-mute]">{data.captain.role}</p>
+                  )}
+                </div>
+              </div>
+            )}
+            <p class="mt-5 text-lg leading-relaxed">{data.captainBio}</p>
+          </div>
+        </Container>
+      </Section>
+    )
+  }
+
+  {/* Training schedule */}
+  <Section tone="bone" spacing="md">
+    <Container width="narrow">
+      <Eyebrow>Training week</Eyebrow>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl">A typical week.</h2>
+      <p class="mt-3 text-[--color-mute]">
+        Sessions are mandatory unless the captain or coach signs you off. Times shift slightly term
+        by term — the captain confirms the latest at the start of each term.
+      </p>
+      <div class="mt-8">
+        <TrainingScheduleTable sessions={data?.trainingSchedule} />
+      </div>
+    </Container>
+  </Section>
+
+  {/* Expected standards */}
+  {
+    data?.expectedStandards != null && (
+      <Section spacing="md">
+        <Container width="narrow">
+          <Eyebrow>Expected standards</Eyebrow>
+          <h2 class="mt-4 font-display text-3xl sm:text-4xl">What we ask of you.</h2>
+          <div class="mt-6">
+            <PortableText value={data.expectedStandards} />
+          </div>
+        </Container>
+      </Section>
+    )
+  }
+
+  {/* Coaches */}
+  {
+    data?.coaches && data.coaches.length > 0 && (
+      <Section tone="bone" spacing="md">
+        <Container>
+          <div class="max-w-2xl">
+            <Eyebrow>Coaching</Eyebrow>
+            <h2 class="mt-4 font-display text-3xl sm:text-4xl">Who you'll work with.</h2>
+          </div>
+          <div class="mt-10">
+            <CoachStrip coaches={data.coaches} />
+          </div>
+        </Container>
+      </Section>
+    )
+  }
+
+  {/* Recent achievements */}
+  {
+    sortedAchievements.length > 0 && (
+      <Section spacing="md">
+        <Container width="narrow">
+          <Eyebrow>Recent form</Eyebrow>
+          <h2 class="mt-4 font-display text-3xl sm:text-4xl">On the result sheet.</h2>
+          <ul class="mt-8 divide-y divide-[--color-ink]/10">
+            {sortedAchievements.map((a) => (
+              <li class="py-4 grid grid-cols-[5rem_1fr] gap-4 items-start">
+                <span class="font-display text-2xl tabular-nums text-[--color-gold]">{a.year}</span>
+                <div>
+                  <p class="font-medium">{a.title}</p>
+                  {a.detail && <p class="mt-1 text-sm text-[--color-mute]">{a.detail}</p>}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </Container>
+      </Section>
+    )
+  }
+
+  {/* Photo gallery */}
+  {
+    data?.photos && data.photos.length > 0 && (
+      <Section tone="bone" spacing="md">
+        <Container>
+          <Eyebrow>Squad gallery</Eyebrow>
+          <h2 class="mt-4 font-display text-3xl sm:text-4xl">The season so far.</h2>
+          <div class="mt-10">
+            <PhotoGallery images={data.photos} />
+          </div>
+        </Container>
+      </Section>
+    )
+  }
+
+  {/* CTA strip */}
+  <Section tone="navy" spacing="md">
+    <Container>
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+        <div class="max-w-xl">
+          <Eyebrow tone="paper">Ready to step in?</Eyebrow>
+          <h2 class="mt-4 font-display text-3xl sm:text-4xl text-[--color-paper]">
+            Trials run every September and January.
+          </h2>
+          <p class="mt-4 text-[--color-paper]/80">
+            All experience levels welcome. Drop your details and the captains will be in touch.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <Button href="/squads/trial/" variant="gold" size="lg">Trial with us</Button>
+          {
+            data?.contactEmail && (
+              <Button
+                href={`mailto:${data.contactEmail}`}
+                variant="ghost"
+                size="lg"
+                external
+                class="!border-[--color-paper] !text-[--color-paper] hover:!bg-[--color-paper] hover:!text-[--color-ink]"
+              >
+                Email the captain
+              </Button>
+            )
+          }
+        </div>
+      </div>
+    </Container>
+  </Section>
+</PageLayout>

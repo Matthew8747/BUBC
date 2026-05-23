@@ -1,0 +1,58 @@
+---
+/**
+ * DonationThermometer — accessible progress bar for a fundraising campaign.
+ *
+ * Clamps the percentage between 0 and 100 so over-raised campaigns still
+ * render correctly. Numbers are formatted in pounds with no decimals.
+ */
+interface Props {
+  goal: number;
+  raised: number;
+  donorCount?: number;
+  /** Optional currency override; defaults to GBP. */
+  currency?: 'GBP' | 'USD' | 'EUR';
+  size?: 'sm' | 'md';
+}
+
+const { goal, raised, donorCount, currency = 'GBP', size = 'md' } = Astro.props;
+
+const formatter = new Intl.NumberFormat('en-GB', {
+  style: 'currency',
+  currency,
+  maximumFractionDigits: 0,
+});
+
+const percent = Math.max(0, Math.min(100, goal > 0 ? (raised / goal) * 100 : 0));
+const percentDisplay = percent.toFixed(0);
+
+const heightClass = size === 'sm' ? 'h-2' : 'h-3';
+---
+
+<div>
+  <div class="flex items-baseline justify-between gap-3">
+    <p class="font-display text-2xl tabular-nums">
+      {formatter.format(raised)}
+      <span class="text-sm text-[--color-mute] font-body">of {formatter.format(goal)}</span>
+    </p>
+    <p class="text-xs uppercase tracking-[0.12em] text-[--color-gold] font-medium tabular-nums">
+      {percentDisplay}%
+    </p>
+  </div>
+  <div
+    class={`mt-2 w-full ${heightClass} bg-[--color-ink]/10 overflow-hidden`}
+    role="progressbar"
+    aria-valuenow={Math.round(percent)}
+    aria-valuemin="0"
+    aria-valuemax="100"
+    aria-label={`${percentDisplay}% of goal raised`}
+  >
+    <div class={`${heightClass} bg-[--color-gold]`} style={`width:${percent}%`}></div>
+  </div>
+  {
+    donorCount != null && donorCount > 0 && (
+      <p class="mt-2 text-xs uppercase tracking-[0.12em] text-[--color-mute]">
+        {donorCount} donor{donorCount === 1 ? '' : 's'} so far
+      </p>
+    )
+  }
+</div>

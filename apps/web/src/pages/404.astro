@@ -1,0 +1,60 @@
+---
+/**
+ * 404 page — branded, ends in a forward route.
+ *
+ * Astro serves this for any unmatched route. Keep it short, on-brand, and
+ * obvious about what to do next.
+ */
+import PageLayout from '../layouts/PageLayout.astro';
+import Section from '../components/ui/Section.astro';
+import Container from '../components/ui/Container.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import Button from '../components/ui/Button.astro';
+---
+
+<PageLayout
+  seo={{
+    title: 'Page not found',
+    description: "The page you were looking for can't be found.",
+    noIndex: true,
+  }}
+>
+  <Section spacing="lg" tone="bone">
+    <Container width="narrow">
+      <Eyebrow>404</Eyebrow>
+      <h1 class="mt-4 font-display text-4xl sm:text-5xl">Off the line — boat not in sight.</h1>
+      <p class="mt-5 text-lg text-[--color-mute]">
+        That page either moved or never existed. If you arrived here from a bookmark or an old link,
+        try one of these instead:
+      </p>
+
+      <ul class="mt-8 grid sm:grid-cols-2 gap-3">
+        <li>
+          <Button href="/" variant="solid" class="w-full justify-center">Home</Button>
+        </li>
+        <li>
+          <Button href="/squads/" variant="ghost" class="w-full justify-center">Squads</Button>
+        </li>
+        <li>
+          <Button href="/news/" variant="ghost" class="w-full justify-center">News</Button>
+        </li>
+        <li>
+          <Button href="/support/donate/" variant="ghost" class="w-full justify-center">
+            Donate
+          </Button>
+        </li>
+      </ul>
+
+      <p class="mt-10 text-sm text-[--color-mute]">
+        If you think this is a broken link, please email{' '}
+        <a
+          href="mailto:info@bubc.co.uk"
+          class="underline decoration-[--color-gold] underline-offset-4 hover:text-[--color-gold]"
+        >
+          info@bubc.co.uk
+        </a>{' '}
+        with the page you were trying to reach.
+      </p>
+    </Container>
+  </Section>
+</PageLayout>

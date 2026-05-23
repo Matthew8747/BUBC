@@ -1,0 +1,119 @@
+---
+/**
+ * Contact — addresses, common emails, safeguarding callout, boathouse map.
+ *
+ * Deliberately no inline form: every common reason for reaching out has a
+ * direct email that gets to the right person. The free-form contact form
+ * was historically a black hole on the old site.
+ */
+import PageLayout from '../layouts/PageLayout.astro';
+import PageHero from '../components/layout/PageHero.astro';
+import Section from '../components/ui/Section.astro';
+import Container from '../components/ui/Container.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import { safeFetch } from '../lib/sanity';
+import { settingsQuery } from '../lib/queries';
+import type { Settings } from '../lib/types';
+
+const settings = await safeFetch<Settings>(settingsQuery);
+
+const directContacts = [
+  { who: "Men's Captain", email: 'captain.m@bubc.co.uk', purpose: 'Senior men, trial, training' },
+  {
+    who: "Women's Captain",
+    email: 'captain.w@bubc.co.uk',
+    purpose: 'Senior women, trial, training',
+  },
+  {
+    who: 'Treasurer',
+    email: 'treasurer@bubc.co.uk',
+    purpose: 'Fundraising, donations, buy-a-boat',
+  },
+  { who: 'Welfare Officer', email: 'welfare@bubc.co.uk', purpose: 'Confidential welfare matters' },
+  { who: 'Alumni', email: 'alumni@bubc.co.uk', purpose: 'Alumni network, Meles BC, events' },
+  {
+    who: 'Sponsorship',
+    email: 'sponsorship@bubc.co.uk',
+    purpose: 'Partnerships, sponsorship pack',
+  },
+  { who: 'General', email: 'info@bubc.co.uk', purpose: 'Anything else' },
+];
+
+const seo = {
+  title: 'Contact',
+  description:
+    'Contact the University of Bath Boat Club — direct emails for captains, treasurer, welfare, alumni, sponsorship, and general enquiries.',
+};
+---
+
+<PageLayout seo={seo}>
+  <PageHero
+    eyebrow="Contact"
+    headline="Pick the right inbox."
+    lead="BUBC is run by students with full degree loads. Routing your message to the right person up-front means a faster, better answer."
+  />
+
+  <Section spacing="md">
+    <Container width="narrow">
+      <Eyebrow>Direct contacts</Eyebrow>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl">Who to email about what.</h2>
+
+      <ul class="mt-8 divide-y divide-[--color-ink]/10">
+        {
+          directContacts.map((c) => (
+            <li class="py-4 grid sm:grid-cols-[12rem_1fr_auto] gap-y-2 gap-x-6 items-baseline">
+              <p class="font-display text-lg">{c.who}</p>
+              <p class="text-sm text-[--color-mute]">{c.purpose}</p>
+              <a
+                href={`mailto:${c.email}`}
+                class="text-sm underline decoration-[--color-gold] underline-offset-4 hover:text-[--color-gold] tabular-nums"
+              >
+                {c.email}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </Container>
+  </Section>
+
+  <Section tone="bone" spacing="md">
+    <Container width="narrow">
+      <div class="border-l-2 border-[--color-blade] pl-6 sm:pl-8 py-2">
+        <Eyebrow tone="navy">Safeguarding</Eyebrow>
+        <p class="mt-4 text-lg">
+          For a confidential safeguarding or welfare concern, please email{' '}
+          <a
+            href="mailto:welfare@bubc.co.uk"
+            class="underline decoration-[--color-gold] underline-offset-4 hover:text-[--color-gold]"
+          >
+            welfare@bubc.co.uk
+          </a>
+          {' '}or use one of the independent routes on the
+          <a
+            href="/welfare/"
+            class="underline decoration-[--color-gold] underline-offset-4 hover:text-[--color-gold]"
+          >
+            {' '}welfare page
+          </a>
+          .
+        </p>
+      </div>
+    </Container>
+  </Section>
+
+  {
+    settings?.address && (
+      <Section spacing="md">
+        <Container width="narrow">
+          <Eyebrow>Postal address</Eyebrow>
+          <p class="mt-4 whitespace-pre-line text-[--color-ink]">{settings.address}</p>
+          <p class="mt-4 text-sm text-[--color-mute]">
+            We don't keep regular hours at the postal address. For boathouse-related visits, please
+            confirm with the captain first.
+          </p>
+        </Container>
+      </Section>
+    )
+  }
+</PageLayout>

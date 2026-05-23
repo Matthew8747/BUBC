@@ -1,0 +1,207 @@
+---
+/**
+ * Donate page — hero, "why donate", ways to give, active campaigns.
+ *
+ * The main donate button points to the existing Hubbub link; active campaigns
+ * are pulled from Sanity and each shows a live thermometer.
+ */
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/layout/PageHero.astro';
+import Section from '../../components/ui/Section.astro';
+import Container from '../../components/ui/Container.astro';
+import Eyebrow from '../../components/ui/Eyebrow.astro';
+import Button from '../../components/ui/Button.astro';
+import Picture from '../../components/content/Picture.astro';
+import DonationThermometer from '../../components/support/DonationThermometer.astro';
+import { safeFetch } from '../../lib/sanity';
+import { activeCampaignsQuery } from '../../lib/queries';
+import type { CampaignData } from '../../lib/types';
+
+const campaigns = (await safeFetch<CampaignData[]>(activeCampaignsQuery)) ?? [];
+
+// Primary destination for the headline donate button.
+const HUBBUB_URL = 'https://bath.hubbub.net/p/BUBC/pledge/';
+
+const waysToGive = [
+  {
+    title: 'One-off donation',
+    body: 'Quickest route in. Hubbub adds Gift Aid where eligible so every pound is worth a quarter more to the club.',
+    href: HUBBUB_URL,
+    cta: 'Donate via Hubbub',
+    external: true,
+  },
+  {
+    title: 'Buy a boat',
+    body: 'Fund a new shell — single, pair, four, or eight — and the donor (or chosen name) is on the boat for its lifetime.',
+    href: '/support/buy-a-boat/',
+    cta: 'See the boats we need',
+  },
+  {
+    title: 'Sponsor a season',
+    body: 'For businesses and high-net-worth donors. Sponsorship tiers cover blade decals, AIO branding, regatta hoarding presence, and alumni dinner placement.',
+    href: '/support/sponsor/',
+    cta: 'Sponsorship',
+  },
+  {
+    title: 'Leave a gift in your will',
+    body: "An option for alumni considering long-term legacy giving. We're happy to discuss this in confidence — please email the Treasurer.",
+    href: 'mailto:treasurer@bubc.co.uk',
+    cta: 'Email the Treasurer',
+    external: true,
+  },
+];
+
+const seo = {
+  title: 'Donate',
+  description:
+    'Support the University of Bath Boat Club — one-off donations, fund a boat, or sponsor a season. Every pound goes back into the programme.',
+};
+---
+
+<PageLayout seo={seo}>
+  <PageHero
+    eyebrow="Donate"
+    headline="Keep Bath rowing fast."
+    lead="BUBC is a self-funded charity. Boats are expensive, regatta entries are expensive, and our athletes pay subs to be here. Every pound from outside the club extends what we can offer — and who we can offer it to."
+    ctas={[
+      {
+        label: 'Donate via Hubbub',
+        variant: 'gold',
+        link: { label: 'Donate', url: HUBBUB_URL, external: true },
+      },
+      {
+        label: 'See active campaigns',
+        variant: 'ghost',
+        link: { label: 'Campaigns', url: '#campaigns' },
+      },
+    ]}
+  />
+
+  <Section spacing="md">
+    <Container width="narrow">
+      <Eyebrow>Why donate</Eyebrow>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl">What your money does.</h2>
+      <ul class="mt-6 space-y-4 text-[--color-ink] leading-relaxed">
+        <li class="flex gap-3">
+          <span
+            class="mt-2 h-1.5 w-1.5 rounded-full bg-[--color-gold] flex-shrink-0"
+            aria-hidden="true"></span>
+          <span>
+            <strong class="font-display">Boats.</strong> A racing eight costs around £35,000 and lasts
+            a decade. A new shell is the single biggest unlock for crew speed.
+          </span>
+        </li>
+        <li class="flex gap-3">
+          <span
+            class="mt-2 h-1.5 w-1.5 rounded-full bg-[--color-gold] flex-shrink-0"
+            aria-hidden="true"></span>
+          <span>
+            <strong class="font-display">Coaching.</strong> Senior coach time is the difference between
+            competing and winning at BUCS, BUCS Regatta, and Henley.
+          </span>
+        </li>
+        <li class="flex gap-3">
+          <span
+            class="mt-2 h-1.5 w-1.5 rounded-full bg-[--color-gold] flex-shrink-0"
+            aria-hidden="true"></span>
+          <span>
+            <strong class="font-display">Regatta entries.</strong> Henley alone runs to several thousand
+            pounds in entries, transport, and accommodation across the regatta.
+          </span>
+        </li>
+        <li class="flex gap-3">
+          <span
+            class="mt-2 h-1.5 w-1.5 rounded-full bg-[--color-gold] flex-shrink-0"
+            aria-hidden="true"></span>
+          <span>
+            <strong class="font-display">Access.</strong> Bursaries reduce the financial barrier to rowing
+            for athletes who could not otherwise commit.
+          </span>
+        </li>
+      </ul>
+    </Container>
+  </Section>
+
+  <Section tone="bone" spacing="md">
+    <Container>
+      <Eyebrow>Ways to give</Eyebrow>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl">Pick a route.</h2>
+      <ul class="mt-10 grid sm:grid-cols-2 gap-6">
+        {
+          waysToGive.map((w) => (
+            <li class="flex flex-col bg-[--color-paper] p-6 sm:p-7">
+              <h3 class="font-display text-xl">{w.title}</h3>
+              <p class="mt-3 text-[--color-ink] leading-relaxed flex-1">{w.body}</p>
+              <div class="mt-5">
+                <Button href={w.href} variant="solid" external={w.external}>
+                  {w.cta}
+                </Button>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </Container>
+  </Section>
+
+  <Section spacing="md" id="campaigns">
+    <Container>
+      <Eyebrow>Active campaigns</Eyebrow>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl">What we're raising for right now.</h2>
+
+      {
+        campaigns.length === 0 ? (
+          <p class="mt-6 italic text-[--color-mute] max-w-2xl">
+            No live fundraising campaigns at the moment. One-off donations via Hubbub still go
+            directly to the club's operating fund.
+          </p>
+        ) : (
+          <ul class="mt-10 grid lg:grid-cols-2 gap-10">
+            {campaigns.map((c) => (
+              <li>
+                <article class="flex flex-col bg-[--color-bone]">
+                  <Picture
+                    image={c.heroImage}
+                    ratio="3/2"
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    fallbackLabel={c.title}
+                  />
+                  <div class="p-6 sm:p-8 flex flex-col gap-5">
+                    <div>
+                      <h3 class="font-display text-2xl">{c.title}</h3>
+                      <p class="mt-2 text-[--color-mute]">{c.shortDescription}</p>
+                    </div>
+                    <DonationThermometer
+                      goal={c.goalAmount}
+                      raised={c.raisedAmount}
+                      donorCount={c.donorCount}
+                    />
+                    <div>
+                      <Button href={c.donateUrl} variant="solid" external>
+                        Donate to {c.title}
+                      </Button>
+                    </div>
+                  </div>
+                </article>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </Container>
+  </Section>
+
+  <Section tone="navy" spacing="md">
+    <Container>
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+        <div class="max-w-xl">
+          <Eyebrow tone="paper">Quickest route</Eyebrow>
+          <h2 class="mt-4 font-display text-3xl sm:text-4xl text-[--color-paper]">
+            One pledge, Gift Aid, two minutes.
+          </h2>
+        </div>
+        <Button href={HUBBUB_URL} variant="gold" size="lg" external> Donate via Hubbub </Button>
+      </div>
+    </Container>
+  </Section>
+</PageLayout>
