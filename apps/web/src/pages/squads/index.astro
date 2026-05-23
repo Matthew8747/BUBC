@@ -1,0 +1,145 @@
+---
+/**
+ * Squads index — recruitment-focused overview of all squads, ordered by tier.
+ *
+ * Pulls every squad from Sanity, sorts senior → development → novice → trial.
+ * When the dataset is empty we still render the four default squads from
+ * SquadPathway so the page is useful pre-launch.
+ */
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/layout/PageHero.astro';
+import Section from '../../components/ui/Section.astro';
+import Container from '../../components/ui/Container.astro';
+import Eyebrow from '../../components/ui/Eyebrow.astro';
+import Picture from '../../components/content/Picture.astro';
+import Button from '../../components/ui/Button.astro';
+import { safeFetch } from '../../lib/sanity';
+import { allSquadsQuery } from '../../lib/queries';
+import type { SquadCardData } from '../../lib/types';
+
+const squads = (await safeFetch<SquadCardData[]>(allSquadsQuery)) ?? [];
+
+const defaults: SquadCardData[] = [
+  {
+    _id: 'ph-sm',
+    name: 'Senior men',
+    slug: 'senior-men',
+    tier: 'senior',
+    gender: 'men',
+    shortDescription:
+      'The performance squad — six to nine sessions a week, racing BUCS, Henley Royal Regatta, and the Head circuit.',
+  },
+  {
+    _id: 'ph-sw',
+    name: 'Senior women',
+    slug: 'senior-women',
+    tier: 'senior',
+    gender: 'women',
+    shortDescription:
+      "Bath's senior women's programme — BUCS, Henley Women's Regatta, and the Head circuit. Six to nine sessions a week.",
+  },
+  {
+    _id: 'ph-n',
+    name: 'Novice',
+    slug: 'novice',
+    tier: 'novice',
+    shortDescription:
+      'Learn to row from scratch. Six weeks of land then water training, racing Christmas Head and the BUCS Beginners.',
+  },
+];
+
+const items = squads.length > 0 ? squads : defaults;
+
+const tierOrder: Record<string, number> = { senior: 0, development: 1, novice: 2, trial: 3 };
+const sorted = [...items].sort((a, b) => (tierOrder[a.tier] ?? 9) - (tierOrder[b.tier] ?? 9));
+
+const seo = {
+  title: 'Squads',
+  description:
+    "BUBC's senior men's, senior women's, and novice squads — training schedules, captains, coaches, and how to get involved.",
+};
+---
+
+<PageLayout seo={seo}>
+  <PageHero
+    eyebrow="Squads"
+    headline="Find your level."
+    lead="Whether you've rowed since school or have never sat in a boat, there is a route in. Pick the squad that matches where you are now — and where you want to go."
+  />
+
+  <Section spacing="lg">
+    <Container>
+      <ul class="grid md:grid-cols-2 gap-10 lg:gap-14">
+        {
+          sorted.map((squad) => (
+            <li>
+              <a
+                href={`/squads/${squad.slug}/`}
+                class="group block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[--color-gold]"
+              >
+                <div class="overflow-hidden">
+                  <Picture
+                    image={squad.heroImage}
+                    ratio="3/2"
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                    fallbackLabel={squad.name}
+                    class="transition-transform duration-500 group-hover:scale-[1.02]"
+                  />
+                </div>
+                <div class="mt-5">
+                  <Eyebrow tone="navy">
+                    {squad.tier}
+                    {squad.gender && squad.gender !== 'mixed' ? ` · ${squad.gender}` : ''}
+                  </Eyebrow>
+                  <h2 class="mt-3 font-display text-3xl group-hover:text-[--color-gold] transition-colors">
+                    {squad.name}
+                  </h2>
+                  <p class="mt-3 text-[--color-mute]">{squad.shortDescription}</p>
+                  <span class="mt-4 inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.12em] text-[--color-navy]">
+                    See squad page
+                    <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                      <path
+                        d="M3 7h8M7 3l4 4-4 4"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </Container>
+  </Section>
+
+  <Section tone="navy" spacing="md">
+    <Container>
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+        <div class="max-w-xl">
+          <Eyebrow tone="paper">Not sure where you fit?</Eyebrow>
+          <h2 class="mt-4 font-display text-3xl sm:text-4xl text-[--color-paper]">
+            Sign up to trial — we'll work it out together.
+          </h2>
+          <p class="mt-4 text-[--color-paper]/80">
+            One ergo, one swim test, one chat with the captains. Around 90 minutes start to finish.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <Button href="/squads/trial/" variant="gold" size="lg"> Trial with us </Button>
+          <Button
+            href="/coaching/"
+            variant="ghost"
+            size="lg"
+            class="!border-[--color-paper] !text-[--color-paper] hover:!bg-[--color-paper] hover:!text-[--color-ink]"
+          >
+            Meet the coaches
+          </Button>
+        </div>
+      </div>
+    </Container>
+  </Section>
+</PageLayout>

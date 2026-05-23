@@ -1,0 +1,38 @@
+---
+/**
+ * PhotoGallery — masonry-ish responsive grid of Sanity images.
+ *
+ * Strategy is deliberately simple: a CSS grid of 4:5 cards. We don't try to
+ * preserve original aspect ratios across the grid — the editorial language
+ * wants regularity. If the editor wants a "full-bleed" image they can embed
+ * it via PortableText body content instead.
+ */
+import Picture from './Picture.astro';
+import type { SanityImage } from '../../lib/types';
+
+interface Props {
+  images?: SanityImage[];
+  emptyLabel?: string;
+}
+
+const { images = [], emptyLabel = 'Photos to come' } = Astro.props;
+---
+
+{
+  images.length === 0 ? (
+    <p class="italic text-[--color-mute]">{emptyLabel}</p>
+  ) : (
+    <ul class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 not-prose">
+      {images.map((img, i) => (
+        <li>
+          <Picture
+            image={img}
+            ratio="4/5"
+            sizes="(min-width: 1024px) 33vw, 50vw"
+            priority={i === 0}
+          />
+        </li>
+      ))}
+    </ul>
+  )
+}

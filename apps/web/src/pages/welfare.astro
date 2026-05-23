@@ -1,0 +1,199 @@
+---
+/**
+ * Welfare & Safeguarding page.
+ *
+ * This is a *required* page for a modern UK student sports club: it gives a
+ * named welfare officer, the club's stance on key concerns, and independent
+ * reporting routes for anyone who needs them.
+ *
+ * The structured content sits in a Sanity `page` doc at slug `welfare` so the
+ * named officer + contact details can be updated each year without a deploy.
+ * Fallback content here gives a sensible baseline before the doc lands.
+ */
+import PageLayout from '../layouts/PageLayout.astro';
+import PageHero from '../components/layout/PageHero.astro';
+import Section from '../components/ui/Section.astro';
+import Container from '../components/ui/Container.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import PortableText from '../components/content/PortableText.astro';
+import { safeFetch } from '../lib/sanity';
+import { pageBySlugQuery } from '../lib/queries';
+import type { PageDoc } from '../lib/types';
+
+const page = (await safeFetch<PageDoc>(pageBySlugQuery, { slug: 'welfare' })) ?? null;
+
+const seo = {
+  title: page?.seo?.title ?? 'Welfare & Safeguarding',
+  description:
+    page?.seo?.description ??
+    "BUBC's welfare and safeguarding policies, named welfare officer, and independent reporting routes for athletes, parents, and visitors.",
+  noIndex: page?.seo?.noIndex,
+};
+
+const policies = [
+  {
+    title: 'Code of conduct',
+    body: 'Every BUBC member signs up to a code of conduct covering training behaviour, social conduct, and treatment of other athletes, coaches, officials, and members of the public.',
+  },
+  {
+    title: 'Anti-bullying and harassment',
+    body: 'Bullying, harassment, and discrimination on the basis of any protected characteristic are not tolerated. Reports are taken seriously and acted on by the welfare officer and committee.',
+  },
+  {
+    title: 'Sexual misconduct',
+    body: 'BUBC adopts the British Rowing Sexual Misconduct policy. Any disclosure is handled in line with that policy, with the option of routing to British Rowing directly if independence is needed.',
+  },
+  {
+    title: 'Concussion protocol',
+    body: 'Suspected concussions, whether from training, racing, or otherwise, are managed in line with current British Rowing guidance. Athletes return to training only after sign-off.',
+  },
+  {
+    title: 'Mental health',
+    body: 'The welfare officer is a first point of contact for mental health concerns and can signpost to University of Bath Wellbeing Services, GP services, and external helplines.',
+  },
+];
+
+const reportingRoutes = [
+  {
+    title: 'BUBC Welfare Officer',
+    body: 'First port of call. Confidential.',
+    href: 'mailto:welfare@bubc.co.uk',
+    label: 'welfare@bubc.co.uk',
+  },
+  {
+    title: 'University of Bath Wellbeing Services',
+    body: '24/7 mental health and wellbeing support for all enrolled students.',
+    href: 'https://www.bath.ac.uk/topics/student-wellbeing/',
+    label: 'bath.ac.uk · Student Wellbeing',
+    external: true,
+  },
+  {
+    title: 'British Rowing Safeguarding Team',
+    body: 'Independent reporting route for any sport-related safeguarding concern.',
+    href: 'https://www.britishrowing.org/about-us/policies-guidance/safeguarding/',
+    label: 'britishrowing.org · Safeguarding',
+    external: true,
+  },
+  {
+    title: 'NSPCC Helpline',
+    body: 'Independent reporting route for concerns involving anyone under 18.',
+    href: 'tel:08088005000',
+    label: '0808 800 5000',
+  },
+];
+---
+
+<PageLayout seo={seo}>
+  <PageHero
+    eyebrow="Welfare & safeguarding"
+    headline={page?.title ?? 'A safe place to row.'}
+    lead={page?.intro ??
+      'BUBC takes welfare seriously. Every member has a named welfare officer to go to and independent reporting routes when they need them. This page exists so nobody ever has to guess where to start.'}
+  />
+
+  <Section spacing="md">
+    <Container width="narrow">
+      <div class="border-l-2 border-[--color-gold] pl-6 sm:pl-8 py-2">
+        <Eyebrow>Named officer</Eyebrow>
+        <p class="mt-4 text-lg">
+          BUBC's elected Welfare Officer is the first port of call for any concern. Confidential, by
+          email or in person.
+        </p>
+        <p class="mt-3 text-base">
+          <a
+            href="mailto:welfare@bubc.co.uk"
+            class="font-display text-xl underline decoration-[--color-gold] underline-offset-4 hover:text-[--color-gold]"
+          >
+            welfare@bubc.co.uk
+          </a>
+        </p>
+        <p class="mt-3 text-sm text-[--color-mute]">
+          The Welfare Officer's name and photo is on the{' '}
+          <a
+            href="/committee/"
+            class="underline decoration-[--color-gold] underline-offset-4 hover:text-[--color-gold]"
+          >
+            committee page
+          </a>{' '}
+          (rotates annually).
+        </p>
+      </div>
+    </Container>
+  </Section>
+
+  {
+    page?.body != null && (
+      <Section spacing="md">
+        <Container width="prose">
+          <PortableText value={page.body} />
+        </Container>
+      </Section>
+    )
+  }
+
+  <Section tone="bone" spacing="md">
+    <Container width="narrow">
+      <Eyebrow>Policies</Eyebrow>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl">What we hold ourselves to.</h2>
+      <ul class="mt-8 space-y-6">
+        {
+          policies.map((p) => (
+            <li>
+              <h3 class="font-display text-xl">{p.title}</h3>
+              <p class="mt-2 text-[--color-ink]">{p.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </Container>
+  </Section>
+
+  <Section spacing="md">
+    <Container width="narrow">
+      <Eyebrow>Reporting routes</Eyebrow>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl">Where to take a concern.</h2>
+      <p class="mt-3 text-[--color-mute]">
+        Use whichever feels right. If you'd rather not go to the club directly, the external routes
+        are independent of BUBC.
+      </p>
+      <ul class="mt-8 grid sm:grid-cols-2 gap-6">
+        {
+          reportingRoutes.map((r) => (
+            <li class="border border-[--color-ink]/15 p-5">
+              <h3 class="font-display text-lg">{r.title}</h3>
+              <p class="mt-2 text-sm text-[--color-mute]">{r.body}</p>
+              <p class="mt-3 text-sm">
+                <a
+                  href={r.href}
+                  target={r.external ? '_blank' : undefined}
+                  rel={r.external ? 'noopener noreferrer' : undefined}
+                  class="underline decoration-[--color-gold] underline-offset-4 hover:text-[--color-gold]"
+                >
+                  {r.label}
+                </a>
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+    </Container>
+  </Section>
+
+  <Section tone="bone" spacing="md">
+    <Container width="narrow">
+      <Eyebrow>Inclusion & accessibility</Eyebrow>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl">Who BUBC is for.</h2>
+      <p class="mt-3 text-[--color-ink] leading-relaxed">
+        BUBC welcomes athletes of every background, gender, sexuality, ethnicity, faith, and
+        socio-economic position. Financial barriers (kit, training-camp contributions, regatta entry
+        fees) are discussable in confidence with the Treasurer or Welfare Officer — bursaries and
+        instalment plans exist.
+      </p>
+      <p class="mt-3 text-[--color-ink] leading-relaxed">
+        We are committed to growing pathways for para-rowers as our facilities allow. If you have an
+        accessibility need we should know about, please get in touch before trialling so we can plan
+        a session that works for you.
+      </p>
+    </Container>
+  </Section>
+</PageLayout>

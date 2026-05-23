@@ -1,0 +1,84 @@
+---
+/**
+ * Support landing — entry point to every way of giving.
+ */
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/layout/PageHero.astro';
+import Section from '../../components/ui/Section.astro';
+import Container from '../../components/ui/Container.astro';
+import Eyebrow from '../../components/ui/Eyebrow.astro';
+
+const sections = [
+  {
+    title: 'Donate',
+    href: '/support/donate/',
+    blurb: 'One-off or recurring. Gift Aid where eligible. Backs the operating fund.',
+  },
+  {
+    title: 'Buy a Boat',
+    href: '/support/buy-a-boat/',
+    blurb: 'Fund a new shell, name it, and christen it. Lasts a decade on the river.',
+  },
+  {
+    title: 'Sponsor',
+    href: '/support/sponsor/',
+    blurb: 'Business and partner tiers — exposure on kit, blades, boats, and at home regattas.',
+  },
+  {
+    title: 'Campaigns',
+    href: '/support/campaigns/',
+    blurb: 'Specific projects: new boats, training camps, alumni events.',
+  },
+];
+
+const seo = {
+  title: 'Support BUBC',
+  description:
+    'Support the University of Bath Boat Club: donate, fund a boat, sponsor a season, or back a specific campaign.',
+};
+---
+
+<PageLayout seo={seo}>
+  <PageHero
+    eyebrow="Support"
+    headline="Back a club that's been backed before."
+    lead="BUBC is a charity run entirely by the people who row in it. Every pound from outside the membership extends what the club can do — and who it can do it with."
+  />
+
+  <Section spacing="lg">
+    <Container>
+      <Eyebrow>Pick a way in</Eyebrow>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl">Four routes.</h2>
+
+      <ul class="mt-10 grid sm:grid-cols-2 gap-x-8 gap-y-12">
+        {
+          sections.map((s) => (
+            <li>
+              <a
+                href={s.href}
+                class="group block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[--color-gold]"
+              >
+                <h3 class="font-display text-3xl group-hover:text-[--color-gold] transition-colors">
+                  {s.title}
+                </h3>
+                <p class="mt-2 text-[--color-mute] text-lg">{s.blurb}</p>
+                <span class="mt-3 inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.12em] text-[--color-navy]">
+                  Read more
+                  <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path
+                      d="M3 7h8M7 3l4 4-4 4"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </Container>
+  </Section>
+</PageLayout>

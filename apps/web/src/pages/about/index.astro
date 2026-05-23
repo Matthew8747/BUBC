@@ -1,0 +1,90 @@
+---
+/**
+ * About — landing page for the history-and-heritage section.
+ * Lists the sub-pages (History, Henley Honours, Olympians, Chairs, Blazers).
+ */
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/layout/PageHero.astro';
+import Section from '../../components/ui/Section.astro';
+import Container from '../../components/ui/Container.astro';
+import Eyebrow from '../../components/ui/Eyebrow.astro';
+
+const subSections = [
+  {
+    title: 'History',
+    href: '/about/history/',
+    blurb: 'How the club started in 1965, and the moments that have defined it since.',
+  },
+  {
+    title: 'Henley Honours',
+    href: '/about/henley-honours/',
+    blurb: "Every Bath crew that has qualified for the Royal Regatta and Henley Women's.",
+  },
+  {
+    title: 'Olympians & Internationals',
+    href: '/about/olympians/',
+    blurb: 'Bath rowers who have gone on to represent Great Britain.',
+  },
+  {
+    title: 'Chairs of BUBC',
+    href: '/about/chairs/',
+    blurb: 'The people who have led the club, decade by decade.',
+  },
+  {
+    title: 'Blazers',
+    href: '/about/blazers/',
+    blurb: 'The trim, the rules, the meaning behind earning a Bath blazer.',
+  },
+];
+
+const seo = {
+  title: 'About the club',
+  description:
+    'About the University of Bath Boat Club — history, honours, alumni who have gone on to international rowing, and the traditions that hold the club together.',
+};
+---
+
+<PageLayout seo={seo}>
+  <PageHero
+    eyebrow="About"
+    headline="A club, not a brand."
+    lead="Founded in 1965 and run by students ever since, BUBC has trained more than two thousand rowers, sent dozens to international careers, and crewed the Henley reach every year it has been able to. This is how that has happened — and continues to."
+  />
+
+  <Section spacing="lg">
+    <Container>
+      <Eyebrow>Read more</Eyebrow>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl">Pages in this section.</h2>
+
+      <ul class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+        {
+          subSections.map((s) => (
+            <li>
+              <a
+                href={s.href}
+                class="group block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[--color-gold]"
+              >
+                <h3 class="font-display text-2xl group-hover:text-[--color-gold] transition-colors">
+                  {s.title}
+                </h3>
+                <p class="mt-2 text-[--color-mute]">{s.blurb}</p>
+                <span class="mt-3 inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.12em] text-[--color-navy]">
+                  Read
+                  <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path
+                      d="M3 7h8M7 3l4 4-4 4"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </Container>
+  </Section>
+</PageLayout>

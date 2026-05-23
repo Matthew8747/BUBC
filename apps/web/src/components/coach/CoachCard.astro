@@ -1,0 +1,58 @@
+---
+/**
+ * CoachCard — full coach profile card: portrait, name, role, qualifications,
+ * short bio, contact. Used on /coaching/.
+ */
+import Picture from '../content/Picture.astro';
+import PortableText from '../content/PortableText.astro';
+import type { CoachData } from '../../lib/types';
+
+interface Props {
+  coach: CoachData;
+}
+
+const { coach } = Astro.props;
+---
+
+<article class="grid sm:grid-cols-[14rem_1fr] gap-6 sm:gap-8 items-start">
+  <div class="overflow-hidden">
+    <Picture
+      image={coach.photo}
+      ratio="4/5"
+      sizes="(min-width: 640px) 224px, 100vw"
+      fallbackLabel={coach.name}
+    />
+  </div>
+  <div>
+    <p class="text-xs uppercase tracking-[0.12em] text-[--color-gold] font-medium">{coach.role}</p>
+    <h2 class="mt-2 font-display text-2xl sm:text-3xl">{coach.name}</h2>
+    {
+      coach.qualifications && coach.qualifications.length > 0 && (
+        <ul class="mt-3 flex flex-wrap gap-2">
+          {coach.qualifications.map((q) => (
+            <li class="text-xs px-2.5 py-1 bg-[--color-bone] text-[--color-ink]">{q}</li>
+          ))}
+        </ul>
+      )
+    }
+    {
+      coach.bio != null && (
+        <div class="mt-4 text-[--color-ink]">
+          <PortableText value={coach.bio} />
+        </div>
+      )
+    }
+    {
+      coach.email && (
+        <p class="mt-5 text-sm">
+          <a
+            href={`mailto:${coach.email}`}
+            class="underline decoration-[--color-gold] underline-offset-4 hover:text-[--color-gold]"
+          >
+            {coach.email}
+          </a>
+        </p>
+      )
+    }
+  </div>
+</article>

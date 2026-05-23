@@ -44,7 +44,7 @@ export const settingsQuery = /* groq */ `
     charityNumber,
     contactEmail,
     address,
-    boathouseLocation,
+    boathouseLocation { lat, lng, what3words },
     primaryNav[] { label, url, external },
     utilityNav[] { label, url, external },
     primaryCta { ${ctaBlockFields} },
@@ -100,6 +100,12 @@ export const allSquadsQuery = /* groq */ `
   *[_type == "squad"] | order(tier asc, name asc) {
     _id, name, "slug": slug.current, tier, gender, shortDescription,
     heroImage { ${imageBlockFields} }
+  }
+`;
+
+export const allSquadSlugsQuery = /* groq */ `
+  *[_type == "squad" && defined(slug.current)] {
+    "slug": slug.current
   }
 `;
 
@@ -163,6 +169,11 @@ export const committeeQuery = /* groq */ `
   }
 `;
 
+/** Most recent academic year that has at least one committee member published. */
+export const latestCommitteeYearQuery = /* groq */ `
+  *[_type == "committeeMember"] | order(academicYear desc) [0].academicYear
+`;
+
 // ---------------------------------------------------------------------------
 // Fleet / boats
 // ---------------------------------------------------------------------------
@@ -189,5 +200,20 @@ export const activeCampaignsQuery = /* groq */ `
 export const buyABoatQuery = /* groq */ `
   *[_type == "boatForSale"] | order(priority asc) {
     _id, boatType, priceRange, status, notes
+  }
+`;
+
+// ---------------------------------------------------------------------------
+// Generic pages (welfare, contact, history, etc.)
+// ---------------------------------------------------------------------------
+
+export const pageBySlugQuery = /* groq */ `
+  *[_type == "page" && slug.current == $slug][0] {
+    title, "slug": slug.current,
+    intro,
+    heroImage { ${imageBlockFields} },
+    body,
+    ctas[] { ${ctaBlockFields} },
+    seo { ${seoFields} }
   }
 `;
