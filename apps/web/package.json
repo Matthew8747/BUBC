@@ -10,12 +10,19 @@
     "build": "astro build",
     "preview": "astro preview",
     "typecheck": "astro check",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "astro": "astro"
   },
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.2.9",
     "@fontsource-variable/geist": "^5.2.9",
     "@fontsource-variable/geist-mono": "^5.2.8",
+    "@portabletext/to-html": "^5.0.2",
+    "@sanity/client": "^7.22.0",
+    "@sanity/image-url": "^2.1.1",
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.3.6",
     "clsx": "^2.1.1",
@@ -23,6 +30,8 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
-    "typescript": "^5.9.3"
+    "@playwright/test": "^1.60.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.7"
   }
 }

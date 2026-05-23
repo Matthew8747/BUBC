@@ -1,0 +1,100 @@
+---
+/**
+ * SquadPathway — "find your level" entry point. Each card opens the squad page.
+ * Falls back to a sensible set of cards while Sanity squads aren't populated.
+ */
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Picture from '../content/Picture.astro';
+import type { SquadCardData } from '../../lib/types';
+
+interface Props {
+  intro?: string;
+  squads?: SquadCardData[];
+}
+
+const defaultSquads: SquadCardData[] = [
+  {
+    _id: 'ph-sm',
+    name: 'Senior men',
+    slug: 'senior-men',
+    tier: 'senior',
+    gender: 'men',
+    shortDescription: 'BUCS, Henley, and Head — six sessions a week, year-round.',
+  },
+  {
+    _id: 'ph-sw',
+    name: 'Senior women',
+    slug: 'senior-women',
+    tier: 'senior',
+    gender: 'women',
+    shortDescription: "BUCS, Henley Women's, and Head — six sessions a week, year-round.",
+  },
+  {
+    _id: 'ph-n',
+    name: 'Novice',
+    slug: 'novice',
+    tier: 'novice',
+    shortDescription: 'No experience required. Learn to row in time for Christmas Head.',
+  },
+  {
+    _id: 'ph-t',
+    name: 'Trial with us',
+    slug: 'trial',
+    tier: 'trial',
+    shortDescription: 'Ergo, swim test, and an interview. Open to all students.',
+  },
+];
+
+const {
+  intro = 'Whether you rowed at school or have never sat in a boat, there is a route in.',
+  squads = defaultSquads,
+} = Astro.props;
+
+const items = squads.length > 0 ? squads : defaultSquads;
+---
+
+<Section tone="bone" spacing="lg">
+  <Container>
+    <div class="max-w-3xl">
+      <Eyebrow>Squad pathway</Eyebrow>
+      <h2 class="mt-3 text-3xl sm:text-4xl">Find your level.</h2>
+      {intro && <p class="mt-4 text-lg text-[--color-mute]">{intro}</p>}
+    </div>
+
+    <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {
+        items.map((squad) => (
+          <a href={`/squads/${squad.slug}/`} class="group relative flex flex-col overflow-hidden">
+            <Picture
+              image={squad.heroImage}
+              ratio="4/5"
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+              fallbackLabel={squad.name}
+              class="transition-transform duration-500 group-hover:scale-[1.02]"
+            />
+            <div class="mt-4">
+              <h3 class="font-display text-xl group-hover:text-[--color-gold] transition-colors">
+                {squad.name}
+              </h3>
+              <p class="mt-2 text-sm text-[--color-mute] line-clamp-3">{squad.shortDescription}</p>
+              <span class="mt-3 inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.12em] text-[--color-navy]">
+                Read more
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path
+                    d="M3 7h8M7 3l4 4-4 4"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </Container>
+</Section>

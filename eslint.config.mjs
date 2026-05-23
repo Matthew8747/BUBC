@@ -19,6 +19,14 @@ export default [
       '**/.sanity/**',
       '**/sanity.types.ts',
       '**/pnpm-lock.yaml',
+      // Python virtualenvs and local tool outputs that may exist in the
+      // working directory but are not part of this project's source.
+      '**/.venv/**',
+      '**/venv/**',
+      '**/__pycache__/**',
+      '**/graphify-out/**',
+      '**/playwright-report/**',
+      '**/test-results/**',
     ],
   },
 

@@ -1,0 +1,279 @@
+---
+/**
+ * Trial form — Formspree-backed.
+ *
+ * Flow:
+ *   1. User fills the form.
+ *   2. `fetch` POSTs to https://formspree.io/f/{FORM_ID}, JSON, AJAX.
+ *   3. On 200, the form is replaced by a success state. On error, an inline
+ *      message appears below the submit button.
+ *
+ * The form ID lives in `PUBLIC_FORMSPREE_TRIAL_ID` (anything `PUBLIC_*` is
+ * exposed to the client bundle). If unset, the form renders in "disabled"
+ * mode with a clear setup notice — so unconfigured deploys don't pretend to
+ * accept submissions.
+ */
+import PageLayout from '../../layouts/PageLayout.astro';
+import Section from '../../components/ui/Section.astro';
+import Container from '../../components/ui/Container.astro';
+import Eyebrow from '../../components/ui/Eyebrow.astro';
+import Button from '../../components/ui/Button.astro';
+import Field from '../../components/form/Field.astro';
+import Textarea from '../../components/form/Textarea.astro';
+import RadioGroup from '../../components/form/RadioGroup.astro';
+import Checkbox from '../../components/form/Checkbox.astro';
+
+const formId = import.meta.env.PUBLIC_FORMSPREE_TRIAL_ID;
+const isConfigured = Boolean(formId);
+---
+
+<PageLayout
+  seo={{
+    title: 'Trial with us',
+    description:
+      'Trial for the University of Bath Boat Club. Open to all Bath students. September and January intakes.',
+  }}
+>
+  <Section spacing="lg">
+    <Container width="narrow">
+      <Eyebrow>Sign up</Eyebrow>
+      <h1 class="mt-4 text-4xl sm:text-5xl">Trial with us.</h1>
+      <p class="mt-6 text-lg text-[--color-mute]">
+        Whether you rowed at school or have never sat in a boat, we want to hear from you. Drop your
+        details below and we'll be in touch with your trial date, what to bring, and where to meet.
+      </p>
+
+      <div class="mt-10 p-5 sm:p-6 border-l-2 border-[--color-gold] bg-[--color-bone]">
+        <h2 class="font-display text-xl">What to expect</h2>
+        <ul class="mt-3 space-y-1.5 text-sm text-[--color-ink] list-disc pl-5">
+          <li>2-kilometre ergo (rowing machine) under supervision</li>
+          <li>A 100-metre swim test in the university pool</li>
+          <li>A short chat with the captains and head coach</li>
+          <li>Around 90 minutes start to finish</li>
+        </ul>
+      </div>
+
+      {
+        !isConfigured && (
+          <div
+            role="alert"
+            class="mt-8 p-4 border border-[--color-blade]/30 bg-[--color-blade]/10 text-sm"
+          >
+            <strong>Form not yet configured.</strong> Set{' '}
+            <code class="font-mono text-xs">PUBLIC_FORMSPREE_TRIAL_ID</code> in
+            <code class="font-mono text-xs">apps/web/.env</code> (locally) and as a Vercel
+            environment variable. Then redeploy.
+          </div>
+        )
+      }
+
+      <form
+        id="trial-form"
+        class="mt-10 flex flex-col gap-6"
+        method="POST"
+        action={isConfigured ? `https://formspree.io/f/${formId}` : undefined}
+        data-formspree={isConfigured ? 'true' : 'false'}
+        novalidate
+      >
+        <div class="grid sm:grid-cols-2 gap-5">
+          <Field name="firstName" label="First name" required autocomplete="given-name" />
+          <Field name="lastName" label="Last name" required autocomplete="family-name" />
+        </div>
+        <Field
+          name="email"
+          type="email"
+          label="Bath email address"
+          required
+          autocomplete="email"
+          hint="Use your @bath.ac.uk email if you have one."
+          inputmode="email"
+        />
+        <Field name="phone" type="tel" label="Mobile" required autocomplete="tel" inputmode="tel" />
+        <Field
+          name="course"
+          label="Course & year"
+          required
+          hint="e.g. Mechanical Engineering, 2nd year."
+        />
+
+        <RadioGroup
+          name="intake"
+          legend="Which intake?"
+          required
+          options={[
+            {
+              value: 'september',
+              label: 'September (Fresher)',
+              description: 'Main intake — six weeks of learn-to-row before Christmas Head.',
+            },
+            {
+              value: 'january',
+              label: 'January (Second intake)',
+              description: 'Shorter on-water programme, focused on BUCS regatta.',
+            },
+            { value: 'unsure', label: 'Not sure yet' },
+          ]}
+        />
+
+        <RadioGroup
+          name="experience"
+          legend="Rowing experience"
+          required
+          options={[
+            { value: 'none', label: 'None at all' },
+            { value: 'school', label: 'School / club rowing' },
+            { value: 'gb', label: 'GB / national pathway' },
+            { value: 'other', label: 'Other (tell us below)' },
+          ]}
+        />
+
+        <div class="grid sm:grid-cols-3 gap-5">
+          <Field
+            name="height"
+            type="number"
+            label="Height (cm)"
+            min={140}
+            max={220}
+            inputmode="numeric"
+          />
+          <Field
+            name="weight"
+            type="number"
+            label="Weight (kg)"
+            min={40}
+            max={140}
+            inputmode="numeric"
+          />
+          <Field
+            name="pb2k"
+            label="2k erg PB"
+            placeholder="e.g. 6:42.0"
+            hint="Leave blank if unsure."
+          />
+        </div>
+
+        <Textarea
+          name="message"
+          label="Anything else we should know?"
+          rows={4}
+          maxlength={1000}
+          hint="Injuries, accessibility needs, questions — anything."
+        />
+
+        <Checkbox
+          name="welfare"
+          required
+          label="I confirm I have read the welfare and safeguarding policy"
+          hint="By signing up you agree to our code of conduct (linked from the welfare page)."
+        />
+
+        {/* Anti-spam honeypot — bots fill this; humans don't see it. */}
+        <div aria-hidden="true" class="hidden">
+          <label
+            >Don't fill this in <input
+              type="text"
+              name="_gotcha"
+              tabindex="-1"
+              autocomplete="off"
+            /></label
+          >
+        </div>
+
+        <div class="pt-2 flex flex-wrap items-center gap-4">
+          <Button type="submit" variant="gold" size="lg">Send my application</Button>
+          <p
+            id="trial-form-status"
+            class="text-sm text-[--color-mute]"
+            role="status"
+            aria-live="polite"
+          >
+          </p>
+        </div>
+      </form>
+
+      <div
+        id="trial-success"
+        class="mt-10 hidden p-6 sm:p-8 border-l-2 border-[--color-avon] bg-[--color-bone]"
+        role="status"
+        aria-live="polite"
+      >
+        <h2 class="font-display text-2xl">Application received.</h2>
+        <p class="mt-3 text-[--color-ink]">
+          Thanks — the captains will be in touch within 48 hours. Check your inbox (and spam, just
+          in case) for confirmation.
+        </p>
+        <p class="mt-3 text-sm text-[--color-mute]">
+          Questions before then? Email <a
+            href="mailto:captain.m@bubc.co.uk"
+            class="underline decoration-[--color-gold] underline-offset-4">captain.m@bubc.co.uk</a
+          >.
+        </p>
+      </div>
+    </Container>
+  </Section>
+</PageLayout>
+
+<script>
+  const form = document.getElementById('trial-form') as HTMLFormElement | null;
+  const status = document.getElementById('trial-form-status');
+  const success = document.getElementById('trial-success');
+
+  if (form && status && success) {
+    const isFormspree = form.dataset.formspree === 'true';
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      status.textContent = '';
+      status.classList.remove('text-[--color-blade]');
+
+      if (!form.reportValidity()) return;
+
+      if (!isFormspree) {
+        status.textContent = 'Form is not yet configured — see the notice above.';
+        status.classList.add('text-[--color-blade]');
+        return;
+      }
+
+      const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending…';
+      }
+
+      const data = new FormData(form);
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: data,
+          headers: { Accept: 'application/json' },
+        });
+
+        if (response.ok) {
+          form.classList.add('hidden');
+          success.classList.remove('hidden');
+          success.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          const json = (await response.json().catch(() => null)) as {
+            errors?: { message: string }[];
+          } | null;
+          status.textContent =
+            json?.errors?.[0]?.message ??
+            'Something went wrong sending the form. Try again, or email captain.m@bubc.co.uk.';
+          status.classList.add('text-[--color-blade]');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send my application';
+          }
+        }
+      } catch {
+        status.textContent = 'Network error. Check your connection and try again.';
+        status.classList.add('text-[--color-blade]');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send my application';
+        }
+      }
+    });
+  }
+</script>

@@ -7,9 +7,11 @@
 ## 0. Project brief
 
 ### Mission
+
 Rebuild bubc.co.uk as a fast, beautiful, content-rich site that recruits rowers, engages alumni, attracts sponsors, and outlives the committee that built it.
 
 ### Audiences (ranked)
+
 1. **Prospective rowers** — Bath students considering trialling
 2. **Parents** — Googling after their kid says "I'm joining the boat club"
 3. **Alumni and donors** — looking for news, events, ways to give
@@ -17,6 +19,7 @@ Rebuild bubc.co.uk as a fast, beautiful, content-rich site that recruits rowers,
 5. **Press / British Rowing / Henley** — race weekend coverage
 
 ### Success criteria
+
 - Lighthouse: Performance ≥ 95, Accessibility ≥ 95, Best Practices ≥ 95, SEO ≥ 95
 - Time to Interactive < 2s on 4G
 - Zero runtime cost (£10/yr domain only)
@@ -26,6 +29,7 @@ Rebuild bubc.co.uk as a fast, beautiful, content-rich site that recruits rowers,
 - Full content type coverage — no Lorem ipsum, no empty pages
 
 ### Non-goals (deliberately not building)
+
 - E-commerce store (Rival Kit handles kit; Perry handles blazers; link out)
 - Member portal / training log app (use Strava / Concept2 ErgData)
 - Live race scoring (link out to British Rowing / regatta sites)
@@ -99,6 +103,7 @@ graph TD
 `Contact · Trial with us (CTA button, accent colour)`
 
 **Footer columns:**
+
 1. **Club** — About, History, Henley Honours, Olympians, Committee, Welfare, Press
 2. **Row** — Senior Men, Senior Women, Novice, Trial, Coaching
 3. **Support** — Donate, Buy a Boat, Sponsor, Campaigns
@@ -106,37 +111,37 @@ graph TD
 
 ### Page priority (build order)
 
-| Priority | Pages |
-|----------|-------|
-| **P0 — launch** | Home, Squads (×3), Trial, Coaching, Boathouse, News index + post, Donate, Buy a Boat, About, History, Committee, Contact, Welfare, 404 |
-| **P1 — within 4 weeks of launch** | Alumni, Meles, Henley Honours, Olympians, Sponsor, Campaigns, Press kit |
-| **P2 — nice to have** | Fleet visualiser, Results archive (filterable), Alumni map, Blazers, Chairs, Newsletter sub-pages |
+| Priority                          | Pages                                                                                                                                  |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| **P0 — launch**                   | Home, Squads (×3), Trial, Coaching, Boathouse, News index + post, Donate, Buy a Boat, About, History, Committee, Contact, Welfare, 404 |
+| **P1 — within 4 weeks of launch** | Alumni, Meles, Henley Honours, Olympians, Sponsor, Campaigns, Press kit                                                                |
+| **P2 — nice to have**             | Fleet visualiser, Results archive (filterable), Alumni map, Blazers, Chairs, Newsletter sub-pages                                      |
 
 ### URL migration map (old → new)
 
 Set up via `astro:redirects` so SEO and bookmarks survive.
 
-| Old | New |
-|-----|-----|
-| `/committee/` | `/committee/` (no change) |
-| `/coaching-team/` | `/coaching/` |
-| `/facilities-fleet/` | `/boathouse/` |
-| `/sponsors/` | `/support/sponsor/` |
-| `/history-2/` | `/about/history/` |
-| `/senior-squad/` | `/squads/senior-men/` |
-| `/women-senior-squad/` | `/squads/senior-women/` |
-| `/fundraising/` | `/support/campaigns/` |
-| `/donate/` | `/support/donate/` |
-| `/single-donation/` | `/support/donate/` |
-| `/bubc-alumni/` | `/alumni/` |
-| `/meles-boat-club/` | `/alumni/meles/` |
-| `/join-meles-bc/` | `/alumni/meles#join` |
-| `/events/` | `/alumni/events/` |
-| `/our-impact/` | `/support/campaigns/` |
-| `/buy-a-boat/` | `/support/buy-a-boat/` |
-| `/chairs-of-bubc/` | `/about/chairs/` |
-| `/henley-honours/` | `/about/henley-honours/` |
-| `/blazers/` | `/about/blazers/` |
+| Old                    | New                       |
+| ---------------------- | ------------------------- |
+| `/committee/`          | `/committee/` (no change) |
+| `/coaching-team/`      | `/coaching/`              |
+| `/facilities-fleet/`   | `/boathouse/`             |
+| `/sponsors/`           | `/support/sponsor/`       |
+| `/history-2/`          | `/about/history/`         |
+| `/senior-squad/`       | `/squads/senior-men/`     |
+| `/women-senior-squad/` | `/squads/senior-women/`   |
+| `/fundraising/`        | `/support/campaigns/`     |
+| `/donate/`             | `/support/donate/`        |
+| `/single-donation/`    | `/support/donate/`        |
+| `/bubc-alumni/`        | `/alumni/`                |
+| `/meles-boat-club/`    | `/alumni/meles/`          |
+| `/join-meles-bc/`      | `/alumni/meles#join`      |
+| `/events/`             | `/alumni/events/`         |
+| `/our-impact/`         | `/support/campaigns/`     |
+| `/buy-a-boat/`         | `/support/buy-a-boat/`    |
+| `/chairs-of-bubc/`     | `/about/chairs/`          |
+| `/henley-honours/`     | `/about/henley-honours/`  |
+| `/blazers/`            | `/about/blazers/`         |
 
 ---
 
@@ -144,22 +149,22 @@ Set up via `astro:redirects` so SEO and bookmarks survive.
 
 ### The stack
 
-| Layer | Choice | Why |
-|-------|--------|-----|
-| **Framework** | Astro 5 | Static-first, fast, content-collection-friendly, partial hydration |
-| **Language** | TypeScript (strict) | Type safety for schemas + components |
-| **Styling** | Tailwind CSS v4 | Utility-first, no build step in v4, design tokens via CSS vars |
-| **CMS** | Sanity (free tier) | Real-time editor, structured content, generous free tier, great image CDN |
-| **Forms** | Formspree free tier | 50 submissions/mo, GDPR-OK, spam protection |
-| **Hosting** | Vercel (free tier) | Auto-deploys from GitHub, edge cache, generous free tier |
-| **DNS / CDN / email** | Cloudflare | Free DNS, free email routing (info@, captain.m@, etc.) |
-| **Analytics** | Cloudflare Web Analytics | Free, privacy-friendly, no cookie banner needed |
-| **Search** | Pagefind | Static, runs at build time, no server, ~100KB |
-| **Repo** | GitHub (private) | Vercel deploy hooks, PR previews |
-| **Package manager** | pnpm | Fast, disk-efficient |
-| **Linting** | ESLint + Prettier + Astro plugin | Standard |
-| **Testing** | Playwright (smoke tests only) | Critical paths: trial form, donate flow, news post |
-| **Donations** | Existing Hubbub link | No code, just CTA buttons |
+| Layer                 | Choice                           | Why                                                                       |
+| --------------------- | -------------------------------- | ------------------------------------------------------------------------- |
+| **Framework**         | Astro 6                          | Static-first, fast, content-collection-friendly, partial hydration        |
+| **Language**          | TypeScript (strict)              | Type safety for schemas + components                                      |
+| **Styling**           | Tailwind CSS v4                  | Utility-first, no build step in v4, design tokens via CSS vars            |
+| **CMS**               | Sanity (free tier)               | Real-time editor, structured content, generous free tier, great image CDN |
+| **Forms**             | Formspree free tier              | 50 submissions/mo, GDPR-OK, spam protection                               |
+| **Hosting**           | Vercel (free tier)               | Auto-deploys from GitHub, edge cache, generous free tier                  |
+| **DNS / CDN / email** | Cloudflare                       | Free DNS, free email routing (info@, captain.m@, etc.)                    |
+| **Analytics**         | Cloudflare Web Analytics         | Free, privacy-friendly, no cookie banner needed                           |
+| **Search**            | Pagefind                         | Static, runs at build time, no server, ~100KB                             |
+| **Repo**              | GitHub (private)                 | Vercel deploy hooks, PR previews                                          |
+| **Package manager**   | pnpm                             | Fast, disk-efficient                                                      |
+| **Linting**           | ESLint + Prettier + Astro plugin | Standard                                                                  |
+| **Testing**           | Playwright (smoke tests only)    | Critical paths: trial form, donate flow, news post                        |
+| **Donations**         | Existing Hubbub link             | No code, just CTA buttons                                                 |
 
 ### Why not...
 
@@ -171,14 +176,14 @@ Set up via `astro:redirects` so SEO and bookmarks survive.
 
 ### Total annual cost
 
-| Item | Cost |
-|------|------|
-| Domain (bubc.co.uk renewal) | ~£10/yr |
-| Vercel | £0 |
-| Sanity | £0 |
-| Cloudflare | £0 |
-| Formspree | £0 (50/mo limit; upgrade if needed) |
-| **Total** | **~£10/yr** |
+| Item                        | Cost                                |
+| --------------------------- | ----------------------------------- |
+| Domain (bubc.co.uk renewal) | ~£10/yr                             |
+| Vercel                      | £0                                  |
+| Sanity                      | £0                                  |
+| Cloudflare                  | £0                                  |
+| Formspree                   | £0 (50/mo limit; upgrade if needed) |
+| **Total**                   | **~£10/yr**                         |
 
 ---
 
@@ -268,45 +273,45 @@ bubc-site/
 
 ### Aesthetic direction
 
-**Editorial heritage athletic.** Think *The Boat Race* programme crossed with a *Monocle* magazine spread. Confident, classical, no-nonsense. Heavy on big photography of crews and water. Sparse use of an accent gold that nods to the BUBC blazer trim.
+**Editorial heritage athletic.** Think _The Boat Race_ programme crossed with a _Monocle_ magazine spread. Confident, classical, no-nonsense. Heavy on big photography of crews and water. Sparse use of an accent gold that nods to the BUBC blazer trim.
 
-The brief: this should look like the website of a club that's been around for 60 years and intends to be around for 60 more. Not a startup. Not a sports brand selling protein. A *club*.
+The brief: this should look like the website of a club that's been around for 60 years and intends to be around for 60 more. Not a startup. Not a sports brand selling protein. A _club_.
 
 ### Brand tokens
 
 ```css
 /* Colour — minimum, no decorative palette */
---ink:        #0A1B2E;   /* deepest navy — text, headings */
---navy:       #0E2A47;   /* primary navy — header, footer, dark sections */
---paper:      #F5F1EA;   /* warm off-white — body background */
---bone:       #ECE5D8;   /* slightly warmer for surfaces */
---gold:       #B8924A;   /* blazer-trim accent — used sparingly */
---avon:       #2D4A3E;   /* deep green — secondary accent */
---blade:      #C8312A;   /* signal red — race day / live indicators only */
+--ink: #0a1b2e; /* deepest navy — text, headings */
+--navy: #0e2a47; /* primary navy — header, footer, dark sections */
+--paper: #f5f1ea; /* warm off-white — body background */
+--bone: #ece5d8; /* slightly warmer for surfaces */
+--gold: #b8924a; /* blazer-trim accent — used sparingly */
+--avon: #2d4a3e; /* deep green — secondary accent */
+--blade: #c8312a; /* signal red — race day / live indicators only */
 
 /* Type */
---font-display: "Fraunces", Georgia, serif;
---font-body:    "Geist", system-ui, sans-serif;
---font-mono:    "Geist Mono", ui-monospace, monospace;
+--font-display: 'Fraunces', Georgia, serif;
+--font-body: 'Geist', system-ui, sans-serif;
+--font-mono: 'Geist Mono', ui-monospace, monospace;
 
 /* Scale — modular, 1.25 ratio */
---text-xs:    0.75rem;
---text-sm:    0.875rem;
---text-base:  1rem;
---text-lg:    1.125rem;
---text-xl:    1.5rem;
---text-2xl:   2rem;
---text-3xl:   2.75rem;
---text-4xl:   3.75rem;
---text-5xl:   5rem;        /* hero only */
+--text-xs: 0.75rem;
+--text-sm: 0.875rem;
+--text-base: 1rem;
+--text-lg: 1.125rem;
+--text-xl: 1.5rem;
+--text-2xl: 2rem;
+--text-3xl: 2.75rem;
+--text-4xl: 3.75rem;
+--text-5xl: 5rem; /* hero only */
 
 /* Space — 4px base */
---space-1:  0.25rem;
---space-2:  0.5rem;
---space-3:  0.75rem;
---space-4:  1rem;
---space-6:  1.5rem;
---space-8:  2rem;
+--space-1: 0.25rem;
+--space-2: 0.5rem;
+--space-3: 0.75rem;
+--space-4: 1rem;
+--space-6: 1.5rem;
+--space-8: 2rem;
 --space-12: 3rem;
 --space-16: 4rem;
 --space-24: 6rem;
@@ -320,7 +325,7 @@ The brief: this should look like the website of a club that's been around for 60
 
 /* Shadow — used very sparingly */
 --shadow-1: 0 1px 2px rgba(10, 27, 46, 0.08);
---shadow-2: 0 4px 12px rgba(10, 27, 46, 0.10);
+--shadow-2: 0 4px 12px rgba(10, 27, 46, 0.1);
 ```
 
 ### Typography rules
@@ -333,17 +338,17 @@ The brief: this should look like the website of a club that's been around for 60
 
 ### Component patterns
 
-| Component | Notes |
-|-----------|-------|
-| **Hero** | Full-bleed image, 80vh on desktop, 70vh mobile. Headline in Fraunces, sub in Geist, two CTAs. No carousel. |
-| **Stat strip** | Horizontal row of 4–5 numbers + labels. Tabular Geist numerals. Divider lines, no boxes. |
-| **News card** | Image 4:5, category tag, headline, date. Hover: image scales 1.02, gold underline on headline. |
-| **Crew card** | Square photo, name, seat, year. Tap → modal or sub-page. |
-| **Boat card** | Boat profile photo, name in Fraunces, make + class + year, donor tag. |
-| **Pull quote** | Fraunces, 1.5em, leading 1.2, gold horizontal rule above. |
-| **Button** | Two variants only: solid (navy bg, paper text) and ghost (navy border, navy text). No 3D, no gradients. |
-| **Tag** | Small caps, 0.75rem, letter-spacing 0.08em, gold or navy. |
-| **Footer** | Dark navy, paper-coloured text, 4-column grid, full-width sponsor strip above. |
+| Component      | Notes                                                                                                      |
+| -------------- | ---------------------------------------------------------------------------------------------------------- |
+| **Hero**       | Full-bleed image, 80vh on desktop, 70vh mobile. Headline in Fraunces, sub in Geist, two CTAs. No carousel. |
+| **Stat strip** | Horizontal row of 4–5 numbers + labels. Tabular Geist numerals. Divider lines, no boxes.                   |
+| **News card**  | Image 4:5, category tag, headline, date. Hover: image scales 1.02, gold underline on headline.             |
+| **Crew card**  | Square photo, name, seat, year. Tap → modal or sub-page.                                                   |
+| **Boat card**  | Boat profile photo, name in Fraunces, make + class + year, donor tag.                                      |
+| **Pull quote** | Fraunces, 1.5em, leading 1.2, gold horizontal rule above.                                                  |
+| **Button**     | Two variants only: solid (navy bg, paper text) and ghost (navy border, navy text). No 3D, no gradients.    |
+| **Tag**        | Small caps, 0.75rem, letter-spacing 0.08em, gold or navy.                                                  |
+| **Footer**     | Dark navy, paper-coloured text, 4-column grid, full-width sponsor strip above.                             |
 
 ### Photography direction
 
@@ -449,6 +454,7 @@ statBlock:  { value, label, suffix }
 A spreadsheet → Sanity import. One column per field. Use `sanity-import` CLI or `@sanity/client` write API.
 
 Priority content to migrate first:
+
 1. Settings (nav, footer, contact)
 2. History (great existing copy)
 3. Coaching bios (good existing copy, just polish)
@@ -468,13 +474,15 @@ export default defineConfig({
   integrations: [
     tailwind(),
     sitemap(),
-    pagefind(),         // build-time search
+    pagefind(), // build-time search
     sanity({ projectId, dataset, useCdn: true }),
   ],
   image: {
     domains: ['cdn.sanity.io'],
   },
-  redirects: { /* see URL migration map */ },
+  redirects: {
+    /* see URL migration map */
+  },
   prefetch: { prefetchAll: true, defaultStrategy: 'viewport' },
 });
 ```
@@ -488,14 +496,14 @@ export default defineConfig({
 
 ### Performance budget
 
-| Metric | Target |
-|--------|--------|
-| HTML | < 30 KB compressed |
-| Critical CSS | < 14 KB inlined |
-| JS (per page) | < 50 KB |
-| LCP image | < 200 KB, AVIF/WebP, responsive |
-| Total page weight | < 800 KB |
-| Web fonts | Self-hosted, `font-display: swap`, subset to Latin |
+| Metric            | Target                                             |
+| ----------------- | -------------------------------------------------- |
+| HTML              | < 30 KB compressed                                 |
+| Critical CSS      | < 14 KB inlined                                    |
+| JS (per page)     | < 50 KB                                            |
+| LCP image         | < 200 KB, AVIF/WebP, responsive                    |
+| Total page weight | < 800 KB                                           |
+| Web fonts         | Self-hosted, `font-display: swap`, subset to Latin |
 
 ---
 
@@ -689,6 +697,161 @@ How auto-deploy works, how to roll back, how to add a new page, how to update Sa
 
 ---
 
+## 9b. Testing & quality strategy
+
+Originally hand-waved as "Playwright smoke tests" in Phase 6 — fleshed out here so it's clear what each layer catches and when it's wired in.
+
+### Pyramid
+
+| Layer                      | Tool                               | Catches                                                                                                                        | When                                                           |
+| -------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- |
+| **Type checking**          | `astro check` + `tsc --noEmit`     | Schema/component type mismatches; missing props; wrong Sanity GROQ result shapes                                               | Every commit (CI + local typecheck script)                     |
+| **Linting**                | ESLint 9 flat config + Prettier    | Style drift, unused vars, banned patterns                                                                                      | Pre-commit (lint-staged) + CI                                  |
+| **Unit / component tests** | Vitest + @testing-library/dom      | Pure utils (`seo.ts`, GROQ projection helpers), component rendering, edge cases                                                | New tests with each lib helper; ~20% coverage target on `lib/` |
+| **Smoke / E2E**            | Playwright                         | Critical user journeys: home loads, news post loads, trial form submits, donate link points to Hubbub, mobile nav opens/closes | Phase 6 expansion; basic skeleton wired now                    |
+| **Accessibility**          | axe-core via Playwright + Pa11y CI | WCAG 2.2 AA regressions on every important page; manual screen-reader pass before launch                                       | CI on every PR for changed pages; full sweep monthly           |
+| **Performance**            | Lighthouse CI (`@lhci/cli`)        | LCP/TBT/CLS regressions, bundle bloat                                                                                          | CI on every PR — fails if any score drops > 5pts vs main       |
+| **Visual regression**      | Playwright screenshot diffs        | Unintended styling changes across the styleguide and home page                                                                 | Optional, set up if it pays for itself                         |
+
+### What lives in code now
+
+- `apps/web/tests/e2e/` — Playwright specs (smoke only at first: home, styleguide, 404)
+- `apps/web/tests/unit/` — Vitest specs, colocated with the code they test where it makes sense (e.g. `src/lib/seo.test.ts`)
+- `apps/web/playwright.config.ts`
+- `apps/web/vitest.config.ts`
+- `.github/workflows/ci.yml` — runs lint, typecheck, build, unit tests, Playwright
+
+### What "good" looks like
+
+- A PR that touches a component **must** ship the test that exercises its public contract (props, edge cases).
+- A failing test never gets bypassed with `.skip` — either the test is wrong (fix it) or the change is wrong (fix the change).
+- Lighthouse CI is _advisory_ for the first two weeks while baselines settle, then becomes a required check.
+- Pa11y zero-error budget on the home page, news post template, trial form, and donate page. Warnings tracked but not blocking.
+
+---
+
+## 9c. CI / CD pipeline
+
+Two workflows in `.github/workflows/`:
+
+### `ci.yml` — runs on every PR
+
+```yaml
+jobs:
+  install: # cache pnpm store
+  lint: # eslint, prettier --check
+  typecheck: # astro check + studio tsc
+  unit: # vitest
+  build: # pnpm build (catches astro runtime errors)
+  e2e: # playwright against the build output (npx http-server dist)
+  a11y: # pa11y-ci against the same
+  lighthouse: # @lhci/cli autorun against the same — advisory at first
+```
+
+All jobs run in parallel where possible. Vercel preview deploys handle visual review; CI handles correctness.
+
+### `lhci.yml` — performance trend on main
+
+Runs Lighthouse on `main` deploys and posts the trend to the PR that introduced the regression.
+
+### Branch protection (set this up on GitHub)
+
+- `main` requires: 1 approving review (when there are more devs), all CI checks pass, conversation resolved, up-to-date with main.
+- No direct pushes to `main`. Pre-merge squash.
+
+---
+
+## 9d. Image strategy
+
+### Source of truth
+
+- **Real photography** lives in Sanity (`imageBlock`). Sanity gives us a CDN, hotspot/crop tooling, and on-the-fly transforms. The `imageBlock` object enforces alt text at schema level.
+- **Static decorative images** (logo, OG fallback, favicon, blazer crest) live in `apps/web/public/`.
+- **Placeholders** during development before real photography exists: a single `Placeholder.astro` component renders a styled rectangle with a label. Identifiable at a glance as "to be replaced".
+
+### Pipeline
+
+1. **Upload to Sanity** with hotspot + alt text (editor enforced).
+2. **`Picture.astro` component** wraps the Sanity image URL builder:
+   - Renders `<picture>` with AVIF + WebP sources and a JPEG fallback
+   - `srcset` with widths matched to Tailwind breakpoints (640, 768, 1024, 1280, 1920)
+   - `sizes` attribute that mirrors the layout (e.g. `(min-width: 1024px) 50vw, 100vw`)
+   - `loading="lazy"` by default; `loading="eager" fetchpriority="high"` for above-the-fold hero
+   - `decoding="async"`
+   - Inline width/height to preserve aspect ratio (avoid CLS)
+3. **LQIP** — low-quality image placeholder (Sanity provides this in the asset metadata) used as a background that fades out when the high-res loads.
+
+### Performance budget (per image)
+
+- Above the fold (hero): ≤ 200KB AVIF, ≤ 300KB WebP fallback
+- News card thumbs: ≤ 60KB AVIF
+- Stats / logos: SVG only
+
+### What to do when real photos arrive
+
+Hand the editor a one-pager (in `CONTENT-EDITING.md`) covering: upload, hotspot, alt text, where each aspect ratio is used. Sanity handles the resizing.
+
+---
+
+## 9e. Content seeding & preview
+
+### Seeding (one-time, before launch)
+
+Bulk-import a baseline so editors see realistic content from day one rather than an empty CMS.
+
+- `apps/studio/seed/` — JSON files for example documents (`squad-senior-men.json`, `news-temple-win.json`, …)
+- A `pnpm --filter @bubc/studio seed` script uses `@sanity/client` write API to upload them. Idempotent: skip docs whose `_id` already exists.
+- Seed targets the `production` dataset only after content is reviewed; during dev, target a `development` dataset.
+
+### Two-dataset workflow
+
+| Dataset       | Used by                                    | Purpose                             |
+| ------------- | ------------------------------------------ | ----------------------------------- |
+| `production`  | live site builds                           | Source of truth                     |
+| `development` | local dev + `bubc-web.vercel.app` previews | Fearless editing — wipe it any time |
+
+Wire via `SANITY_DATASET` env var. Set to `production` on Vercel, `development` in `.env.local`.
+
+### Preview mode (T-late)
+
+Sanity's Presentation tool needs an Astro preview route:
+
+- `apps/web/src/pages/api/preview.ts` — server-side endpoint that sets a draft cookie
+- Sanity client checks the cookie; uses `useCdn: false` and `perspective: 'previewDrafts'` when set
+- Studio configured to point at `https://bubc-web.vercel.app/api/preview` for live preview
+
+---
+
+## 9f. Monitoring & error tracking
+
+| Concern                     | Tool                     | Free tier?         | When                                                              |
+| --------------------------- | ------------------------ | ------------------ | ----------------------------------------------------------------- |
+| Page-load analytics         | Cloudflare Web Analytics | Yes, unlimited     | Wire now (no DNS needed — JS beacon mode works on `*.vercel.app`) |
+| JS errors in browser        | Sentry (`@sentry/astro`) | Yes — 5k events/mo | Phase 5 polish                                                    |
+| Uptime ping                 | UptimeRobot or Cronitor  | Yes                | Phase 6, after DNS cutover                                        |
+| Sanity webhook → revalidate | Vercel deploy hook       | Free               | T28 (news, so editors see posts go live within ~60s)              |
+
+Cloudflare Web Analytics has two installation modes:
+
+- **Automatic** — needs traffic to proxy through Cloudflare (only viable after DNS cutover)
+- **Manual JS beacon** — small `<script>` snippet. Works on any host including `*.vercel.app`. **Use this for now.**
+
+---
+
+## 9g. Cloudflare — what to do, what to defer
+
+The plan calls for Cloudflare in three roles (DNS, Email Routing, Web Analytics). Here's what to do now vs at launch.
+
+| Task                                  | When                    | Notes                                                                                                                                               |
+| ------------------------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Add Web Analytics beacon to the site  | **Now**                 | Free, no DNS needed. Sign up → "Web Analytics" → "Add a site" → "Manual setup" → copy the `<script>` tag → paste into `BaseLayout.astro` (in head). |
+| Add `bubc.co.uk` as a Cloudflare zone | **At launch (Phase 6)** | Domain registrar's nameservers point to Cloudflare.                                                                                                 |
+| Set up Email Routing                  | **At launch**           | Requires the domain to be on Cloudflare nameservers. Forwards `info@bubc.co.uk`, `captain.m@bubc.co.uk`, etc. to personal Gmails.                   |
+| Switch DNS to Vercel via CNAME        | **At launch (Phase 6)** | Add `CNAME @ cname.vercel-dns.com` (or A records) in Cloudflare DNS.                                                                                |
+| ⚠ Cloudflare Pages                    | **Never**               | We host on Vercel. Don't create a Pages project — it'd be a parallel host competing with Vercel. If one was created by accident, delete it.         |
+
+---
+
 ## 10. CV-worthy talking points
 
 Things to be able to articulate when this is on your CV:
@@ -711,13 +874,13 @@ Don't just list the stack. Talk about the decisions: why Astro over Next, why Sa
 
 These need answers from the BUBC committee, not from Claude Code:
 
-1. **Domain control** — who currently owns the `bubc.co.uk` domain registration? Get the login.   -  we already own the domain
-2. **Hubbub** — keep using the existing `bath.hubbub.net/p/BUBC/pledge/` link, or switch to a new donate provider?   - not a priority, just link
+1. **Domain control** — who currently owns the `bubc.co.uk` domain registration? Get the login. - we already own the domain
+2. **Hubbub** — keep using the existing `bath.hubbub.net/p/BUBC/pledge/` link, or switch to a new donate provider? - not a priority, just link
 3. **Hosting** — is the current WP host on contract, or month-to-month? Plan the cancellation.
-4. **Email** — does the club currently have a Google Workspace, or is it all forwarded to personal gmails?   -  think it is all just personal
-5. **Brand** — is there an existing brand guide / colour spec, or are we defining one from scratch?    - defining from scratch, use uni of bath colours
-6. **Photos** — who owns the existing photography? Can we get hi-res originals? Plan a new shoot?   -   we own photos 
-7. **Welfare officer** — name and contact for the dedicated welfare page.   - can sort later when doing comitee
+4. **Email** — does the club currently have a Google Workspace, or is it all forwarded to personal gmails? - think it is all just personal
+5. **Brand** — is there an existing brand guide / colour spec, or are we defining one from scratch? - defining from scratch, use uni of bath colours
+6. **Photos** — who owns the existing photography? Can we get hi-res originals? Plan a new shoot? - we own photos
+7. **Welfare officer** — name and contact for the dedicated welfare page. - can sort later when doing comitee
 8. **Charity status** — is BUBC registered as a charity? Charity number for footer?
 9. **Sanity admins** — who are the two committee members with admin access?
 10. **GitHub access** — who has push rights to `main`? PR approval rules?
@@ -729,24 +892,24 @@ These need answers from the BUBC committee, not from Claude Code:
 Paste these into Claude Code with this plan in context:
 
 ```
-"Read the BUBC development plan in this repo. Start with task T01 — 
-scaffold the astro app and pnpm workspace. Use strict TypeScript. 
+"Read the BUBC development plan in this repo. Start with task T01 —
+scaffold the astro app and pnpm workspace. Use strict TypeScript.
 Stop after the workspace builds and ask before continuing to T02."
 
-"Read §5 of the BUBC plan. Implement the squad document schema in 
-apps/studio/schemas/documents/squad.ts. Include the validation rule 
-that captainBio is required and excerpt is max 200 characters. 
+"Read §5 of the BUBC plan. Implement the squad document schema in
+apps/studio/schemas/documents/squad.ts. Include the validation rule
+that captainBio is required and excerpt is max 200 characters.
 Generate types when done."
 
-"Implement the Hero component for the home page as specified in §4 
-(component patterns) and §7 phase 3. Use the brand tokens from §4. 
-Image should be a Sanity reference, 16:9 desktop, 4:5 mobile. 
+"Implement the Hero component for the home page as specified in §4
+(component patterns) and §7 phase 3. Use the brand tokens from §4.
+Image should be a Sanity reference, 16:9 desktop, 4:5 mobile.
 Include reduced-motion variant."
 
-"Add 301 redirects from §1 URL migration map to astro.config.mjs. 
+"Add 301 redirects from §1 URL migration map to astro.config.mjs.
 Verify each one with a smoke test."
 ```
 
 ---
 
-*Last updated: pre-build. Update this plan as decisions are made — it should be the single source of truth.*
+_Last updated: pre-build. Update this plan as decisions are made — it should be the single source of truth._

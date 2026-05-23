@@ -26,3 +26,17 @@ Thumbs.db
 
 # Sanity
 .sanity/
+
+# Playwright
+**/playwright-report/
+**/test-results/
+**/playwright/.cache/
+
+# Local tool output
+graphify-out/
+
+# Python virtualenvs (not part of this project, but devs may have one for tooling)
+.venv/
+venv/
+__pycache__/
+*.pyc

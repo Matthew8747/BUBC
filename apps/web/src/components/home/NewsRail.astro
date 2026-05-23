@@ -1,0 +1,118 @@
+---
+/**
+ * NewsRail — 3 latest news cards. If Sanity returns nothing, renders 3
+ * placeholder cards so the home page still looks finished during build-out.
+ */
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+import Tag from '../ui/Tag.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Picture from '../content/Picture.astro';
+import type { NewsCardData } from '../../lib/types';
+
+interface Props {
+  posts?: NewsCardData[];
+}
+
+const placeholders: NewsCardData[] = [
+  {
+    _id: 'ph-1',
+    title: 'Senior men reach the Temple final at Henley',
+    slug: 'placeholder-1',
+    publishDate: new Date().toISOString(),
+    excerpt: 'A summer of long sessions on the Avon pays off on the Thames.',
+    category: { title: 'Race report', slug: 'race-report' },
+  },
+  {
+    _id: 'ph-2',
+    title: 'Novice intake opens 18 September',
+    slug: 'placeholder-2',
+    publishDate: new Date().toISOString(),
+    excerpt: 'No experience required. Six weeks to learn to row before Christmas Head.',
+    category: { title: 'Squad update', slug: 'squad-update' },
+  },
+  {
+    _id: 'ph-3',
+    title: 'The new eight — naming details inside',
+    slug: 'placeholder-3',
+    publishDate: new Date().toISOString(),
+    excerpt: 'Alumni-funded boat arrives in February. Ceremony at BUCS Head weekend.',
+    category: { title: 'Fundraising', slug: 'fundraising' },
+  },
+];
+
+const { posts = placeholders } = Astro.props;
+const items = posts.length > 0 ? posts : placeholders;
+
+function fmt(date: string) {
+  return new Date(date).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+}
+---
+
+<Section spacing="lg">
+  <Container>
+    <div class="flex items-end justify-between gap-6 mb-12">
+      <div>
+        <Eyebrow>Latest</Eyebrow>
+        <h2 class="mt-3 text-3xl sm:text-4xl">News from the boathouse</h2>
+      </div>
+      <a
+        href="/news/"
+        class="hidden sm:inline-flex items-center gap-2 text-sm font-medium text-[--color-navy] hover:text-[--color-gold] transition-colors"
+      >
+        All news
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path
+            d="M3 7h8M7 3l4 4-4 4"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path>
+        </svg>
+      </a>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {
+        items.slice(0, 3).map((post) => (
+          <article class="group relative flex flex-col">
+            <a
+              href={post.slug.startsWith('placeholder') ? '#' : `/news/${post.slug}/`}
+              class="absolute inset-0 z-10"
+              aria-label={`Read: ${post.title}`}
+            >
+              <span class="sr-only">Read</span>
+            </a>
+            <Picture
+              image={post.heroImage}
+              ratio="4/5"
+              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+              fallbackLabel={post.title}
+              class="transition-transform duration-500 group-hover:scale-[1.02]"
+            />
+            <div class="mt-5">
+              {post.category && <Tag tone="gold">{post.category.title}</Tag>}
+              <h3 class="mt-3 text-xl sm:text-2xl group-hover:underline decoration-[--color-gold] underline-offset-4">
+                {post.title}
+              </h3>
+              <p class="mt-2 text-sm text-[--color-mute]">{fmt(post.publishDate)}</p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    <div class="mt-12 sm:hidden">
+      <a
+        href="/news/"
+        class="inline-flex items-center gap-2 text-sm font-medium text-[--color-navy]"
+      >
+        All news →
+      </a>
+    </div>
+  </Container>
+</Section>

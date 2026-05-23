@@ -1,0 +1,97 @@
+---
+/**
+ * Picture — responsive image with Sanity CDN transforms + AVIF/WebP fallbacks.
+ *
+ * Drops in anywhere a Sanity `imageBlock` lives. When the image is missing or
+ * fails to resolve, renders a Placeholder of the same aspect ratio so layouts
+ * don't shift.
+ *
+ *   <Picture image={data.heroImage} ratio="16/9" sizes="100vw" priority />
+ */
+import clsx from 'clsx';
+import { urlFor } from '../../lib/sanity';
+import type { SanityImage } from '../../lib/types';
+import Placeholder from './Placeholder.astro';
+
+interface Props {
+  image?: SanityImage | null;
+  ratio?: '16/9' | '4/5' | '1/1' | '3/2' | '21/9';
+  sizes?: string;
+  /** Eager-load + high fetch priority. Use for above-the-fold hero. */
+  priority?: boolean;
+  /** Fallback label shown on the placeholder when the image is missing. */
+  fallbackLabel?: string;
+  /** Decorative — sets alt="" and aria-hidden. Overrides whatever's on the image. */
+  decorative?: boolean;
+  class?: string;
+}
+
+const {
+  image,
+  ratio = '16/9',
+  sizes = '100vw',
+  priority = false,
+  fallbackLabel,
+  decorative,
+  class: className,
+} = Astro.props;
+
+const aspectClass: Record<NonNullable<Props['ratio']>, string> = {
+  '16/9': 'aspect-[16/9]',
+  '4/5': 'aspect-[4/5]',
+  '1/1': 'aspect-square',
+  '3/2': 'aspect-[3/2]',
+  '21/9': 'aspect-[21/9]',
+};
+
+const widths = [480, 768, 1024, 1440, 1920];
+
+const hasAsset = Boolean(image?.asset?._id || image?.asset?._ref);
+
+const isDecorative = decorative ?? image?.decorative ?? false;
+const alt = isDecorative ? '' : (image?.alt ?? '');
+const lqip = image?.asset?.metadata?.lqip;
+
+// Sanity's CDN negotiates AVIF / WebP / JPEG via the browser's Accept header
+// when we pass `auto=format`. That removes the need to author separate
+// <source> tags per format — one srcset works for everyone.
+function buildSrcset() {
+  if (!image) return undefined;
+  return widths
+    .map((w) => `${urlFor(image).width(w).quality(80).fit('max').auto('format').url()} ${w}w`)
+    .join(', ');
+}
+
+const fallbackSrc = image ? urlFor(image).width(1024).quality(80).auto('format').url() : undefined;
+---
+
+{
+  hasAsset && image ? (
+    <figure class={clsx('relative overflow-hidden', aspectClass[ratio], className)}>
+      <img
+        src={fallbackSrc}
+        srcset={buildSrcset()}
+        sizes={sizes}
+        alt={alt}
+        aria-hidden={isDecorative ? 'true' : undefined}
+        loading={priority ? 'eager' : 'lazy'}
+        fetchpriority={priority ? 'high' : undefined}
+        decoding="async"
+        class="absolute inset-0 h-full w-full object-cover"
+        style={
+          lqip
+            ? `background-image:url(${lqip});background-size:cover;background-position:center`
+            : undefined
+        }
+      />
+      {image?.caption && (
+        <figcaption class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent px-4 py-3 text-xs text-white">
+          {image.caption}
+          {image.credit && <span class="ml-2 opacity-70">— {image.credit}</span>}
+        </figcaption>
+      )}
+    </figure>
+  ) : (
+    <Placeholder ratio={ratio} label={fallbackLabel} class={className} />
+  )
+}

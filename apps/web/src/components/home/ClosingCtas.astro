@@ -1,0 +1,100 @@
+---
+/**
+ * ClosingCtas — bottom-of-home band with 2-3 navy cards prompting the next
+ * step (donate, sponsor, alumni). Driven by Sanity if present.
+ */
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+import Button from '../ui/Button.astro';
+import type { Cta } from '../../lib/types';
+
+interface Props {
+  ctas?: Cta[];
+}
+
+const defaults: { title: string; description: string; cta: Cta }[] = [
+  {
+    title: 'Trial with us',
+    description:
+      'Open to all Bath students. Ergo, swim test, interview — September and January intakes.',
+    cta: {
+      label: 'See trial dates',
+      variant: 'gold',
+      link: { label: 'Trial', url: '/squads/trial/' },
+    },
+  },
+  {
+    title: 'Back the club',
+    description:
+      'Every boat we race was paid for by alumni and donors. Help us put the next eight on the water.',
+    cta: { label: 'Donate', variant: 'ghost', link: { label: 'Donate', url: '/support/donate/' } },
+  },
+  {
+    title: 'Sponsor BUBC',
+    description:
+      'Reach 200+ student athletes and a global alumni network. Drop us a line to talk packages.',
+    cta: {
+      label: 'Partnership packs',
+      variant: 'ghost',
+      link: { label: 'Sponsor', url: '/support/sponsor/' },
+    },
+  },
+];
+
+const { ctas } = Astro.props;
+// If Sanity returns CTAs, render as a row of buttons; otherwise the editorial defaults.
+const useCustom = ctas && ctas.length > 0;
+---
+
+<Section tone="navy" spacing="lg">
+  <Container>
+    {
+      useCustom ? (
+        <div class="flex flex-col items-center text-center gap-6">
+          <h2 class="text-3xl sm:text-4xl text-[--color-paper]">Take the next step.</h2>
+          <div class="flex flex-wrap gap-3 justify-center">
+            {ctas!.map((cta) => (
+              <Button
+                href={cta.link.url}
+                variant={cta.variant}
+                size="lg"
+                external={cta.link.external}
+                class={
+                  cta.variant === 'ghost'
+                    ? '!border-[--color-paper] !text-[--color-paper] hover:!bg-[--color-paper] hover:!text-[--color-navy]'
+                    : ''
+                }
+              >
+                {cta.label}
+              </Button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <>
+          <h2 class="text-3xl sm:text-4xl text-[--color-paper] max-w-2xl">Three ways in.</h2>
+          <div class="mt-12 grid md:grid-cols-3 gap-px bg-[--color-paper]/10 border border-[--color-paper]/10">
+            {defaults.map(({ title, description, cta }) => (
+              <div class="p-8 bg-[--color-navy] flex flex-col gap-5">
+                <h3 class="font-display text-2xl text-[--color-paper]">{title}</h3>
+                <p class="text-[--color-paper]/75 flex-1">{description}</p>
+                <Button
+                  href={cta.link.url}
+                  variant={cta.variant}
+                  external={cta.link.external}
+                  class={
+                    cta.variant === 'ghost'
+                      ? '!border-[--color-paper] !text-[--color-paper] hover:!bg-[--color-paper] hover:!text-[--color-navy] self-start'
+                      : 'self-start'
+                  }
+                >
+                  {cta.label}
+                </Button>
+              </div>
+            ))}
+          </div>
+        </>
+      )
+    }
+  </Container>
+</Section>

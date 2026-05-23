@@ -1,0 +1,44 @@
+---
+interface Props {
+  name: string;
+  label: string;
+  hint?: string;
+  placeholder?: string;
+  required?: boolean;
+  rows?: number;
+  maxlength?: number;
+}
+
+const { name, label, hint, placeholder, required, rows = 4, maxlength } = Astro.props;
+const id = `f-${name}`;
+const hintId = hint ? `${id}-hint` : undefined;
+---
+
+<div class="flex flex-col gap-1.5">
+  <label for={id} class="text-sm font-medium text-[--color-ink]">
+    {label}{
+      required && (
+        <span aria-hidden="true" class="text-[--color-blade] ml-0.5">
+          *
+        </span>
+      )
+    }
+  </label>
+  <textarea
+    id={id}
+    name={name}
+    rows={rows}
+    placeholder={placeholder}
+    required={required}
+    maxlength={maxlength}
+    aria-describedby={hintId}
+    class="px-3.5 py-3 border border-[--color-line] bg-[--color-paper] text-[--color-ink] rounded-sm placeholder:text-[--color-mute] focus:border-[--color-navy] focus:outline-2 focus:outline-[--color-gold] focus:outline-offset-2 resize-y"
+  ></textarea>
+  {
+    hint && (
+      <p id={hintId} class="text-xs text-[--color-mute]">
+        {hint}
+      </p>
+    )
+  }
+</div>
