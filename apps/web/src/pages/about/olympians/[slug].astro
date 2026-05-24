@@ -16,6 +16,7 @@ import JsonLd from '../../../components/seo/JsonLd.astro';
 import { safeFetch, urlFor } from '../../../lib/sanity';
 import { olympianBySlugQuery, allOlympianSlugsQuery } from '../../../lib/queries';
 import { SITE } from '../../../lib/seo';
+import { ogImage as generateOgImage } from '../../../lib/og/url';
 import type { OlympianDetail } from '../../../lib/types';
 
 export async function getStaticPaths() {
@@ -33,7 +34,7 @@ if (!o) {
 const canonicalUrl = `${SITE.url}/about/olympians/${slug}/`;
 const ogImage = o.photo?.asset
   ? urlFor(o.photo).width(1200).height(630).fit('crop').auto('format').url()
-  : undefined;
+  : generateOgImage({ kind: 'olympian', slug: slug! });
 
 const medals = (o.olympicYears ?? [])
   .map((y) => y.medal)

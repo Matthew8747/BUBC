@@ -145,4 +145,105 @@ test.describe('smoke', () => {
     const response = await request.get('/sitemap-index.xml');
     expect(response.ok()).toBeTruthy();
   });
+
+  // ---------------------------------------------------------------------------
+  // Phase 5 — fleet, sponsors, campaigns, alumni, newsletter, OG, redirects
+  // ---------------------------------------------------------------------------
+
+  test('fleet index renders heading and empty-state CTAs when no boats', async ({ page }) => {
+    await page.goto('/boathouse/fleet/');
+    await expect(page.getByRole('heading', { level: 1, name: 'The fleet.' })).toBeVisible();
+    // Either entries are present or the editorial empty state is shown.
+    const filterPill = page.locator('.fleet-filter[data-filter="all"]');
+    const empty = page.getByRole('heading', { name: /Fleet profiles coming soon/ });
+    await expect(filterPill.or(empty)).toBeVisible();
+  });
+
+  test('sponsor page renders tier descriptions and contact mailto', async ({ page }) => {
+    await page.goto('/support/sponsor/');
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Sponsor a club that races.' }),
+    ).toBeVisible();
+    // Tier labels render as <dt> not headings.
+    await expect(page.getByText('Headline partner').first()).toBeVisible();
+    await expect(
+      page.getByRole('link', { name: 'sponsorship@bubc.co.uk' }).first(),
+    ).toHaveAttribute('href', 'mailto:sponsorship@bubc.co.uk');
+  });
+
+  test('campaigns index renders heading and an empty state or active list', async ({ page }) => {
+    await page.goto('/support/campaigns/');
+    await expect(
+      page.getByRole('heading', { level: 1, name: "What we're raising for." }),
+    ).toBeVisible();
+    const active = page.getByRole('heading', { name: 'Active campaigns.' });
+    const empty = page.getByRole('heading', { name: /No campaigns running/ });
+    await expect(active.or(empty)).toBeVisible();
+  });
+
+  test('alumni landing exposes filter pills and quick links', async ({ page }) => {
+    await page.goto('/alumni/');
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Where they are now.' }),
+    ).toBeVisible();
+    await expect(page.getByRole('button', { name: /All alumni/ })).toBeVisible();
+    // CTA button + quick-link aside both link to Meles; `.first()` picks the CTA.
+    await expect(page.getByRole('link', { name: /Meles Boat Club/ }).first()).toBeVisible();
+  });
+
+  test('Meles BC page renders join steps and alumni mailto', async ({ page }) => {
+    await page.goto('/alumni/meles/');
+    await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible();
+    await expect(page.getByRole('heading', { name: /How to get back on the river/ })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'alumni@bubc.co.uk' }).first()).toHaveAttribute(
+      'href',
+      /alumni@bubc\.co\.uk/,
+    );
+  });
+
+  test('alumni events page renders heading and event list or empty state', async ({ page }) => {
+    await page.goto('/alumni/events/');
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Come back to the river.' }),
+    ).toBeVisible();
+  });
+
+  test('footer newsletter signup is present in either configured or notice mode', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    const footerSection = page.locator('#footer-newsletter');
+    await expect(footerSection).toBeVisible();
+    // Either the email input is there (configured) or the "not configured" notice is.
+    const emailInput = footerSection.locator('input[type="email"]');
+    const notice = footerSection.getByText(/Newsletter sign-up isn't configured/);
+    await expect(emailInput.or(notice)).toBeVisible();
+  });
+
+  test('OG image endpoint serves a PNG for the home card', async ({ request }) => {
+    const response = await request.get('/og/home.png');
+    expect(response.ok()).toBeTruthy();
+    expect(response.headers()['content-type']).toMatch(/image\/png/);
+  });
+
+  test('OG image endpoint serves a PNG for the default card', async ({ request }) => {
+    const response = await request.get('/og/default.png');
+    expect(response.ok()).toBeTruthy();
+    expect(response.headers()['content-type']).toMatch(/image\/png/);
+  });
+
+  test('legacy /donate/ redirects to /support/donate/', async ({ page }) => {
+    await page.goto('/donate/');
+    await expect(page).toHaveURL(/\/support\/donate\/$/);
+  });
+
+  test('legacy /coaching-team/ redirects to /coaching/', async ({ page }) => {
+    await page.goto('/coaching-team/');
+    await expect(page).toHaveURL(/\/coaching\/$/);
+  });
+
+  test('legacy /buy-a-boat/ redirects to /support/buy-a-boat/', async ({ page }) => {
+    await page.goto('/buy-a-boat/');
+    await expect(page).toHaveURL(/\/support\/buy-a-boat\/$/);
+  });
 });

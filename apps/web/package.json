@@ -16,6 +16,9 @@
     "test:unit:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
+    "test:lhci": "lhci autorun",
+    "test:a11y:serve": "http-server dist -p 4322 -s -c-1",
+    "test:a11y": "pa11y-ci --config .pa11yci.json",
     "astro": "astro"
   },
   "dependencies": {
@@ -25,17 +28,25 @@
     "@fontsource-variable/geist": "^5.2.9",
     "@fontsource-variable/geist-mono": "^5.2.8",
     "@portabletext/to-html": "^5.0.2",
+    "@resvg/resvg-js": "^2.6.2",
     "@sanity/client": "^7.22.0",
     "@sanity/image-url": "^2.1.1",
+    "@sentry/browser": "^10.53.1",
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.3.6",
     "clsx": "^2.1.1",
     "pagefind": "^1.5.2",
+    "satori": "^0.26.0",
     "tailwindcss": "^4.3.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
+    "@fontsource/fraunces": "^5.2.9",
+    "@fontsource/geist": "^5.2.9",
+    "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.60.0",
+    "http-server": "^14.1.1",
+    "pa11y-ci": "^4.1.1",
     "typescript": "^5.9.3",
     "vitest": "^4.1.7"
   }

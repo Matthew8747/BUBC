@@ -10,6 +10,8 @@ interface ImportMetaEnv {
   readonly SANITY_API_READ_TOKEN?: string;
   readonly PUBLIC_FORMSPREE_TRIAL_ID?: string;
   readonly PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN?: string;
+  readonly PUBLIC_BUTTONDOWN_USERNAME?: string;
+  readonly PUBLIC_SENTRY_DSN?: string;
 }
 
 interface ImportMeta {

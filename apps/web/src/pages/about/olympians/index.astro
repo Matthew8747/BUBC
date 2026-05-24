@@ -20,6 +20,7 @@ import JsonLd from '../../../components/seo/JsonLd.astro';
 import { safeFetch } from '../../../lib/sanity';
 import { olympiansQuery } from '../../../lib/queries';
 import { SITE } from '../../../lib/seo';
+import { ogImage } from '../../../lib/og/url';
 import type { OlympianCard } from '../../../lib/types';
 
 const olympians = (await safeFetch<OlympianCard[]>(olympiansQuery)) ?? [];
@@ -70,6 +71,7 @@ const breadcrumbs = {
   seo={{
     title: 'Olympians',
     description: 'BUBC alumni who have rowed for Great Britain (and beyond) at the Olympic Games.',
+    image: ogImage({ kind: 'page', slug: 'olympians' }),
   }}
 >
   <JsonLd data={breadcrumbs} slot="head" />

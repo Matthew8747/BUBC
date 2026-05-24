@@ -1,0 +1,199 @@
+---
+/**
+ * Campaign detail — /support/campaigns/[slug]/
+ *
+ * Full story for a single fundraising campaign: hero, thermometer, story body,
+ * gallery, share buttons, donate CTA. Pre-renders every campaign at build time.
+ */
+import type { GetStaticPaths } from 'astro';
+import PageLayout from '../../../layouts/PageLayout.astro';
+import Container from '../../../components/ui/Container.astro';
+import Section from '../../../components/ui/Section.astro';
+import Picture from '../../../components/content/Picture.astro';
+import PortableText from '../../../components/content/PortableText.astro';
+import Eyebrow from '../../../components/ui/Eyebrow.astro';
+import Button from '../../../components/ui/Button.astro';
+import DonationThermometer from '../../../components/support/DonationThermometer.astro';
+import ShareButtons from '../../../components/news/ShareButtons.astro';
+import JsonLd from '../../../components/seo/JsonLd.astro';
+import { safeFetch } from '../../../lib/sanity';
+import { allCampaignSlugsQuery, campaignBySlugQuery } from '../../../lib/queries';
+import { SITE } from '../../../lib/seo';
+import { ogImage } from '../../../lib/og/url';
+import type { CampaignDetail } from '../../../lib/types';
+
+export const getStaticPaths = (async () => {
+  const slugs = (await safeFetch<{ slug: string }[]>(allCampaignSlugsQuery)) ?? [];
+  return slugs.filter((s) => s.slug).map((s) => ({ params: { slug: s.slug } }));
+}) satisfies GetStaticPaths;
+
+const { slug } = Astro.params;
+const campaign = await safeFetch<CampaignDetail>(campaignBySlugQuery, { slug });
+
+if (!campaign) {
+  return Astro.redirect('/support/campaigns/');
+}
+
+const isActive = campaign.status === 'active';
+const isReached = campaign.status === 'reached';
+const shareUrl = `${SITE.url}/support/campaigns/${campaign.slug}/`;
+
+const breadcrumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'Support', item: `${SITE.url}/support/` },
+    { '@type': 'ListItem', position: 3, name: 'Campaigns', item: `${SITE.url}/support/campaigns/` },
+    { '@type': 'ListItem', position: 4, name: campaign.title, item: shareUrl },
+  ],
+};
+
+const seo = {
+  title: campaign.title,
+  description: campaign.shortDescription,
+  image: campaign.heroImage?.asset?.url ?? ogImage({ kind: 'campaign', slug: campaign.slug }),
+};
+---
+
+<PageLayout seo={seo}>
+  <JsonLd data={breadcrumbs} slot="head" />
+
+  <article>
+    <header class="relative isolate bg-[--color-navy]">
+      {
+        campaign.heroImage && (
+          <div class="absolute inset-0 -z-10">
+            <Picture
+              image={campaign.heroImage}
+              ratio="21/9"
+              sizes="100vw"
+              priority
+              fallbackLabel={campaign.title}
+              decorative
+              class="h-full w-full"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-[--color-ink]/90 via-[--color-ink]/50 to-[--color-ink]/30" />
+          </div>
+        )
+      }
+      <Container class="pt-24 pb-16 sm:pt-32 sm:pb-24 text-[--color-paper]">
+        <p class="text-sm text-[--color-paper]/70 mb-6">
+          <a href="/support/campaigns/" class="hover:text-[--color-paper]">Campaigns</a>
+          <span class="mx-2 opacity-50">/</span>
+          <span class="text-[--color-paper]">{campaign.title}</span>
+        </p>
+        {
+          isActive && (
+            <span class="inline-flex items-center rounded-sm bg-[--color-gold] text-[--color-ink] px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.12em]">
+              Active campaign
+            </span>
+          )
+        }
+        {
+          isReached && (
+            <span class="inline-flex items-center rounded-sm bg-[--color-paper]/15 text-[--color-paper] px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.12em]">
+              Goal reached
+            </span>
+          )
+        }
+        <h1 class="mt-5 max-w-4xl font-display text-4xl sm:text-5xl md:text-6xl leading-[1.05]">
+          {campaign.title}
+        </h1>
+        <p class="mt-4 max-w-2xl text-base sm:text-lg text-[--color-paper]/85">
+          {campaign.shortDescription}
+        </p>
+      </Container>
+    </header>
+
+    <Section spacing="md">
+      <Container>
+        <div class="grid lg:grid-cols-[1.6fr_1fr] gap-12 lg:gap-16 items-start">
+          <div>
+            {
+              campaign.story != null ? (
+                <>
+                  <Eyebrow>The story</Eyebrow>
+                  <PortableText value={campaign.story} class="mt-6" />
+                </>
+              ) : (
+                <p class="text-[--color-mute] italic">
+                  Campaign story coming soon. In the meantime — every pound towards the goal helps;
+                  the link is on the right.
+                </p>
+              )
+            }
+          </div>
+
+          <aside class="lg:sticky lg:top-24">
+            <div class="bg-[--color-bone] p-6 sm:p-8 flex flex-col gap-6">
+              <DonationThermometer
+                goal={campaign.goalAmount}
+                raised={campaign.raisedAmount}
+                donorCount={campaign.donorCount}
+              />
+              {
+                isActive && (
+                  <Button href={campaign.donateUrl} variant="solid" external>
+                    Donate to {campaign.title}
+                  </Button>
+                )
+              }
+              {
+                isReached && (
+                  <p class="text-sm text-[--color-mute]">
+                    This campaign hit its goal. Thank you to everyone who gave. New campaigns are
+                    listed on the{' '}
+                    <a
+                      href="/support/campaigns/"
+                      class="underline decoration-[--color-gold] underline-offset-4"
+                    >
+                      campaigns page
+                    </a>
+                    .
+                  </p>
+                )
+              }
+              <div>
+                <p class="text-xs uppercase tracking-[0.12em] text-[--color-mute] mb-3">Share</p>
+                <ShareButtons url={shareUrl} title={campaign.title} />
+              </div>
+            </div>
+          </aside>
+        </div>
+      </Container>
+    </Section>
+
+    {
+      campaign.gallery && campaign.gallery.length > 0 && (
+        <Section tone="bone" spacing="md">
+          <Container>
+            <Eyebrow>Gallery</Eyebrow>
+            <h2 class="mt-3 font-display text-3xl">Photos from the campaign.</h2>
+            <ul class="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {campaign.gallery.map((img) => (
+                <li>
+                  <Picture
+                    image={img}
+                    ratio="4/5"
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  />
+                </li>
+              ))}
+            </ul>
+          </Container>
+        </Section>
+      )
+    }
+
+    <Section tone="navy" spacing="sm">
+      <Container class="flex flex-wrap items-center justify-between gap-6">
+        <div>
+          <Eyebrow tone="paper">All campaigns</Eyebrow>
+          <p class="mt-2 font-display text-2xl text-[--color-paper]">More ways to help.</p>
+        </div>
+        <Button href="/support/campaigns/" variant="gold">View all campaigns</Button>
+      </Container>
+    </Section>
+  </article>
+</PageLayout>

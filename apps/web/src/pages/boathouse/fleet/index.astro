@@ -1,0 +1,236 @@
+---
+/**
+ * Fleet index — /boathouse/fleet/
+ *
+ * Card grid of every boat the club owns, grouped visually by status (active
+ * boats first, then reserve, then forSale, retired last). Filter pills at the
+ * top toggle visibility client-side; the underlying HTML is still indexable
+ * and accessible without JS.
+ */
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHero from '../../../components/layout/PageHero.astro';
+import Container from '../../../components/ui/Container.astro';
+import Section from '../../../components/ui/Section.astro';
+import Picture from '../../../components/content/Picture.astro';
+import Eyebrow from '../../../components/ui/Eyebrow.astro';
+import Button from '../../../components/ui/Button.astro';
+import JsonLd from '../../../components/seo/JsonLd.astro';
+import { safeFetch } from '../../../lib/sanity';
+import { fullFleetQuery } from '../../../lib/queries';
+import { SITE } from '../../../lib/seo';
+import { ogImage } from '../../../lib/og/url';
+import type { BoatCardData } from '../../../lib/types';
+
+const fleet = (await safeFetch<BoatCardData[]>(fullFleetQuery)) ?? [];
+
+const statusLabel: Record<BoatCardData['status'], string> = {
+  active: 'Active',
+  reserve: 'Reserve',
+  forSale: 'For sale',
+  retired: 'Retired',
+};
+
+// Backed pill so the status is legible regardless of the photo behind it.
+const statusBadge: Record<BoatCardData['status'], string> = {
+  active: 'bg-[--color-navy] text-[--color-paper]',
+  reserve: 'bg-[--color-paper] text-[--color-ink]',
+  forSale: 'bg-[--color-gold] text-[--color-ink]',
+  retired: 'bg-[--color-ink]/70 text-[--color-paper]',
+};
+
+// Distinct boat classes that exist in the data, for filter pills.
+const classes = Array.from(new Set(fleet.map((b) => b.class)))
+  .filter(Boolean)
+  .sort();
+
+const totalCount = fleet.length;
+const activeCount = fleet.filter((b) => b.status === 'active').length;
+
+const breadcrumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'Boathouse', item: `${SITE.url}/boathouse/` },
+    { '@type': 'ListItem', position: 3, name: 'Fleet', item: `${SITE.url}/boathouse/fleet/` },
+  ],
+};
+---
+
+<PageLayout
+  seo={{
+    title: 'Fleet',
+    description:
+      'Every BUBC racing boat with name, make, class, and donor story. The current fleet on the River Avon.',
+    image: ogImage({ kind: 'page', slug: 'fleet' }),
+  }}
+>
+  <JsonLd data={breadcrumbs} slot="head" />
+
+  <PageHero
+    eyebrow="Boathouse"
+    headline="The fleet."
+    lead="Each shell carries a name, a donor, and a history of crews who've raced it. Browse the boats that make up our current fleet."
+  />
+
+  <Section spacing="md">
+    <Container>
+      <p class="text-sm text-[--color-mute] mb-6">
+        <a href="/boathouse/" class="hover:text-[--color-navy]">Boathouse</a>
+        <span class="mx-2 opacity-50">/</span>
+        <span class="text-[--color-ink]">Fleet</span>
+      </p>
+
+      {
+        totalCount > 0 ? (
+          <>
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-[--color-ink]/10 pb-6">
+              <div class="flex flex-wrap items-baseline gap-x-6 gap-y-2 text-sm text-[--color-mute]">
+                <span>
+                  <strong class="text-[--color-ink] font-display text-base">{totalCount}</strong>{' '}
+                  boats in the fleet
+                </span>
+                {activeCount > 0 && (
+                  <span>
+                    <strong class="text-[--color-ink] font-display text-base">{activeCount}</strong>{' '}
+                    currently racing
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <div
+              class="mt-6 flex flex-wrap gap-2"
+              role="group"
+              aria-label="Filter the fleet by boat class"
+            >
+              <button
+                type="button"
+                class="fleet-filter inline-flex items-center rounded-full border border-[--color-ink]/15 bg-[--color-paper] px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.1em] hover:border-[--color-ink]/30 aria-pressed:bg-[--color-ink] aria-pressed:text-[--color-paper] aria-pressed:border-[--color-ink]"
+                data-filter="all"
+                aria-pressed="true"
+              >
+                All
+              </button>
+              {classes.map((cls) => (
+                <button
+                  type="button"
+                  class="fleet-filter inline-flex items-center rounded-full border border-[--color-ink]/15 bg-[--color-paper] px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.1em] hover:border-[--color-ink]/30 aria-pressed:bg-[--color-ink] aria-pressed:text-[--color-paper] aria-pressed:border-[--color-ink]"
+                  data-filter={cls}
+                  aria-pressed="false"
+                >
+                  {cls}
+                </button>
+              ))}
+            </div>
+
+            <ul class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12" id="fleet-grid">
+              {fleet.map((boat, i) => (
+                <li data-boat-class={boat.class} data-boat-status={boat.status}>
+                  <article class="group relative flex flex-col">
+                    <a
+                      href={`/boathouse/fleet/${boat.slug}/`}
+                      class="absolute inset-0 z-10"
+                      aria-label={`${boat.name} — full profile`}
+                    >
+                      <span class="sr-only">Profile</span>
+                    </a>
+                    <div class="relative">
+                      <Picture
+                        image={boat.photo}
+                        ratio="4/5"
+                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                        fallbackLabel={boat.name}
+                        priority={i < 3}
+                        class="transition-transform duration-500 group-hover:scale-[1.02]"
+                      />
+                      <span
+                        class:list={[
+                          'absolute top-3 left-3 inline-flex items-center rounded-sm px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.12em]',
+                          statusBadge[boat.status],
+                        ]}
+                      >
+                        {statusLabel[boat.status]}
+                      </span>
+                    </div>
+                    <div class="mt-4">
+                      <h2 class="font-display text-2xl group-hover:underline decoration-[--color-gold] underline-offset-4">
+                        {boat.name}
+                      </h2>
+                      <p class="mt-1 text-sm text-[--color-mute]">
+                        {boat.make} · {boat.class}
+                        {boat.weight
+                          ? ` · ${boat.weight === 'heavy' ? 'Heavyweight' : 'Lightweight'}`
+                          : ''}
+                        {boat.yearBought ? ` · ${boat.yearBought}` : ''}
+                      </p>
+                      {boat.donor && (
+                        <p class="mt-2 text-xs uppercase tracking-[0.12em] text-[--color-gold]">
+                          Donated by {boat.donor}
+                        </p>
+                      )}
+                    </div>
+                  </article>
+                </li>
+              ))}
+            </ul>
+
+            <p
+              class="mt-12 hidden text-sm italic text-[--color-mute]"
+              id="fleet-empty-filter"
+              role="status"
+              aria-live="polite"
+            >
+              No boats in this class right now.
+            </p>
+          </>
+        ) : (
+          <div class="rounded border border-dashed border-[--color-ink]/15 bg-[--color-bone]/60 p-10 text-center max-w-2xl mx-auto">
+            <Eyebrow>Boats</Eyebrow>
+            <h2 class="mt-3 font-display text-2xl">Fleet profiles coming soon</h2>
+            <p class="mt-3 text-sm text-[--color-mute]">
+              We're photographing the fleet boat-by-boat over the coming weeks. Once the photo shoot
+              wraps each shell gets its own profile here — name, class, donor, and the crews who've
+              raced it.
+            </p>
+            <div class="mt-6 flex flex-wrap gap-3 justify-center">
+              <Button href="/support/buy-a-boat/" variant="ghost">
+                Buy a boat
+              </Button>
+              <Button href="/support/donate/" variant="solid">
+                Support the fleet
+              </Button>
+            </div>
+          </div>
+        )
+      }
+    </Container>
+  </Section>
+</PageLayout>
+
+<script>
+  // Class-pill filter for the fleet grid. Pure DOM; preserves the rendered list,
+  // hides items that don't match. Falls back to "show all" when JS is disabled.
+  const pills = document.querySelectorAll<HTMLButtonElement>('.fleet-filter');
+  const grid = document.getElementById('fleet-grid');
+  const emptyMsg = document.getElementById('fleet-empty-filter');
+
+  function applyFilter(filter: string) {
+    if (!grid) return;
+    let visible = 0;
+    grid.querySelectorAll<HTMLElement>('[data-boat-class]').forEach((li) => {
+      const match = filter === 'all' || li.dataset.boatClass === filter;
+      li.hidden = !match;
+      if (match) visible++;
+    });
+    if (emptyMsg) emptyMsg.hidden = visible !== 0;
+  }
+
+  pills.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      pills.forEach((b) => b.setAttribute('aria-pressed', 'false'));
+      btn.setAttribute('aria-pressed', 'true');
+      applyFilter(btn.dataset.filter ?? 'all');
+    });
+  });
+</script>

@@ -105,3 +105,58 @@ jobs:
           name: playwright-report
           path: apps/web/playwright-report
           retention-days: 7
+
+  # Lighthouse CI — advisory only (warn, don't error) until baselines settle.
+  # See plan.md §9b "Performance" + apps/web/.lighthouserc.json.
+  lighthouse:
+    name: Lighthouse CI
+    needs: build
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@v4
+        with:
+          name: web-dist
+          path: apps/web/dist
+      - name: Run Lighthouse CI
+        working-directory: apps/web
+        run: pnpm test:lhci
+
+  # Pa11y accessibility checks across every key page. Same advisory posture
+  # for the first two weeks; tighten to required once baselines settle.
+  a11y:
+    name: Pa11y accessibility
+    needs: build
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@v4
+        with:
+          name: web-dist
+          path: apps/web/dist
+      - name: Start static server
+        working-directory: apps/web
+        run: |
+          pnpm exec http-server dist -p 4322 -s -c-1 &
+          sleep 3
+      - name: Run pa11y-ci
+        working-directory: apps/web
+        run: pnpm test:a11y

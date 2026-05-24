@@ -21,6 +21,7 @@ import JsonLd from '../../components/seo/JsonLd.astro';
 import { safeFetch } from '../../lib/sanity';
 import { henleyHonoursQuery } from '../../lib/queries';
 import { SITE } from '../../lib/seo';
+import { ogImage } from '../../lib/og/url';
 import type { HenleyHonour } from '../../lib/types';
 
 const honours = (await safeFetch<HenleyHonour[]>(henleyHonoursQuery)) ?? [];
@@ -77,6 +78,7 @@ function athleteLink(name?: string, slug?: string) {
     title: 'Henley honours',
     description:
       'Every BUBC crew that has competed at Henley Royal and Henley Women’s Regatta, year by year.',
+    image: ogImage({ kind: 'page', slug: 'henley-honours' }),
   }}
 >
   <JsonLd data={breadcrumbs} slot="head" />

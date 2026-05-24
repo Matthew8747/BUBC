@@ -22,6 +22,7 @@ import CategoryPills from '../../components/news/CategoryPills.astro';
 import Pagination from '../../components/news/Pagination.astro';
 import { safeFetch } from '../../lib/sanity';
 import { newsIndexQuery, newsCategoriesQuery } from '../../lib/queries';
+import { ogImage } from '../../lib/og/url';
 import type { NewsCardData, NewsCategory } from '../../lib/types';
 
 export const PAGE_SIZE = 9;
@@ -40,6 +41,7 @@ const hasPosts = posts.length > 0;
   seo={{
     title: 'News',
     description: 'Race reports, squad updates, and announcements from the boathouse.',
+    image: ogImage({ kind: 'page', slug: 'news' }),
   }}
 >
   <PageHero

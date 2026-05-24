@@ -15,6 +15,7 @@ import Picture from '../../components/content/Picture.astro';
 import Button from '../../components/ui/Button.astro';
 import { safeFetch } from '../../lib/sanity';
 import { allSquadsQuery } from '../../lib/queries';
+import { ogImage } from '../../lib/og/url';
 import type { SquadCardData } from '../../lib/types';
 
 const squads = (await safeFetch<SquadCardData[]>(allSquadsQuery)) ?? [];
@@ -57,6 +58,7 @@ const seo = {
   title: 'Squads',
   description:
     "BUBC's senior men's, senior women's, and novice squads — training schedules, captains, coaches, and how to get involved.",
+  image: ogImage({ kind: 'page', slug: 'squads' }),
 };
 ---
 

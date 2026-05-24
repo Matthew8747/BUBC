@@ -12,7 +12,7 @@
 > - **❓ Needs decision** — user input required before scoping
 > - **🚫 Out of scope** — explicitly not doing (with reason)
 >
-> Last updated: 2026-05-24 (session 4 — Phase 4 landed).
+> Last updated: 2026-05-24 (session 5 — Phase 5 landed).
 
 ---
 
@@ -45,12 +45,12 @@
 
 ## 3. Boats & boathouse
 
-| ID  | Feature                         | Status                 | Notes                                                                                                                                 |
-| --- | ------------------------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| B1  | Boathouse page                  | 📋 Planned (T23)       | Facilities + location + fleet teaser.                                                                                                 |
-| B2  | Fleet index + boat detail pages | 📋 Planned             | `boat` schema has `name, make, class, weight, yearBought, donor, story, photo, status`. Schema supports boat naming history (P4 ask). |
-| B3  | Boat naming history             | 🟡 Under consideration | Already supported by `boat.story` + `boat.donor`. Just needs the page to surface it well. Trivial extension.                          |
-| B4  | Interactive fleet visualiser    | 📋 Planned (T32)       | SVG of boathouse bays, clickable boats → detail. Phase 5 polish. Needs bay layout / `fleetLocation` schema (in plan §5).              |
+| ID  | Feature                         | Status                | Notes                                                                                                                                |
+| --- | ------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| B1  | Boathouse page                  | ✅ Built (T23)        | Facilities + location + fleet teaser. Now also links to `/boathouse/fleet/`.                                                         |
+| B2  | Fleet index + boat detail pages | ✅ Built (session 5)  | `/boathouse/fleet/` grid with class filter pills + status badges; `/boathouse/fleet/[slug]/` detail with story, current crew, donor. |
+| B3  | Boat naming history             | ✅ Surfaced           | `boat.story` (PortableText) + `boat.donor` + naming-ceremony date all rendered on the boat detail page.                              |
+| B4  | Interactive fleet visualiser    | 🚫 Skipped (decision) | User chose plain grid layout in session 5 — editors don't have to maintain SVG when bays move. Standard fleet pages built instead.   |
 
 ## 4. Results & history
 
@@ -64,37 +64,37 @@
 
 ## 5. Alumni & community
 
-| ID  | Feature                   | Status                 | Notes                                                                                                                                                                                                                                                           |
-| --- | ------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| A1  | Alumni landing page       | 📋 Planned (P1)        | `/alumni/`.                                                                                                                                                                                                                                                     |
-| A2  | Meles Boat Club page      | 📋 Planned (P1)        | `/alumni/meles/`.                                                                                                                                                                                                                                               |
-| A3  | Alumni events page        | 📋 Planned (P1)        | `/alumni/events/` — uses `event` schema.                                                                                                                                                                                                                        |
-| A4  | "Where they are now" grid | 🟡 Under consideration | **Decision (2026-05-23):** extend `olympian` → `alumniProfile` with `category` enum (`olympian` / `international` / `boatRace` / `notableCareer`). One unified feed, filterable on the page. Schema rename + page split happens when alumni section lands (P1). |
-| A5  | Alumni world map          | 🟡 Under consideration | Pins for where alumni live/work. Mapbox or Leaflet. Phase 5 polish. Needs location data on each alumnus.                                                                                                                                                        |
-| A6  | Newsletter signup         | 🟡 Under consideration | Buttondown or Beehiiv free tier. Footer + post pages. Plan §7 Phase 5. Needs provider chosen.                                                                                                                                                                   |
+| ID  | Feature                   | Status                 | Notes                                                                                                                                                                                                                              |
+| --- | ------------------------- | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A1  | Alumni landing page       | ✅ Built (session 5)   | `/alumni/` — unified profile grid with category filter pills, medal indicators, quick-links aside, graceful empty state.                                                                                                           |
+| A2  | Meles Boat Club page      | ✅ Built (session 5)   | `/alumni/meles/` — `page` doc-driven body with fallback, three-step join flow + sticky contact card, `#join` anchor (legacy URL target).                                                                                           |
+| A3  | Alumni events page        | ✅ Built (session 5)   | `/alumni/events/` — upcoming events with `Event` JSON-LD per item, past events compact list. Reads `event` schema filtered to `type == "alumni"`.                                                                                  |
+| A4  | "Where they are now" grid | ✅ Built (session 5)   | `olympian` schema extended (no rename) with `category` enum + `internationalAppearances` + `boatRaceAppearances` + `careerHighlight` + `location` fields. `/alumni/` filters by category; `/about/olympians/` still olympian-only. |
+| A5  | Alumni world map          | 🟡 Under consideration | `location` field now on schema. When enough alumni have populated it, build the map view (Mapbox or Leaflet).                                                                                                                      |
+| A6  | Newsletter signup         | ✅ Built (session 5)   | **Buttondown** wired into footer + bottom of news posts. Graceful "not configured" state when `PUBLIC_BUTTONDOWN_USERNAME` unset. Honeypot anti-spam + AJAX submission + inline success/error states.                              |
 
 ## 6. Fundraising & sponsorship
 
-| ID  | Feature                                  | Status            | Notes                                                                                                  |
-| --- | ---------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------ |
-| F1  | Donate page                              | 📋 Planned (T27)  | Links to existing Hubbub.                                                                              |
-| F2  | Buy a Boat page                          | 📋 Planned (T27)  | `boatForSale` schema exists.                                                                           |
-| F3  | Sponsor index / partners page            | 📋 Planned (P1)   | `sponsor` schema exists, tiers ready.                                                                  |
-| F4  | Campaign pages + thermometer             | 📋 Planned (T33)  | `campaign` schema has `goalAmount`, `raisedAmount`, `donorCount`. Thermometer = pure UI on top.        |
-| F5  | Sponsorship pack PDF                     | ❓ Needs decision | Tiered packages, audience numbers, benefits per tier. Linked from sponsor page. Needs draft from club. |
-| F6  | Crew Boat Race / erg-athon page template | ❓ Needs decision | Live total embed during fundraising events. Could reuse `campaign` schema with `eventDate` extension.  |
+| ID  | Feature                                  | Status               | Notes                                                                                                                                      |
+| --- | ---------------------------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| F1  | Donate page                              | ✅ Built (T27)       | Links to existing Hubbub. Active campaigns surface with thermometers inline.                                                               |
+| F2  | Buy a Boat page                          | ✅ Built (T27)       | `boatForSale` schema; semantic price-range table.                                                                                          |
+| F3  | Sponsor index / partners page            | ✅ Built (session 5) | `/support/sponsor/` — tier descriptions + partner grid (rich cards for headline/gold, compact logo grid for silver/supporter) + email CTA. |
+| F4  | Campaign pages + thermometer             | ✅ Built (session 5) | `/support/campaigns/` listing (active/reached/closed); `/support/campaigns/[slug]/` detail with sticky thermometer + story + gallery.      |
+| F5  | Sponsorship pack PDF                     | ❓ Needs decision    | Sponsor page links to mailto for the pack until draft content arrives. Hook up when ready.                                                 |
+| F6  | Crew Boat Race / erg-athon page template | ❓ Needs decision    | Live total embed during fundraising events. Could reuse `campaign` schema with `eventDate` extension.                                      |
 
 ## 7. Interactive / "wow"
 
-| ID  | Feature                            | Status                 | Notes                                                                                                                                                                                                                        |
-| --- | ---------------------------------- | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| W1  | Strava club embed                  | 🟡 Under consideration | Phase 5. Plan §7. Needs club Strava account + widget URL.                                                                                                                                                                    |
-| W2  | Erg leaderboard                    | ❓ Needs decision      | Top 10 2k / 5k by squad / gender, anonymised optional. Source: Airtable or Notion table? Anti-cheat policy needed.                                                                                                           |
-| W3  | Race countdown banner (HRR / BUCS) | 📋 Planned (Phase 5)   | Driven by a `nextEvent` field on `settings`. Plan §7.                                                                                                                                                                        |
-| W4  | Donate progress thermometer        | 📋 Planned (T33)       | See F4. Phase 5.                                                                                                                                                                                                             |
-| W5  | Fleet visualiser SVG               | 📋 Planned (T32)       | See B4.                                                                                                                                                                                                                      |
-| W6  | OG image generation (satori)       | 📋 Planned (T34)       | Per-page dynamic OG. Phase 5.                                                                                                                                                                                                |
-| W7  | Structured data (JSON-LD)          | ✅ Partly built (T35)  | Global `SportsOrganization` + `WebSite` in BaseLayout. Per-template: `NewsArticle` (news posts), `Person` (olympians), `BreadcrumbList` (interior pages). Still to add: `Event` for race days, `SportsTeam` for squad pages. |
+| ID  | Feature                            | Status                 | Notes                                                                                                                                                                                                                |
+| --- | ---------------------------------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| W1  | Strava club embed                  | 🟡 Under consideration | Phase 5. Plan §7. Needs club Strava account + widget URL.                                                                                                                                                            |
+| W2  | Erg leaderboard                    | ❓ Needs decision      | Top 10 2k / 5k by squad / gender, anonymised optional. Source: Airtable or Notion table? Anti-cheat policy needed.                                                                                                   |
+| W3  | Race countdown banner (HRR / BUCS) | ✅ Covered by R5       | Live race banner does double duty as countdown — set `active=true` with the event name and result URL.                                                                                                               |
+| W4  | Donate progress thermometer        | ✅ Built (T33)         | See F4. Used on `/support/donate/` and `/support/campaigns/[slug]/`.                                                                                                                                                 |
+| W5  | Fleet visualiser SVG               | 🚫 Skipped (B4)        | User chose plain grid layout. See B4.                                                                                                                                                                                |
+| W6  | OG image generation (satori)       | ✅ Built (session 5)   | satori + resvg, build-time. ~30 static-page cards + dynamic per news/squad/olympian/alumni/boat/campaign. Bundled fonts (Inter + Fraunces TTF). Transparent-PNG fallback on satori errors so the build never breaks. |
+| W7  | Structured data (JSON-LD)          | ✅ Built (session 5)   | Global `SportsOrganization` + `WebSite`. Per-template: `NewsArticle` (news), `Person` (olympians + alumni), `SportsTeam` (squads), `Event` (alumni events), `BreadcrumbList` (interior pages).                       |
 
 ## 8. Performance, SEO, infra
 
@@ -104,12 +104,12 @@
 | I2  | RSS feed                           | ✅ Built (T28)       | `/news/rss.xml` via `@astrojs/rss` with custom XSL stylesheet for browser preview.                                         |
 | I3  | Pagefind search                    | ✅ Built (T29)       | Indexed at build, `/` keyboard shortcut + Cmd/Ctrl-K + header buttons, accessible dialog.                                  |
 | I4  | Cloudflare Web Analytics           | ✅ code · ⏸ token    | Beacon in BaseLayout. Needs `PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN` in Vercel.                                                 |
-| I5  | Sentry error tracking              | 📋 Planned (Phase 5) | `@sentry/astro` free tier.                                                                                                 |
-| I6  | Lighthouse CI                      | 📋 Planned (Phase 6) | `@lhci/cli` gates PRs after baselines settle.                                                                              |
-| I7  | Pa11y CI                           | 📋 Planned (Phase 6) | Zero-error budget on home, news post, trial, donate.                                                                       |
+| I5  | Sentry error tracking              | ✅ Built (session 5) | `@sentry/browser` dynamic-imported, no-op when DSN unset. Bot UA filter, error-only, env tag.                              |
+| I6  | Lighthouse CI                      | ✅ Built (session 5) | `@lhci/cli` wired into `ci.yml`. Advisory for first two weeks; tighten to required once baselines settle.                  |
+| I7  | Pa11y CI                           | ✅ Built (session 5) | `pa11y-ci` across 24 URLs in `ci.yml`. Advisory initially. Zero-error budget on home/news/trial/donate.                    |
 | I8  | Sanity webhook → Vercel revalidate | ✅ Documented        | Step-by-step in [DEPLOYMENT.md](DEPLOYMENT.md). Needs a user with both dashboards (15 min).                                |
 | I9  | Sanity Presentation (live preview) | 📋 Planned (T-late)  | Two-dataset workflow + draft cookie route.                                                                                 |
-| I10 | URL redirects (18 old → new)       | 📋 Planned (T38)     | Plan §1 migration map. Phase 6.                                                                                            |
+| I10 | URL redirects (18 old → new)       | ✅ Built (session 5) | All 18 from plan.md §1 wired into `astro.config.mjs` `redirects:`. Smoke tests verify three of them.                       |
 | I11 | 404 page                           | 📋 Planned (Phase 3) | Branded.                                                                                                                   |
 | I12 | Robots.txt                         | ✅ Built             | `public/robots.txt` with explicit `Sitemap:` line; blocks AI training crawlers (GPTBot, ClaudeBot, Google-Extended, etc.). |
 
@@ -131,18 +131,19 @@
 
 - **C3 — "What's it like" page** → structured `page` doc with predefined sections (hero, weekly schedule grid, photo gallery, 2 quotes, sticky CTA). Build after Phase 3 P0. _(2026-05-23)_
 - **P4 — Crew lists** → separate `crew` document keyed on `squad` + `season`. Schema additions deferred until Phase 3 P0 ships. _(2026-05-23)_
-- **A4 — Alumni grid** → extend `olympian` to broader `alumniProfile` with category enum. Page split done when alumni section lands (P1). _(2026-05-23)_
+- **A4 — Alumni grid** → ✅ built session 5. `olympian` extended in-place with `category` enum + intl/Boat Race appearance arrays. No document rename (avoids destructive migration).
 - **R5 — Live race tracker** → banner-only via `settings.liveRaceBanner` in Sanity. Link out to external trackers; no iframes. _(2026-05-24, built same session.)_
+- **A6 — Newsletter** → **Buttondown** (session 5). Wired in footer + post pages. _(2026-05-24)_
+- **B4 — Fleet visualiser** → ✅ skipped per user choice in session 5. Standard fleet grid + boat detail pages built instead — editors don't have to maintain SVG when bays move.
 
 ### 🟡 Still open — answer before the relevant phase
 
 1. **C4 — Parent information page.** Same structured `page`-doc approach as C3? Could share section types. (Phase 3 / 4 question — building this is straightforward once you confirm.)
 2. **C7 — Inclusion & accessibility policy.** Standalone page or a section of `/welfare/`? Recommendation: section of `/welfare/` initially. (Affects T26.)
-3. **A6 — Newsletter provider.** Buttondown (dev-friendly, free tier) or Beehiiv (free to 2.5k, more marketing-focused)? Recommendation: Buttondown. (Phase 5 question.)
-4. **W2 — Erg leaderboard.** Source of truth (Airtable, Notion, Sanity doc) + maintainer commitment. Recommend deferring unless captains commit to upkeep.
-5. **F5 — Sponsorship pack PDF.** Needs draft content from the club. Build page with placeholder PDF when ready.
-6. **F6 — Erg-athon / Crew Boat Race templates.** Build only when a real event is on the calendar.
-7. **B4 — Fleet visualiser scope.** SVG hand-traced from a real boathouse floor plan, or stylised illustration? Recommend stylised (editor doesn't have to update when bays move). (Phase 5 question for T32.)
+3. **W2 — Erg leaderboard.** Source of truth (Airtable, Notion, Sanity doc) + maintainer commitment. Recommend deferring unless captains commit to upkeep.
+4. **F5 — Sponsorship pack PDF.** Needs draft content from the club. Sponsor page currently links to mailto until PDF arrives.
+5. **F6 — Erg-athon / Crew Boat Race templates.** Build only when a real event is on the calendar.
+6. **A5 — Alumni world map.** `location` field now lives on the schema. Worth building once enough profiles have it populated (Mapbox or Leaflet).
 
 ---
 
@@ -163,11 +164,19 @@ These are standard club-website features the plan already commits to. I'll build
 - ✅ T31 Olympians index + detail
 - ✅ 404 page
 - ✅ Privacy policy page (form data handling — required for GDPR)
-- 📋 T32 Fleet visualiser SVG (Phase 5)
-- 📋 T33 Campaign listing + detail pages (`DonationThermometer` already built)
-- 📋 T34 OG image generation with satori (Phase 5)
-- 📋 Sponsor index page `/support/sponsor/` (P1)
-- 📋 Alumni section (P1) — `/alumni/`, `/alumni/meles/`, `/alumni/events/`
+- 🚫 T32 Fleet visualiser SVG — skipped per decision (B4). Standard grid built instead.
+- ✅ T33 Campaign listing + detail pages
+- ✅ T34 OG image generation with satori
+- ✅ Sponsor index page `/support/sponsor/`
+- ✅ Alumni section — `/alumni/`, `/alumni/meles/`, `/alumni/events/`, `/alumni/profile/[slug]/`
+- ✅ Newsletter signup (Buttondown) — A6
+- ✅ Sentry error tracking — I5
+- ✅ Lighthouse CI — I6 (advisory)
+- ✅ Pa11y CI — I7 (advisory)
+- ✅ 18 × 301 redirects — I10
+- 📋 Race results archive (P1) — `/results/`
+- 📋 Press kit (P2), Chairs (P2), Blazers (P2)
+- 📋 Sanity Presentation live preview — I9
 
 ---
 

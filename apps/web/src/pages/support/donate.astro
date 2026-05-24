@@ -15,6 +15,7 @@ import Picture from '../../components/content/Picture.astro';
 import DonationThermometer from '../../components/support/DonationThermometer.astro';
 import { safeFetch } from '../../lib/sanity';
 import { activeCampaignsQuery } from '../../lib/queries';
+import { ogImage } from '../../lib/og/url';
 import type { CampaignData } from '../../lib/types';
 
 const campaigns = (await safeFetch<CampaignData[]>(activeCampaignsQuery)) ?? [];
@@ -55,6 +56,7 @@ const seo = {
   title: 'Donate',
   description:
     'Support the University of Bath Boat Club — one-off donations, fund a boat, or sponsor a season. Every pound goes back into the programme.',
+  image: ogImage({ kind: 'page', slug: 'donate' }),
 };
 ---
 

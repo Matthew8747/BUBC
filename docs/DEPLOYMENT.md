@@ -42,13 +42,15 @@ The implication: a content change in Sanity doesn't show up on the live site unt
 
 Set these in Vercel → Project → Settings → Environment Variables. Apply to **Production**, **Preview**, and **Development** unless noted.
 
-| Name                                | Value                                   | Notes                                                          |
-| ----------------------------------- | --------------------------------------- | -------------------------------------------------------------- |
-| `SANITY_PROJECT_ID`                 | `j7zcx618`                              | Hard-coded fallback in client; setting it is preferred.        |
-| `SANITY_DATASET`                    | `production`                            | `development` for preview branches once two-dataset.           |
-| `PUBLIC_FORMSPREE_TRIAL_ID`         | `<formId from Formspree>`               | Trial form. Without this it renders a "not configured" notice. |
-| `PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN` | `<token from Cloudflare Web Analytics>` | Optional. No-op if unset.                                      |
-| `SANITY_API_READ_TOKEN`             | (only if drafts/preview later)          | Not required for production builds.                            |
+| Name                                | Value                                   | Notes                                                                                             |
+| ----------------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `SANITY_PROJECT_ID`                 | `j7zcx618`                              | Hard-coded fallback in client; setting it is preferred.                                           |
+| `SANITY_DATASET`                    | `production`                            | `development` for preview branches once two-dataset.                                              |
+| `PUBLIC_FORMSPREE_TRIAL_ID`         | `<formId from Formspree>`               | Trial form. Without this it renders a "not configured" notice.                                    |
+| `PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN` | `<token from Cloudflare Web Analytics>` | Optional. No-op if unset.                                                                         |
+| `PUBLIC_BUTTONDOWN_USERNAME`        | `<your-buttondown-username>`            | Newsletter signup. Without this the footer + post-page forms render a "not configured" notice.    |
+| `PUBLIC_SENTRY_DSN`                 | `https://…@oNNN.ingest.sentry.io/PROJ`  | Optional browser error tracking. When unset the entire @sentry/browser chunk is tree-shaken away. |
+| `SANITY_API_READ_TOKEN`             | (only if drafts/preview later)          | Not required for production builds.                                                               |
 
 ### Redeploys
 
@@ -173,13 +175,27 @@ pnpm build && pnpm preview
 `.github/workflows/ci.yml` runs on every PR and push to main:
 
 - `pnpm install` (cached)
-- `pnpm lint`
+- `pnpm lint` + `pnpm format:check`
 - `pnpm typecheck` (astro check + studio tsc)
 - `pnpm test:unit` (Vitest)
-- `pnpm build`
+- `pnpm build` (chains pagefind indexer + OG image generation)
 - `pnpm test:e2e` (Playwright against the build output)
+- `pnpm test:lhci` (Lighthouse CI — **advisory**, doesn't block merges)
+- `pnpm test:a11y` (Pa11y CI across 24 URLs — **advisory**, doesn't block merges)
 
-PRs that fail any of these are blocked. Local pre-push hook runs the same lint + typecheck so CI rarely catches anything pre-push fails on.
+PRs that fail lint, typecheck, unit, build, or e2e are blocked. Lighthouse + Pa11y run with `continue-on-error: true` for the first two weeks of running while baselines settle; after that, remove `continue-on-error` in `ci.yml` and tighten the thresholds in `apps/web/.lighthouserc.json` / `.pa11yci.json` to make them required.
+
+Local pre-push hook runs the same lint + typecheck so CI rarely catches anything pre-push fails on.
+
+## Build pipeline
+
+`pnpm build` chains three steps:
+
+1. **`astro build`** — renders every page, runs `getStaticPaths` everywhere (which fans out into Sanity for news/squads/olympians/boats/campaigns/alumni profiles), and writes static HTML + assets to `apps/web/dist/`. The `/og/[slug].png.ts` endpoint executes once per slug here — that's where the satori-driven OG cards get materialised into the build output.
+2. **`pnpm pagefind`** — indexes the built HTML for the static search dialog, writing `dist/pagefind/` (loaded lazily by `SearchDialog.astro`).
+3. (Implicit) Vercel uploads the `dist/` directory and serves it from its CDN.
+
+The whole build is self-contained — no network calls during deploy except the GROQ fetches to Sanity. OG image fonts (Inter + Fraunces TTFs) are committed in `apps/web/src/lib/og/fonts/` so build is reproducible offline.
 
 ---
 
@@ -193,4 +209,4 @@ PRs that fail any of these are blocked. Local pre-push hook runs the same lint +
 
 ---
 
-_Last updated 2026-05-24 — Phase 4 (T28)._
+_Last updated 2026-05-24 — Phase 5 (session 5: newsletter, OG generation, Sentry, Lighthouse CI, Pa11y CI, 301 redirects)._

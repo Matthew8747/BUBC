@@ -15,6 +15,7 @@ import Picture from '../../components/content/Picture.astro';
 import Placeholder from '../../components/content/Placeholder.astro';
 import PortableText from '../../components/content/PortableText.astro';
 import ShareButtons from '../../components/news/ShareButtons.astro';
+import NewsletterSignup from '../../components/layout/NewsletterSignup.astro';
 import JsonLd from '../../components/seo/JsonLd.astro';
 import { safeFetch, urlFor } from '../../lib/sanity';
 import {
@@ -172,6 +173,15 @@ const articleSchema = {
 
         <div class="mt-12">
           <ShareButtons title={post.title} url={canonicalUrl} />
+        </div>
+
+        <div class="mt-16">
+          <NewsletterSignup
+            id="post-newsletter"
+            tone="light"
+            heading="More stories like this?"
+            blurb="One short monthly email — race reports, fundraising milestones, alumni news. No spam."
+          />
         </div>
 
         {

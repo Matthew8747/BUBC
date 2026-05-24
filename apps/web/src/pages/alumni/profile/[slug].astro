@@ -1,0 +1,274 @@
+---
+/**
+ * Alumni profile detail — /alumni/profile/[slug]/
+ *
+ * Generic profile renderer for any non-Olympian alumni category. Olympians
+ * keep their dedicated page at /about/olympians/[slug]/ for SEO continuity
+ * (they were public long before the wider alumni grid existed).
+ *
+ * Pre-renders every non-Olympian alumniProfile in Sanity at build time.
+ */
+import type { GetStaticPaths } from 'astro';
+import PageLayout from '../../../layouts/PageLayout.astro';
+import Container from '../../../components/ui/Container.astro';
+import Section from '../../../components/ui/Section.astro';
+import Picture from '../../../components/content/Picture.astro';
+import PortableText from '../../../components/content/PortableText.astro';
+import Eyebrow from '../../../components/ui/Eyebrow.astro';
+import Button from '../../../components/ui/Button.astro';
+import ShareButtons from '../../../components/news/ShareButtons.astro';
+import JsonLd from '../../../components/seo/JsonLd.astro';
+import { safeFetch } from '../../../lib/sanity';
+import { alumniProfilesQuery, olympianBySlugQuery } from '../../../lib/queries';
+import { SITE } from '../../../lib/seo';
+import { ogImage } from '../../../lib/og/url';
+import type { AlumniProfileCard, OlympianDetail, AlumniCategory, Medal } from '../../../lib/types';
+
+export const getStaticPaths = (async () => {
+  const profiles = (await safeFetch<AlumniProfileCard[]>(alumniProfilesQuery)) ?? [];
+  return profiles
+    .filter((p) => p.slug && p.category && p.category !== 'olympian')
+    .map((p) => ({ params: { slug: p.slug } }));
+}) satisfies GetStaticPaths;
+
+const { slug } = Astro.params;
+const profile = await safeFetch<OlympianDetail>(olympianBySlugQuery, { slug });
+
+if (!profile || profile.category === 'olympian') {
+  return Astro.redirect('/alumni/');
+}
+
+const categoryLabel: Record<AlumniCategory, string> = {
+  olympian: 'Olympian',
+  international: 'GB / International',
+  boatRace: 'Boat Race blue',
+  notableCareer: 'Notable career',
+};
+
+const universityLabel = { oxford: 'Oxford', cambridge: 'Cambridge' } as const;
+const boatLabel = { blue: 'Blue Boat', reserves: 'Reserves' } as const;
+
+const medalTone: Record<Medal, string> = {
+  gold: 'bg-[--color-gold] text-[--color-ink]',
+  silver: 'bg-[#C0C0C0] text-[--color-ink]',
+  bronze: 'bg-[#A97142] text-[--color-paper]',
+  none: 'bg-[--color-ink]/15 text-[--color-ink]',
+};
+
+const category = (profile.category ?? 'notableCareer') as AlumniCategory;
+const profileUrl = `${SITE.url}/alumni/profile/${profile.slug}/`;
+
+const generatedOg = ogImage({ kind: 'alumni', slug: profile.slug });
+const seo = profile.seo
+  ? {
+      title: profile.seo.title ?? profile.name,
+      description: profile.seo.description ?? `${profile.name} — BUBC alumni profile.`,
+      image: profile.seo.image?.asset?.url ?? profile.photo?.asset?.url ?? generatedOg,
+    }
+  : {
+      title: profile.name,
+      description:
+        `${profile.name} — BUBC alumni profile. ${profile.bubcYears ? `BUBC ${profile.bubcYears}.` : ''} ${profile.currentRole ?? ''}`.trim(),
+      image: profile.photo?.asset?.url ?? generatedOg,
+    };
+
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profile.name,
+  alumniOf: {
+    '@type': 'EducationalOrganization',
+    name: 'University of Bath',
+    url: 'https://www.bath.ac.uk/',
+  },
+  memberOf: {
+    '@type': 'SportsOrganization',
+    name: SITE.name,
+    url: SITE.url,
+  },
+  ...(profile.currentRole ? { description: profile.currentRole } : {}),
+  ...(profile.photo?.asset?.url ? { image: profile.photo.asset.url } : {}),
+  url: profileUrl,
+};
+
+const breadcrumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'Alumni', item: `${SITE.url}/alumni/` },
+    { '@type': 'ListItem', position: 3, name: profile.name, item: profileUrl },
+  ],
+};
+---
+
+<PageLayout seo={seo}>
+  <JsonLd data={breadcrumbs} slot="head" />
+  <JsonLd data={personJsonLd} slot="head" />
+
+  <article>
+    <Section spacing="md">
+      <Container>
+        <p class="text-sm text-[--color-mute] mb-6">
+          <a href="/alumni/" class="hover:text-[--color-navy]">Alumni</a>
+          <span class="mx-2 opacity-50">/</span>
+          <span class="text-[--color-ink]">{profile.name}</span>
+        </p>
+
+        <div class="grid lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-16 items-start">
+          <Picture
+            image={profile.photo}
+            ratio="4/5"
+            sizes="(min-width: 1024px) 45vw, 100vw"
+            priority
+            fallbackLabel={profile.name}
+          />
+
+          <div>
+            <Eyebrow>{categoryLabel[category]}</Eyebrow>
+            <h1 class="mt-4 font-display text-4xl sm:text-5xl leading-[1.05]">{profile.name}</h1>
+            {
+              profile.careerHighlight && (
+                <p class="mt-4 font-display text-xl text-[--color-mute] italic">
+                  {profile.careerHighlight}
+                </p>
+              )
+            }
+
+            <dl
+              class="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-y border-[--color-ink]/10 py-6 text-sm"
+            >
+              {
+                profile.bubcYears && (
+                  <div>
+                    <dt class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">
+                      BUBC years
+                    </dt>
+                    <dd class="mt-1 font-display text-lg">{profile.bubcYears}</dd>
+                  </div>
+                )
+              }
+              {
+                profile.currentRole && (
+                  <div>
+                    <dt class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">
+                      Currently
+                    </dt>
+                    <dd class="mt-1">{profile.currentRole}</dd>
+                  </div>
+                )
+              }
+              {
+                profile.location && (
+                  <div>
+                    <dt class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">Based</dt>
+                    <dd class="mt-1">{profile.location}</dd>
+                  </div>
+                )
+              }
+            </dl>
+
+            {
+              category === 'international' && profile.internationalAppearances?.length && (
+                <div class="mt-8">
+                  <h2 class="font-display text-xl">GB / international appearances</h2>
+                  <ul class="mt-4 divide-y divide-[--color-ink]/10 border-y border-[--color-ink]/10">
+                    {profile.internationalAppearances.map((a) => (
+                      <li class="py-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                        <div>
+                          <span class="font-display text-base tabular-nums">{a.year}</span>
+                          <span class="mx-2 opacity-50">·</span>
+                          <span>{[a.team, a.event].filter(Boolean).join(' · ')}</span>
+                          {a.boat && <span class="ml-2 text-[--color-mute]">({a.boat})</span>}
+                        </div>
+                        {a.medal && a.medal !== 'none' && (
+                          <span
+                            class:list={[
+                              'inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.12em]',
+                              medalTone[a.medal],
+                            ]}
+                          >
+                            {a.medal}
+                          </span>
+                        )}
+                        {a.finalPlace && a.medal === 'none' && (
+                          <span class="text-xs text-[--color-mute]">Finished {a.finalPlace}</span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )
+            }
+
+            {
+              category === 'boatRace' && profile.boatRaceAppearances?.length && (
+                <div class="mt-8">
+                  <h2 class="font-display text-xl">Boat Race appearances</h2>
+                  <ul class="mt-4 divide-y divide-[--color-ink]/10 border-y border-[--color-ink]/10">
+                    {profile.boatRaceAppearances.map((a) => (
+                      <li class="py-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                        <div>
+                          <span class="font-display text-base tabular-nums">{a.year}</span>
+                          <span class="mx-2 opacity-50">·</span>
+                          <span>
+                            {universityLabel[a.university]}
+                            {a.boat && ` ${boatLabel[a.boat]}`}
+                          </span>
+                        </div>
+                        {a.result && (
+                          <span
+                            class:list={[
+                              'inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.12em]',
+                              a.result === 'won'
+                                ? 'bg-[--color-gold] text-[--color-ink]'
+                                : 'bg-[--color-ink]/15 text-[--color-ink]',
+                            ]}
+                          >
+                            {a.result === 'won' ? 'Won' : 'Lost'}
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )
+            }
+
+            <div class="mt-8">
+              <ShareButtons url={profileUrl} title={profile.name} />
+            </div>
+          </div>
+        </div>
+      </Container>
+    </Section>
+
+    {
+      profile.story != null && (
+        <Section tone="bone" spacing="md">
+          <Container width="prose">
+            <Eyebrow>Story</Eyebrow>
+            <h2 class="mt-3 font-display text-3xl">In their own words.</h2>
+            <PortableText value={profile.story} class="mt-8" />
+          </Container>
+        </Section>
+      )
+    }
+
+    <Section spacing="sm">
+      <Container class="flex flex-wrap items-center justify-between gap-6">
+        <p class="text-sm text-[--color-mute]">
+          Were you at BUBC? Add yourself to the alumni archive —{' '}
+          <a
+            href="mailto:alumni@bubc.co.uk"
+            class="underline decoration-[--color-gold] underline-offset-4"
+          >
+            alumni@bubc.co.uk
+          </a>
+          .
+        </p>
+        <Button href="/alumni/" variant="ghost" size="sm">← All alumni</Button>
+      </Container>
+    </Section>
+  </article>
+</PageLayout>
