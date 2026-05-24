@@ -1,0 +1,124 @@
+---
+/**
+ * Pagination — prev / next + numbered links. Renders nothing when there's
+ * only one page. Skips middle numbers gracefully with an ellipsis.
+ */
+interface Props {
+  /** 1-based current page. */
+  current: number;
+  /** Total number of pages. */
+  total: number;
+  /** Base path the page numbers append to. Default `/news/`. */
+  base?: string;
+}
+
+const { current, total, base = '/news/' } = Astro.props;
+
+if (total <= 1) {
+  // Render nothing.
+}
+
+function pageHref(n: number) {
+  if (n <= 1) return base;
+  return `${base}page/${n}/`;
+}
+
+function buildPageList(curr: number, last: number): (number | 'ellipsis')[] {
+  if (last <= 7) return Array.from({ length: last }, (_, i) => i + 1);
+  const out: (number | 'ellipsis')[] = [1];
+  const start = Math.max(2, curr - 1);
+  const end = Math.min(last - 1, curr + 1);
+  if (start > 2) out.push('ellipsis');
+  for (let i = start; i <= end; i++) out.push(i);
+  if (end < last - 1) out.push('ellipsis');
+  out.push(last);
+  return out;
+}
+
+const pages = total > 1 ? buildPageList(current, total) : [];
+const prevHref = current > 1 ? pageHref(current - 1) : null;
+const nextHref = current < total ? pageHref(current + 1) : null;
+---
+
+{
+  total > 1 && (
+    <nav
+      aria-label="Pagination"
+      class="flex items-center justify-between gap-4 border-t border-[--color-line] pt-8"
+    >
+      <a
+        href={prevHref ?? undefined}
+        aria-disabled={!prevHref}
+        class:list={[
+          'inline-flex h-10 items-center gap-2 px-4 text-sm font-medium',
+          prevHref
+            ? 'text-[--color-navy] hover:text-[--color-gold]'
+            : 'pointer-events-none text-[--color-mute]/50',
+        ]}
+      >
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path
+            d="M11 7H3M7 11L3 7l4-4"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        Previous
+      </a>
+
+      <ol class="hidden md:flex items-center gap-1" role="list">
+        {pages.map((p) => (
+          <li>
+            {p === 'ellipsis' ? (
+              <span class="px-2 text-[--color-mute]" aria-hidden="true">
+                …
+              </span>
+            ) : (
+              <a
+                href={pageHref(p)}
+                aria-current={p === current ? 'page' : undefined}
+                aria-label={`Go to page ${p}`}
+                class:list={[
+                  'inline-flex h-10 w-10 items-center justify-center text-sm font-medium',
+                  p === current
+                    ? 'bg-[--color-navy] text-[--color-paper]'
+                    : 'text-[--color-ink] hover:bg-[--color-bone]',
+                ]}
+              >
+                {p}
+              </a>
+            )}
+          </li>
+        ))}
+      </ol>
+
+      <span class="md:hidden text-sm text-[--color-mute]">
+        Page {current} of {total}
+      </span>
+
+      <a
+        href={nextHref ?? undefined}
+        aria-disabled={!nextHref}
+        class:list={[
+          'inline-flex h-10 items-center gap-2 px-4 text-sm font-medium',
+          nextHref
+            ? 'text-[--color-navy] hover:text-[--color-gold]'
+            : 'pointer-events-none text-[--color-mute]/50',
+        ]}
+      >
+        Next
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path
+            d="M3 7h8M7 3l4 4-4 4"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </a>
+    </nav>
+  )
+}

@@ -1,0 +1,64 @@
+---
+/**
+ * News index — pages 2..N.
+ *
+ * `getStaticPaths` precomputes every page so the index is fully static. Page 1
+ * is served by `/news/index.astro` and intentionally not generated here.
+ */
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHero from '../../../components/layout/PageHero.astro';
+import Container from '../../../components/ui/Container.astro';
+import Section from '../../../components/ui/Section.astro';
+import NewsCard from '../../../components/news/NewsCard.astro';
+import CategoryPills from '../../../components/news/CategoryPills.astro';
+import Pagination from '../../../components/news/Pagination.astro';
+import { safeFetch } from '../../../lib/sanity';
+import { newsIndexQuery, newsCategoriesQuery } from '../../../lib/queries';
+import type { NewsCardData, NewsCategory } from '../../../lib/types';
+
+export async function getStaticPaths() {
+  // Astro runs this in its own scope — keep all constants local.
+  const PAGE_SIZE = 9;
+  const allPosts = (await safeFetch<NewsCardData[]>(newsIndexQuery)) ?? [];
+  const total = Math.max(1, Math.ceil(allPosts.length / PAGE_SIZE));
+  const paths = [] as {
+    params: { num: string };
+    props: { num: number; total: number; posts: NewsCardData[] };
+  }[];
+  for (let p = 2; p <= total; p++) {
+    const start = (p - 1) * PAGE_SIZE;
+    paths.push({
+      params: { num: String(p) },
+      props: { num: p, total, posts: allPosts.slice(start, start + PAGE_SIZE) },
+    });
+  }
+  return paths;
+}
+
+const { num, total, posts } = Astro.props;
+const categories = (await safeFetch<NewsCategory[]>(newsCategoriesQuery)) ?? [];
+---
+
+<PageLayout
+  seo={{
+    title: `News — page ${num}`,
+    description: 'Race reports, squad updates, and announcements from the boathouse.',
+    noIndex: true,
+  }}
+>
+  <PageHero eyebrow={`Page ${num} of ${total}`} headline="News & reports" />
+
+  <Section spacing="lg">
+    <Container>
+      {categories.length > 0 && <CategoryPills categories={categories} />}
+
+      <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
+        {posts.map((post) => <NewsCard post={post} />)}
+      </div>
+
+      <div class="mt-16">
+        <Pagination current={num} total={total} base="/news/" />
+      </div>
+    </Container>
+  </Section>
+</PageLayout>

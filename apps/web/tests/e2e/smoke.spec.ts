@@ -14,7 +14,7 @@ test.describe('smoke', () => {
   });
 
   test('styleguide renders sections', async ({ page }) => {
-    await page.goto('/styleguide');
+    await page.goto('/styleguide/');
     await expect(page.getByRole('heading', { name: 'Design system' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Colour' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Typography' })).toBeVisible();
@@ -80,5 +80,69 @@ test.describe('smoke', () => {
       expect([200, 404]).toContain(response.status());
     }
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  });
+
+  test('news index renders and offers RSS when the dataset is empty', async ({ page }) => {
+    await page.goto('/news/');
+    await expect(page.getByRole('heading', { level: 1, name: /News/i })).toBeVisible();
+    // Either there are posts, or the editorial empty-state with the RSS link is shown.
+    const rssLink = page.getByRole('link', { name: /Subscribe via RSS/i });
+    const firstPostHeading = page.locator('article a[href^="/news/"][href$="/"]').first();
+    await expect(firstPostHeading.or(rssLink)).toBeVisible();
+  });
+
+  test('RSS feed responds with XML containing the channel title', async ({ request }) => {
+    const response = await request.get('/news/rss.xml');
+    expect(response.ok()).toBeTruthy();
+    const body = await response.text();
+    expect(body).toContain('<rss');
+    expect(body).toContain('BUBC');
+  });
+
+  test('search opens via "/" shortcut, focuses the input, closes on Escape', async ({ page }) => {
+    await page.goto('/');
+    const dialog = page.locator('#search-dialog');
+    await expect(dialog).toBeHidden();
+    await page.keyboard.press('/');
+    await expect(dialog).toBeVisible();
+    await expect(page.locator('#search-input')).toBeFocused();
+    await page.keyboard.press('Escape');
+    await expect(dialog).toBeHidden();
+  });
+
+  test('search opens via the header button', async ({ page }) => {
+    await page.goto('/');
+    // Both desktop and mobile header have a [data-search-open] trigger; click
+    // whichever is visible at the current viewport.
+    await page.locator('[data-search-open]:visible').first().click();
+    await expect(page.locator('#search-dialog')).toBeVisible();
+    await expect(page.locator('#search-input')).toBeFocused();
+  });
+
+  test('Henley honours page renders the heading + empty state or entries', async ({ page }) => {
+    await page.goto('/about/henley-honours/');
+    await expect(page.getByRole('heading', { level: 1, name: /Henley honours/i })).toBeVisible();
+    // Either we have entries (and a filter pill is present) or we have the empty placeholder.
+    const filterPill = page.getByRole('button', { name: /All entries/ });
+    const empty = page.getByRole('heading', { name: /catalogued/i });
+    await expect(filterPill.or(empty)).toBeVisible();
+  });
+
+  test('Olympians index renders the heading + state', async ({ page }) => {
+    await page.goto('/about/olympians/');
+    await expect(page.getByRole('heading', { level: 1, name: /BUBC Olympians/i })).toBeVisible();
+  });
+
+  test('robots.txt is served and points at the sitemap', async ({ request }) => {
+    const response = await request.get('/robots.txt');
+    expect(response.ok()).toBeTruthy();
+    const body = await response.text();
+    expect(body).toContain('Sitemap:');
+    expect(body).toContain('bubc.co.uk');
+  });
+
+  test('sitemap index is generated', async ({ request }) => {
+    const response = await request.get('/sitemap-index.xml');
+    expect(response.ok()).toBeTruthy();
   });
 });

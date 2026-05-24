@@ -1,0 +1,29 @@
+# BUBC.co.uk — robots policy
+# Permissive by design; the site is a public marketing surface.
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /styleguide
+
+# Block AI training crawlers that respect robots.txt.
+# (Most don't; this is best-effort. We don't gate the public content otherwise.)
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+Sitemap: https://bubc.co.uk/sitemap-index.xml

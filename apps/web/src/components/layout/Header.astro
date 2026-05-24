@@ -74,6 +74,21 @@ const isActive = (href: string) =>
 
     {/* Utility + CTA */}
     <div class="hidden lg:flex items-center gap-4">
+      <button
+        type="button"
+        data-search-open
+        aria-label="Search (press /)"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-full text-[--color-mute] hover:text-[--color-navy] hover:bg-[--color-bone] transition-colors"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm10 2-4.35-4.35"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path>
+        </svg>
+      </button>
       {
         utilityNav.map((item) => (
           <a
@@ -86,6 +101,23 @@ const isActive = (href: string) =>
       }
       <Button href="/squads/trial/" variant="gold" size="sm">Trial with us</Button>
     </div>
+
+    {/* Mobile search button */}
+    <button
+      type="button"
+      data-search-open
+      aria-label="Search"
+      class="lg:hidden inline-flex h-11 w-11 items-center justify-center -mr-2 ml-auto"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm10 2-4.35-4.35"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>
+    </button>
 
     {/* Mobile burger */}
     <button

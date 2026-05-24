@@ -1,0 +1,172 @@
+---
+/**
+ * Olympians index — /about/olympians/
+ *
+ * Honours roll of every BUBC athlete who's gone on to row at the Olympics.
+ * Card grid with a hero photo, medal indicator, BUBC years, and Olympic year(s).
+ * Each card links to a detail page.
+ *
+ * When the alumni section lands in P1, the underlying schema will be renamed to
+ * `alumniProfile` with a category enum — see FEATURES.md A4. Until then this
+ * page is the canonical home for the Olympic roll.
+ */
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHero from '../../../components/layout/PageHero.astro';
+import Container from '../../../components/ui/Container.astro';
+import Section from '../../../components/ui/Section.astro';
+import Picture from '../../../components/content/Picture.astro';
+import Tag from '../../../components/ui/Tag.astro';
+import JsonLd from '../../../components/seo/JsonLd.astro';
+import { safeFetch } from '../../../lib/sanity';
+import { olympiansQuery } from '../../../lib/queries';
+import { SITE } from '../../../lib/seo';
+import type { OlympianCard } from '../../../lib/types';
+
+const olympians = (await safeFetch<OlympianCard[]>(olympiansQuery)) ?? [];
+
+const medalTone: Record<string, string> = {
+  gold: 'bg-[--color-gold] text-[--color-ink]',
+  silver: 'bg-[#C0C0C0] text-[--color-ink]',
+  bronze: 'bg-[#A97142] text-[--color-paper]',
+};
+
+function bestMedal(o: OlympianCard): 'gold' | 'silver' | 'bronze' | null {
+  const medals = o.olympicYears
+    ?.map((y) => y.medal)
+    .filter(
+      (m): m is 'gold' | 'silver' | 'bronze' => m === 'gold' || m === 'silver' || m === 'bronze',
+    );
+  if (!medals?.length) return null;
+  if (medals.includes('gold')) return 'gold';
+  if (medals.includes('silver')) return 'silver';
+  return 'bronze';
+}
+
+function olympicYears(o: OlympianCard): string {
+  if (!o.olympicYears?.length) return '';
+  return o.olympicYears
+    .map((y) => y.year)
+    .sort((a, b) => a - b)
+    .join(', ');
+}
+
+const breadcrumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'About', item: `${SITE.url}/about/` },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: 'Olympians',
+      item: `${SITE.url}/about/olympians/`,
+    },
+  ],
+};
+---
+
+<PageLayout
+  seo={{
+    title: 'Olympians',
+    description: 'BUBC alumni who have rowed for Great Britain (and beyond) at the Olympic Games.',
+  }}
+>
+  <JsonLd data={breadcrumbs} slot="head" />
+
+  <PageHero
+    eyebrow="About"
+    headline="BUBC Olympians"
+    lead="Bath rowers don't stop at the Boat Race or BUCS. Here are the alumni who carried what they learned at the club into Olympic boats."
+  />
+
+  <Section spacing="lg">
+    <Container>
+      <p class="text-sm text-[--color-mute] mb-10">
+        <a href="/about/" class="hover:text-[--color-navy]">About</a>
+        <span class="mx-2 opacity-50">/</span>
+        <span class="text-[--color-ink]">Olympians</span>
+      </p>
+
+      {
+        olympians.length > 0 ? (
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
+            {olympians.map((o, i) => {
+              const medal = bestMedal(o);
+              const years = olympicYears(o);
+              return (
+                <article class="group relative flex flex-col">
+                  <a
+                    href={`/about/olympians/${o.slug}/`}
+                    class="absolute inset-0 z-10"
+                    aria-label={`${o.name} — full profile`}
+                  >
+                    <span class="sr-only">Profile</span>
+                  </a>
+                  <div class="relative">
+                    <Picture
+                      image={o.photo}
+                      ratio="4/5"
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      fallbackLabel={o.name}
+                      priority={i < 3}
+                      class="transition-transform duration-500 group-hover:scale-[1.02]"
+                    />
+                    {medal && (
+                      <span
+                        class:list={[
+                          'absolute top-4 left-4 inline-flex h-7 items-center rounded-full px-3 text-xs font-medium uppercase tracking-[0.12em]',
+                          medalTone[medal],
+                        ]}
+                      >
+                        {medal} medallist
+                      </span>
+                    )}
+                  </div>
+                  <div class="mt-5">
+                    <h3 class="font-display text-2xl group-hover:underline decoration-[--color-gold] underline-offset-4">
+                      {o.name}
+                    </h3>
+                    {(o.bubcYears || years) && (
+                      <p class="mt-2 text-sm text-[--color-mute]">
+                        {o.bubcYears && <span>BUBC {o.bubcYears}</span>}
+                        {o.bubcYears && years && <span class="mx-2 opacity-50">·</span>}
+                        {years && <span>Olympics {years}</span>}
+                      </p>
+                    )}
+                    {o.currentRole && (
+                      <p class="mt-2 text-sm text-[--color-mute] italic">{o.currentRole}</p>
+                    )}
+                    {o.olympicYears && o.olympicYears.length > 0 && (
+                      <div class="mt-3 flex flex-wrap gap-1.5">
+                        {o.olympicYears.map((y) => (
+                          <Tag tone={y.medal && y.medal !== 'none' ? 'gold' : 'navy'}>
+                            {y.year}
+                            {y.event ? ` · ${y.event}` : ''}
+                          </Tag>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        ) : (
+          <div class="rounded border border-dashed border-[--color-line] bg-[--color-bone]/60 p-10 text-center max-w-2xl mx-auto">
+            <h2 class="font-display text-2xl">Profiles coming</h2>
+            <p class="mt-3 text-sm text-[--color-mute]">
+              BUBC has alumni in Olympic and World Championship boats. We're writing the profiles
+              one by one with their input — when they're ready, they'll live here. If you raced for
+              Bath and went on to compete at the Olympics, we'd love to get in touch:{' '}
+              <a class="underline" href="mailto:alumni@bubc.co.uk">
+                alumni@bubc.co.uk
+              </a>
+              .
+            </p>
+          </div>
+        )
+      }
+    </Container>
+  </Section>
+</PageLayout>

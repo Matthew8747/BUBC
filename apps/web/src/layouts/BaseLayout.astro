@@ -66,6 +66,39 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN;
     {/* RSS — wired up in Phase 4 */}
     <link rel="alternate" type="application/rss+xml" title="BUBC News" href="/news/rss.xml" />
 
+    {/* Organization + WebSite — single source of truth for the brand entity. */}
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'SportsOrganization',
+            '@id': `${SITE.url}/#organization`,
+            name: SITE.name,
+            alternateName: SITE.shortName,
+            url: SITE.url,
+            sport: 'Rowing',
+            logo: new URL('/favicon.svg', SITE.url).toString(),
+            sameAs: [
+              'https://instagram.com/bathuniboatclub',
+              'https://youtube.com/@bathuniboatclub',
+              'https://www.strava.com/clubs/bubc',
+            ],
+          },
+          {
+            '@type': 'WebSite',
+            '@id': `${SITE.url}/#website`,
+            url: SITE.url,
+            name: SITE.name,
+            publisher: { '@id': `${SITE.url}/#organization` },
+            inLanguage: 'en-GB',
+          },
+        ],
+      })}
+    />
+
     <slot name="head" />
   </head>
   <body class={`min-h-screen bg-[--color-paper] text-[--color-ink] font-body ${bodyClass}`}>

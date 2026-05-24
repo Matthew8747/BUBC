@@ -34,6 +34,7 @@ Thumbs.db
 
 # Local tool output
 graphify-out/
+ruvector.db
 
 # Python virtualenvs (not part of this project, but devs may have one for tooling)
 .venv/

@@ -1,0 +1,124 @@
+---
+/**
+ * ShareButtons — Twitter / Facebook / Copy-link share row.
+ *
+ * Server-rendered links + a single client script that:
+ *   - hydrates the canonical URL from `window.location.href` (works on any host)
+ *   - wires the copy-link button to `navigator.clipboard`, with a fallback
+ *   - shows a brief "Copied!" state for keyboard + screen-reader users
+ */
+interface Props {
+  title: string;
+  /** Defaults to the canonical URL, but pages can override. */
+  url?: string;
+  class?: string;
+}
+
+const { title, url, class: className } = Astro.props;
+---
+
+<div
+  class:list={['flex flex-wrap items-center gap-3', className]}
+  data-share-root
+  data-share-url={url}
+  data-share-title={title}
+>
+  <span class="text-xs uppercase tracking-[0.14em] text-[--color-mute] mr-2">Share</span>
+
+  <a
+    data-share-twitter
+    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Share on Twitter"
+    class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[--color-line] hover:bg-[--color-bone] transition-colors"
+  >
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path
+        d="M18.244 2H21l-6.52 7.45L22 22h-6.83l-5.34-6.99L3.55 22H1l7.05-8.05L1.6 2h6.99l4.83 6.39L18.24 2Zm-2.39 18h1.69L7.23 4H5.43l10.43 16Z"
+      ></path>
+    </svg>
+  </a>
+
+  <a
+    data-share-facebook
+    href="https://www.facebook.com/sharer/sharer.php"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Share on Facebook"
+    class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[--color-line] hover:bg-[--color-bone] transition-colors"
+  >
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path
+        d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.14 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.51 1.49-3.9 3.78-3.9 1.1 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.91h-2.34V22c4.78-.8 8.44-4.93 8.44-9.94Z"
+      ></path>
+    </svg>
+  </a>
+
+  <button
+    type="button"
+    data-share-copy
+    aria-label="Copy link"
+    class="inline-flex h-9 items-center gap-2 rounded-full border border-[--color-line] px-4 text-xs font-medium uppercase tracking-[0.12em] hover:bg-[--color-bone] transition-colors"
+  >
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M9 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5M15 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"></path>
+    </svg>
+    <span data-share-copy-label>Copy link</span>
+  </button>
+
+  <span class="sr-only" aria-live="polite" data-share-status></span>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-share-root]').forEach((root) => {
+    const overrideUrl = root.dataset.shareUrl;
+    const title = root.dataset.shareTitle ?? document.title;
+    const url = overrideUrl && overrideUrl.length > 0 ? overrideUrl : window.location.href;
+
+    const tw = root.querySelector<HTMLAnchorElement>('[data-share-twitter]');
+    if (tw) {
+      tw.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
+    }
+
+    const fb = root.querySelector<HTMLAnchorElement>('[data-share-facebook]');
+    if (fb) {
+      fb.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+    }
+
+    const copy = root.querySelector<HTMLButtonElement>('[data-share-copy]');
+    const copyLabel = root.querySelector<HTMLElement>('[data-share-copy-label]');
+    const status = root.querySelector<HTMLElement>('[data-share-status]');
+
+    copy?.addEventListener('click', async () => {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(url);
+        } else {
+          const ta = document.createElement('textarea');
+          ta.value = url;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'absolute';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          ta.remove();
+        }
+        if (copyLabel) copyLabel.textContent = 'Copied';
+        if (status) status.textContent = 'Link copied to clipboard';
+        window.setTimeout(() => {
+          if (copyLabel) copyLabel.textContent = 'Copy link';
+          if (status) status.textContent = '';
+        }, 2000);
+      } catch {
+        if (status) status.textContent = 'Copy failed — please copy from the address bar';
+      }
+    });
+  });
+</script>
