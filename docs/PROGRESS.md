@@ -1,29 +1,32 @@
 # BUBC Site — Build Progress & Handoff Notes
 
-> Last updated: 2026-05-23 (session 3). Pick up from **"Where we left off"** below.
+> Last updated: 2026-05-24 (session 4). Pick up from **"Where we left off"** below.
 >
-> Related docs: [plan.md](plan.md) (build phases, single source of truth) · [FEATURES.md](FEATURES.md) (idea backlog with status flags + open decisions).
+> Related docs: [plan.md](plan.md) (build phases, single source of truth) · [FEATURES.md](FEATURES.md) (idea backlog with status flags + open decisions) · [DEPLOYMENT.md](DEPLOYMENT.md) (deploy + Sanity webhook setup).
 
 ---
 
 ## Snapshot
 
-| Layer                                          | State                                                                                                                                                                                  |
-| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Monorepo (pnpm)                                | ✅                                                                                                                                                                                     |
-| Astro frontend (`apps/web`)                    | ✅ scaffolded · design system + chrome · Sanity wired · home, trial, **all P0 pages** (squads, coaching, boathouse, about+history, committee, welfare, support, 404, contact, privacy) |
-| Sanity Studio (`apps/studio`)                  | ✅ v5, project `j7zcx618`, all schemas defined                                                                                                                                         |
-| Tooling (ESLint, Prettier, Husky, lint-staged) | ✅                                                                                                                                                                                     |
-| CI workflow (GitHub Actions)                   | ✅ lint + typecheck + unit + build + e2e                                                                                                                                               |
-| Testing (Vitest + Playwright)                  | ✅ skeleton + **11 smoke specs (22 runs across desktop + mobile)** + 6 unit tests                                                                                                      |
-| Vercel                                         | ✅ live at <https://bubc-web.vercel.app/>                                                                                                                                              |
-| Cloudflare DNS / email                         | ⏸ deferred to launch (Phase 6)                                                                                                                                                         |
-| Cloudflare Web Analytics                       | ⏸ ready to wire (beacon code in BaseLayout, gated on env var)                                                                                                                          |
-| Formspree                                      | ⏸ account ready; form ID needs adding to Vercel env                                                                                                                                    |
-| Sanity Studio deploy                           | ❌ not deployed (manual `pnpm --filter @bubc/studio deploy`)                                                                                                                           |
-| Custom domain on prod                          | ❌ Phase 6 cutover                                                                                                                                                                     |
-| Photos                                         | ⏸ being gathered; placeholder system covers the gap                                                                                                                                    |
-| Build / typecheck / lint / format / unit / e2e | ✅ all green                                                                                                                                                                           |
+| Layer                                          | State                                                                                                                                                                                               |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Monorepo (pnpm)                                | ✅                                                                                                                                                                                                  |
+| Astro frontend (`apps/web`)                    | ✅ design system + chrome · Sanity wired · all P0 pages · **Phase 4: news index/post/category/RSS, Pagefind search, Henley Honours, Olympians index + detail, live race banner**                    |
+| Sanity Studio (`apps/studio`)                  | ✅ v5, project `j7zcx618`, all schemas defined · `settings.liveRaceBanner` added                                                                                                                    |
+| Tooling (ESLint, Prettier, Husky, lint-staged) | ✅                                                                                                                                                                                                  |
+| CI workflow (GitHub Actions)                   | ✅ lint + typecheck + unit + build + e2e                                                                                                                                                            |
+| Testing (Vitest + Playwright)                  | ✅ **19 smoke specs (38 runs across desktop + mobile)** + **14 unit tests** (seo, reading time, pagination)                                                                                         |
+| SEO / discovery                                | ✅ `@astrojs/sitemap` (sitemap-index.xml), `robots.txt`, structured data (Organization + WebSite globally, NewsArticle / Person / BreadcrumbList per template), `/news/rss.xml` with XSL stylesheet |
+| Static search                                  | ✅ Pagefind indexed at build time; `/` + Cmd/Ctrl-K + header buttons open the dialog; keyboard nav; graceful unavailable state                                                                      |
+| Vercel                                         | ✅ live at <https://bubc-web.vercel.app/>                                                                                                                                                           |
+| Cloudflare DNS / email                         | ⏸ deferred to launch (Phase 6)                                                                                                                                                                      |
+| Cloudflare Web Analytics                       | ⏸ ready to wire (beacon code in BaseLayout, gated on env var)                                                                                                                                       |
+| Formspree                                      | ⏸ account ready; form ID needs adding to Vercel env                                                                                                                                                 |
+| Sanity Studio deploy                           | ❌ not deployed (manual `pnpm --filter @bubc/studio deploy`)                                                                                                                                        |
+| Sanity → Vercel webhook                        | 📋 setup documented in [DEPLOYMENT.md](DEPLOYMENT.md); needs editor or developer to wire it (15 min, requires Vercel + Sanity dashboard access)                                                     |
+| Custom domain on prod                          | ❌ Phase 6 cutover                                                                                                                                                                                  |
+| Photos                                         | ⏸ being gathered; placeholder system covers the gap                                                                                                                                                 |
+| Build / typecheck / lint / format / unit / e2e | ✅ all green                                                                                                                                                                                        |
 
 ---
 
@@ -144,6 +147,108 @@ Sticky scroll, active-page indicator, mobile overlay with ESC + focus management
 
 ---
 
+## Session 4 — Phase 4 dynamic content ✅
+
+Phase 4 landed in one session. News system, search, honours table, Olympians, live race banner, structured data, sitemap, robots.txt — 22 routes in the static build, all tests + lint + typecheck green.
+
+### T28 — News index + post template + categories + RSS ✅
+
+- `/news/` — paginated index (page size 9); editorial empty state with RSS pointer when the dataset is empty.
+- `/news/page/[num]/` — pages 2..N pre-generated via `getStaticPaths`; deliberately split from the index to avoid colliding with `/news/[slug]/`.
+- `/news/[slug]/` — full post template: hero, breadcrumb, category tag, reading-time helper, PortableText body, related squads + athletes, share buttons (Twitter / Facebook / copy link), prev/next nav, JSON-LD `NewsArticle`.
+- `/news/category/[slug]/` — pre-built one per Sanity category; reuses the index grid + breadcrumbs.
+- `/news/rss.xml` — `@astrojs/rss` endpoint with a custom XSL stylesheet so browsers render the feed nicely. Linked from `<head>` (BaseLayout) and footer.
+- New components: `news/NewsCard`, `news/CategoryPills`, `news/Pagination`, `news/ShareButtons`, `seo/JsonLd`.
+- New lib: `lib/readingTime.ts` (PortableText word count → minutes).
+
+### T28f — Sanity webhook docs ✅
+
+`docs/DEPLOYMENT.md` is the new technical handover doc. Includes:
+
+- Architecture diagram (GitHub → Vercel ← Sanity webhook).
+- Step-by-step Sanity webhook + Vercel deploy hook setup (so editors see published posts in ~60s).
+- Vercel env vars, build settings, rollback procedure.
+- Cloudflare scope (Web Analytics now; DNS + email at launch only).
+- Local dev commands and CI overview.
+
+### T29 — Pagefind static search ✅
+
+- Build chain extended: `astro build && pnpm pagefind` (so `dist/pagefind/` is regenerated every deploy). New script `pnpm pagefind` runs the indexer standalone.
+- `<main data-pagefind-body>` in `PageLayout` scopes what gets indexed; header/footer/banner are excluded.
+- Custom `SearchDialog.astro` modal with:
+  - `/` global keyboard shortcut (suppressed when typing in inputs) + `Cmd`/`Ctrl`+K + header buttons (desktop and mobile).
+  - Arrow-key navigation + Enter follows; ESC closes; focus restored on close.
+  - 120 ms debounce; aria-live status announcing result counts.
+  - Loads `/pagefind/pagefind.js` lazily on first open; surfaces a graceful "search is unavailable" message when the index is missing.
+
+### T30 — Henley Honours ✅
+
+- `/about/henley-honours/` — chronological record grouped by year (newest first), with a totals strip (total appearances, HRR vs HWR count, first appearance).
+- Client-side filter pills: All / HRR / Henley Women's — server-rendered tables remain accessible without JS.
+- Athletes link through to their (future) alumni profile when a slug exists; otherwise plain name.
+- Honest "Records are being catalogued" empty state with an `alumni@bubc.co.uk` mailto.
+- New query: `henleyHonoursQuery`. New type: `HenleyHonour` + `HenleyHonourSeat`.
+- JSON-LD `BreadcrumbList`.
+
+### T31 — Olympians ✅
+
+- `/about/olympians/` — card grid sorted by most recent Olympic year. Each card shows best-medal tag, BUBC years, Olympic years, current role, every Olympic appearance as a chip.
+- `/about/olympians/[slug]/` — full profile: photo, BUBC years, Olympic appearances list (with medal tags), PortableText story, share buttons. JSON-LD `Person` + `BreadcrumbList`.
+- Empty state with mailto for unknown alumni.
+- Schema rename `olympian → alumniProfile` deliberately deferred to P1 alumni section per FEATURES.md decision; current pages query the existing `olympian` type, so no breaking change.
+
+### R5 — Live race banner ✅
+
+- New `settings.liveRaceBanner` object in Sanity: `{ active, eventName, message, liveResultsUrl, ctaLabel, tone }`.
+- `LiveRaceBanner.astro` renders above the header when `active=true`. Three tones (navy / gold / blade red). External link with `noopener noreferrer`.
+- Per-session dismiss via `sessionStorage` keyed on the event name — closes for this visit, re-appears next session, immediately re-appears if the editor changes the event.
+
+### SEO + structured data hardening ✅
+
+- `@astrojs/sitemap` integration generates `/sitemap-index.xml` with priorities boosted for home + main hubs.
+- `public/robots.txt` allows everything, blocks AI training crawlers (GPTBot/ClaudeBot/CCBot/Google-Extended/Bytespider), points at the sitemap.
+- Global JSON-LD in BaseLayout: `SportsOrganization` + `WebSite` graph.
+- Per-template JSON-LD: `NewsArticle` (news posts), `Person` (olympians), `BreadcrumbList` (interior pages).
+- `astro.config.mjs`: `trailingSlash: 'always'`, `prefetch.viewport`, `image.domains: ['cdn.sanity.io']`.
+
+### Tests added
+
+- 8 new Playwright specs: news index empty-state, RSS feed XML, search via `/`, search via header button, Henley Honours page, Olympians index, robots.txt, sitemap-index.
+- 2 new Vitest files: `readingTime.test.ts` (5 cases), `pagination.test.ts` (3 cases).
+- Total: 14 unit + 19 smoke × 2 device profiles = **38 e2e + 14 unit passing**.
+
+### Files added this session
+
+```
+apps/web/
+├── src/
+│   ├── components/
+│   │   ├── layout/LiveRaceBanner.astro
+│   │   ├── news/{NewsCard,CategoryPills,Pagination,ShareButtons}.astro
+│   │   ├── search/SearchDialog.astro
+│   │   └── seo/JsonLd.astro
+│   ├── lib/readingTime.ts
+│   └── pages/
+│       ├── about/henley-honours.astro
+│       ├── about/olympians/{index,[slug]}.astro
+│       └── news/{index,[slug],page/[num],category/[slug],rss.xml.ts}.astro
+├── public/{robots.txt, rss/styles.xsl}
+└── tests/unit/{readingTime,pagination}.test.ts
+
+docs/DEPLOYMENT.md
+```
+
+Changes to existing files:
+
+- `astro.config.mjs` — sitemap, trailingSlash, prefetch, image domains.
+- `apps/web/package.json` — `build` now chains pagefind; new `build:no-search` + `pagefind` scripts.
+- `apps/web/src/layouts/{BaseLayout,PageLayout}.astro` — head slot forwarding; `data-pagefind-body`; global JSON-LD; settings fetch for the live banner; SearchDialog mounted globally.
+- `apps/web/src/components/layout/{Header,Footer}.astro` — search buttons (desktop + mobile).
+- `apps/web/src/lib/{queries,types}.ts` — news (categories, by-category, slugs, prev/next), Henley honours, Olympians, alumni profile types, settings.liveRaceBanner type.
+- `apps/studio/schemaTypes/singletons/settings.ts` — `liveRaceBanner` field with tones, validation, collapsed group.
+
+---
+
 ## Session 3 — Phase 3 P0 pages ✅
 
 Built every Phase 3 must-launch page. 19 routes total, build clean, all gates green.
@@ -206,72 +311,83 @@ Built every Phase 3 must-launch page. 19 routes total, build clean, all gates gr
 
 ---
 
-## Where we left off — Phase 4 next
+## Where we left off — Phase 5 next
 
-Phase 3 P0 is complete. Phase 4 dynamic content is the obvious next move:
+Phase 4 dynamic content is complete (news + RSS, search, Henley Honours, Olympians, live race banner, structured data, sitemap). Phase 5 "wow" features are the natural next step.
 
 ### Immediate next steps (in order)
 
-#### T28 — News index + post template + RSS
+#### T32 — Fleet visualiser
 
-- `/news/` paginated index, category filtering
-- `/news/[slug].astro` post template (heroImage, PortableText body, related athletes/squads, share)
-- `/news/rss.xml` feed via `@astrojs/rss` (not yet installed — 10-min add)
-- Sanity webhook → Vercel deploy hook so editors see posts within ~60s
+- SVG layout of boathouse bays. Clickable boats → `/boathouse/fleet/[slug]/` detail page.
+- Needs a `boat` schema extension for `bayNumber` / `x` / `y`, or a `fleetLocation` join doc per §5 of the plan.
+- New `/boathouse/fleet/` index + `/boathouse/fleet/[slug]/` detail pages.
+- Decision needed: SVG hand-authored from a real boathouse floor plan, or a stylised illustration? **Recommend stylised** — the editor doesn't have to update the SVG when a real bay moves.
 
-#### T29 — Pagefind static search
+#### T33 — Campaign pages + thermometer
 
-- Global `/` keyboard shortcut to open search
-- Index covers posts, athletes, boats, squads
+- `DonationThermometer` already exists (`/support/donate/` uses it on active campaigns).
+- Need: `/support/campaigns/` listing of all campaigns + `/support/campaigns/[slug]/` detail with story, gallery, donor count, share.
+- `campaignBySlugQuery` + types still to add.
 
-#### T30 — Henley Honours
+#### T34 — OG image generation (satori)
 
-- `/about/henley-honours/` — sortable table by year, full crew lists, opposition, finish
+- One PNG per page, generated at build time via [@vercel/og](https://github.com/vercel/og) or [satori](https://github.com/vercel/satori). Branded background + page title + BUBC mark.
+- Replaces the static `/og/default.jpg` fallback for most surfaces.
 
-#### T31 — Olympians & Internationals
+#### Sponsor index (P1 — bring forward)
 
-- `/about/olympians/` index + `/about/olympians/[slug]/` detail
-- Decision locked: schema extends to `alumniProfile` with category enum — implement when this lands
+- `/support/sponsor/` — sponsor index page with tiers from existing `sponsor` schema.
+- Tier groupings (headline / gold / silver / supporter); logo grid; description per partner.
+- Sponsorship pack PDF is decision F5 (still open).
 
-#### After Phase 4
+#### Alumni section (P1)
 
-- T32 Fleet visualiser SVG
-- T33 Campaign thermometer (component already built — needs `/support/campaigns/` listing + detail pages)
-- T34 OG image generation with satori
-- T35 Structured data injection
-- Sponsor index page (P1)
-- Alumni section (P1) — `/alumni/`, `/alumni/meles/`, `/alumni/events/`
+- `/alumni/`, `/alumni/meles/`, `/alumni/events/`.
+- This is when the `olympian` → `alumniProfile` schema rename happens — category enum (`olympian` / `international` / `boatRace` / `notableCareer`), single filterable feed, page split between `/about/olympians/` and `/alumni/`.
+
+#### Race results archive (P1)
+
+- `/results/` filterable by year + regatta. `regattaResult` schema already exists.
 
 ### Backlog decisions still open
 
-See [FEATURES.md § Decision queue — Still open](FEATURES.md). The unblocked items waiting for user input:
+See [FEATURES.md § Decision queue — Still open](FEATURES.md). Unblocked items waiting for user input:
 
-- **C4** — Parent info page (Cambridge-style). Same structured-page approach as "What's it like"?
+- **C4** — Parent info page. Same structured-page approach as "What's it like"?
 - **C7** — Inclusion & accessibility: section of `/welfare/` (currently is) or its own page?
-- **R5** — Live race tracker: banner-only or hosted embed?
 - **A6** — Newsletter: Buttondown vs Beehiiv (recommendation: Buttondown).
 - **W2** — Erg leaderboard: source + maintainer commitment.
 - **F5** — Sponsorship pack PDF — needs draft content from the club.
 - **F6** — Erg-athon / Crew Boat Race templates — only when a real event is scheduled.
 
+### Locked in this session
+
+- **R5** — Live race tracker: banner-only, driven by `settings.liveRaceBanner` in Sanity. **Built.**
+
 ---
 
 ## Manual interventions still required
 
-| #       | Item                                                                                                                                                                                                                             | Why it's manual                                                                 | When                                                                               |
-| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| **M1**  | Add Vercel env vars: `SANITY_PROJECT_ID=j7zcx618`, `SANITY_DATASET=production`                                                                                                                                                   | Per-project secrets                                                             | Now (otherwise Sanity queries return null and pages render with placeholders only) |
-| **M2**  | Create a Formspree form, then set `PUBLIC_FORMSPREE_TRIAL_ID=<formId>` on Vercel                                                                                                                                                 | Per-project secret                                                              | Before /squads/trial/ accepts real submissions                                     |
-| **M3**  | Cloudflare Web Analytics: <https://dash.cloudflare.com> → Web Analytics → Add site → Manual setup. Copy the token (the part inside `data-cf-beacon='{"token":"…"}'`). Set `PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN=<token>` on Vercel. | Per-project secret                                                              | Whenever — works on `*.vercel.app`                                                 |
-| **M4**  | Deploy Sanity Studio: `pnpm --filter @bubc/studio deploy`                                                                                                                                                                        | First run is interactive; prompts for studio hostname like `bubc.sanity.studio` | When editors need to log in to add content                                         |
-| **M5**  | Add committee editors as Sanity members                                                                                                                                                                                          | sanity.io/manage → Members → invite by email                                    | After M4                                                                           |
-| **M6**  | Cloudflare DNS for bubc.co.uk                                                                                                                                                                                                    | Domain registrar nameservers must point at Cloudflare first                     | Phase 6 (launch)                                                                   |
-| **M7**  | Cloudflare Email Routing                                                                                                                                                                                                         | Requires #M6 done                                                               | Phase 6                                                                            |
-| **M8**  | DNS cutover to Vercel                                                                                                                                                                                                            | Add CNAME in Cloudflare DNS                                                     | Phase 6 (launch day)                                                               |
-| **M9**  | Real photography upload to Sanity                                                                                                                                                                                                | User is gathering; placeholders handle the gap                                  | Whenever ready                                                                     |
-| **M11** | Seed Sanity with at least one `page` doc per slug used by the site (`history`, `welfare`, future `parent-info` / `whats-it-like`). Each page falls back gracefully when missing, but real copy is the win.                       | Editorial decision + Sanity write                                               | When committee has content                                                         |
-| **M12** | Add committee `committeeMember` docs for 2025/26 (and 2026/27 when elected). Without these the `/committee/` page shows a placeholder.                                                                                           | Editorial decision + Sanity write                                               | After committee handover                                                           |
-| **M10** | ⚠ **If a Cloudflare Pages project was created by accident**, delete it. Hosting belongs to Vercel; Cloudflare's role is DNS + email + analytics only.                                                                            | Avoid running two hosts in parallel                                             | Now                                                                                |
+| #       | Item                                                                                                                                                                                                                                | Why it's manual                                                                 | When                                                                               |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| **M1**  | Add Vercel env vars: `SANITY_PROJECT_ID=j7zcx618`, `SANITY_DATASET=production`                                                                                                                                                      | Per-project secrets                                                             | Now (otherwise Sanity queries return null and pages render with placeholders only) |
+| **M2**  | Create a Formspree form, then set `PUBLIC_FORMSPREE_TRIAL_ID=<formId>` on Vercel                                                                                                                                                    | Per-project secret                                                              | Before /squads/trial/ accepts real submissions                                     |
+| **M3**  | Cloudflare Web Analytics: <https://dash.cloudflare.com> → Web Analytics → Add site → Manual setup. Copy the token (the part inside `data-cf-beacon='{"token":"…"}'`). Set `PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN=<token>` on Vercel.    | Per-project secret                                                              | Whenever — works on `*.vercel.app`                                                 |
+| **M4**  | Deploy Sanity Studio: `pnpm --filter @bubc/studio deploy`                                                                                                                                                                           | First run is interactive; prompts for studio hostname like `bubc.sanity.studio` | When editors need to log in to add content                                         |
+| **M5**  | Add committee editors as Sanity members                                                                                                                                                                                             | sanity.io/manage → Members → invite by email                                    | After M4                                                                           |
+| **M6**  | Cloudflare DNS for bubc.co.uk                                                                                                                                                                                                       | Domain registrar nameservers must point at Cloudflare first                     | Phase 6 (launch)                                                                   |
+| **M7**  | Cloudflare Email Routing                                                                                                                                                                                                            | Requires #M6 done                                                               | Phase 6                                                                            |
+| **M8**  | DNS cutover to Vercel                                                                                                                                                                                                               | Add CNAME in Cloudflare DNS                                                     | Phase 6 (launch day)                                                               |
+| **M9**  | Real photography upload to Sanity                                                                                                                                                                                                   | User is gathering; placeholders handle the gap                                  | Whenever ready                                                                     |
+| **M11** | Seed Sanity with at least one `page` doc per slug used by the site (`history`, `welfare`, future `parent-info` / `whats-it-like`). Each page falls back gracefully when missing, but real copy is the win.                          | Editorial decision + Sanity write                                               | When committee has content                                                         |
+| **M12** | Add committee `committeeMember` docs for 2025/26 (and 2026/27 when elected). Without these the `/committee/` page shows a placeholder.                                                                                              | Editorial decision + Sanity write                                               | After committee handover                                                           |
+| **M10** | ⚠ **If a Cloudflare Pages project was created by accident**, delete it. Hosting belongs to Vercel; Cloudflare's role is DNS + email + analytics only.                                                                               | Avoid running two hosts in parallel                                             | Now                                                                                |
+| **M13** | Wire Sanity webhook → Vercel deploy hook so editor publishes auto-deploy in ~60s. **Step-by-step in [DEPLOYMENT.md § Sanity → Vercel webhook](DEPLOYMENT.md#sanity--vercel-deploy-webhook).**                                       | Crosses two dashboards (Sanity + Vercel); not scriptable here                   | Before editors start publishing news posts                                         |
+| **M14** | Seed Sanity with the news `category` docs you actually plan to use (e.g. "Race report", "Squad update", "Fundraising", "Alumni", "Announcement"). The category pills + RSS categories all read from this list.                      | Editorial decision                                                              | Before publishing the first news post                                              |
+| **M15** | Once you have Olympian profiles to publish, create `olympian` docs in Sanity. The page lives at `/about/olympians/` (filterable card grid). Each `olympian` becomes a `/about/olympians/<slug>/` detail page.                       | Editorial work + content gathering                                              | When alumni outreach has produced material                                         |
+| **M16** | Add `henleyHonour` docs once the historic record is digitised — ideally one per crew-year combination. The table groups by year automatically.                                                                                      | Editorial — needs the club's archive in spreadsheet form                        | Ongoing                                                                            |
+| **M17** | If you want a live race banner during BUCS / HRR / Henley Women's, open Sanity → Site settings → Live race banner, toggle `active`, fill `eventName` + `liveResultsUrl`, save. Banner disappears the moment you set `active=false`. | Editorial trigger                                                               | Race weekends                                                                      |
 
 ### What to do _right now_ on Cloudflare
 
@@ -296,10 +412,11 @@ Based on the session, things worth adding:
 | **Sentry (`@sentry/astro`)**       | Real-user error tracking in production. Free tier 5k events/mo. Catches the bugs that don't show in dev.                                                             | ~15 min, Phase 5                                                                       |
 | **Sanity Presentation**            | Live editor preview matched to production. Big quality-of-life win for non-developer committee.                                                                      | ~1h, T-late                                                                            |
 | **`pnpm peers check`**             | Sanity v5 emits peer-dep warnings during install. Worth auditing once to confirm nothing is missing.                                                                 | 5 min                                                                                  |
-| **`@astrojs/sitemap` integration** | Auto-generates `/sitemap-index.xml`. The plan mentions it but it's not yet installed.                                                                                | 5 min                                                                                  |
-| **`@astrojs/rss`**                 | RSS for the news feed (T28).                                                                                                                                         | 10 min when news ships                                                                 |
+| **`@astrojs/sitemap` integration** | ✅ Installed and wired (session 4). Sitemap at `/sitemap-index.xml`.                                                                                                 | done                                                                                   |
+| **`@astrojs/rss`**                 | ✅ Installed and wired (session 4). Feed at `/news/rss.xml` with custom XSL stylesheet.                                                                              | done                                                                                   |
+| **Pagefind**                       | ✅ Installed and wired (session 4). Static index built on every deploy. `/` shortcut + header buttons.                                                               | done                                                                                   |
 
-I haven't added any of these this session because the testing skeleton + CI already cover the most important gaps. Wire them when the matching feature lands.
+Wire the remaining ones when the matching feature lands.
 
 ---
 
@@ -320,30 +437,33 @@ bubc-site/
 │   │   │   │   ├── content/      # Picture, Placeholder, PortableText, PhotoGallery, Timeline
 │   │   │   │   ├── form/         # Field, Textarea, RadioGroup, Checkbox
 │   │   │   │   ├── home/         # Hero, StatStrip, NewsRail, SquadPathway, SponsorStrip, ClosingCtas
-│   │   │   │   ├── layout/       # Header, Footer, PageHero
+│   │   │   │   ├── layout/       # Header, Footer, PageHero, LiveRaceBanner
+│   │   │   │   ├── news/         # NewsCard, CategoryPills, Pagination, ShareButtons
+│   │   │   │   ├── search/       # SearchDialog
+│   │   │   │   ├── seo/          # JsonLd
 │   │   │   │   ├── squad/        # TrainingScheduleTable, CoachStrip
 │   │   │   │   ├── support/      # DonationThermometer
 │   │   │   │   └── ui/           # Button, Card, Container, Eyebrow, Section, Stat, Tag
 │   │   │   ├── layouts/          # BaseLayout, PageLayout
-│   │   │   ├── lib/              # sanity.ts, queries.ts, types.ts, seo.ts, academicYear.ts
+│   │   │   ├── lib/              # sanity, queries, types, seo, html, academicYear, readingTime
 │   │   │   ├── pages/
-│   │   │   │   ├── index.astro
-│   │   │   │   ├── styleguide.astro
-│   │   │   │   ├── 404.astro · contact.astro · privacy.astro · welfare.astro · coaching.astro · committee.astro
-│   │   │   │   ├── about/        # index, history
+│   │   │   │   ├── index.astro · styleguide.astro · 404.astro · contact.astro · privacy.astro · welfare.astro · coaching.astro · committee.astro
+│   │   │   │   ├── about/        # index, history, henley-honours, olympians/{index,[slug]}
 │   │   │   │   ├── boathouse/    # index
+│   │   │   │   ├── news/         # index, [slug], page/[num], category/[slug], rss.xml.ts
 │   │   │   │   ├── squads/       # index, trial, [slug]
 │   │   │   │   └── support/      # index, donate, buy-a-boat
 │   │   │   ├── styles/global.css
 │   │   │   └── env.d.ts
+│   │   ├── public/{favicon, robots.txt, rss/styles.xsl}
 │   │   └── tests/
-│   │       ├── e2e/smoke.spec.ts # 11 specs across desktop + mobile
-│   │       └── unit/seo.test.ts
+│   │       ├── e2e/smoke.spec.ts # 19 specs across desktop + mobile (38 runs)
+│   │       └── unit/{seo,readingTime,pagination}.test.ts
 │   └── studio/                   # @bubc/studio — Sanity Studio v5
 │       ├── schemaTypes/{documents,objects,singletons}/
 │       ├── structure.ts
 │       └── sanity.config.ts
-├── docs/{plan.md, PROGRESS.md, FEATURES.md}
+├── docs/{plan.md, PROGRESS.md, FEATURES.md, DEPLOYMENT.md}
 ├── eslint.config.mjs / .prettierrc / .prettierignore
 └── package.json / pnpm-workspace.yaml
 ```
@@ -354,28 +474,28 @@ bubc-site/
 
 ```bash
 # Dev
-pnpm dev                 # Astro dev server → http://localhost:4321
-pnpm studio              # Sanity Studio dev → http://localhost:3333
+pnpm dev                              # Astro dev server → http://localhost:4321
+pnpm studio                           # Sanity Studio dev → http://localhost:3333
 
 # Build / preview
-pnpm build               # production build of apps/web
-pnpm preview             # serve production build locally
+pnpm build                            # production build of apps/web (chains pagefind indexer)
+pnpm preview                          # serve production build locally
+pnpm --filter @bubc/web build:no-search  # skip pagefind (faster iterations)
+pnpm --filter @bubc/web pagefind         # rebuild the search index against existing dist/
 
 # Quality
-pnpm lint                # ESLint across monorepo
-pnpm lint:fix
-pnpm format              # prettier --write
-pnpm format:check
-pnpm typecheck           # astro check + tsc
+pnpm lint / pnpm lint:fix             # ESLint across monorepo
+pnpm format / pnpm format:check       # Prettier
+pnpm typecheck                        # astro check + tsc
 
 # Tests
-pnpm test:unit           # Vitest
-pnpm test:e2e            # Playwright (auto-starts preview server)
-pnpm test                # both
+pnpm test:unit                        # Vitest
+pnpm test:e2e                         # Playwright (auto-starts preview server)
+pnpm test                             # both
 
 # Studio (from apps/studio)
-pnpm deploy              # deploy Studio to bubc.sanity.studio (first run sets hostname)
-pnpm typegen             # generate TS types from schemas
+pnpm deploy                           # deploy Studio to bubc.sanity.studio (first run sets hostname)
+pnpm typegen                          # generate TS types from schemas
 ```
 
 ---
@@ -401,6 +521,7 @@ pnpm typegen             # generate TS types from schemas
 | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
 | [docs/plan.md](plan.md)                                                                                                   | Full development plan — single source of truth          |
 | [docs/FEATURES.md](FEATURES.md)                                                                                           | Feature backlog with status flags + open decision queue |
+| [docs/DEPLOYMENT.md](DEPLOYMENT.md)                                                                                       | Deploy, env vars, Sanity webhook, Cloudflare scope      |
 | [apps/web/src/lib/sanity.ts](../apps/web/src/lib/sanity.ts)                                                               | Sanity client + image URL builder + `safeFetch`         |
 | [apps/web/src/lib/queries.ts](../apps/web/src/lib/queries.ts)                                                             | GROQ queries                                            |
 | [apps/web/src/lib/types.ts](../apps/web/src/lib/types.ts)                                                                 | Hand-maintained types matching GROQ projections         |
@@ -417,6 +538,19 @@ pnpm typegen             # generate TS types from schemas
 | [apps/web/src/components/home/](../apps/web/src/components/home/)                                                         | Home page sections                                      |
 | [apps/web/src/pages/squads/trial.astro](../apps/web/src/pages/squads/trial.astro)                                         | Formspree trial form                                    |
 | [apps/web/src/pages/squads/[slug].astro](../apps/web/src/pages/squads/%5Bslug%5D.astro)                                   | Dynamic squad detail page                               |
+| [apps/web/src/pages/news/index.astro](../apps/web/src/pages/news/index.astro)                                             | News index (page 1) with category filter                |
+| [apps/web/src/pages/news/[slug].astro](../apps/web/src/pages/news/%5Bslug%5D.astro)                                       | News post template with PortableText body + share       |
+| [apps/web/src/pages/news/rss.xml.ts](../apps/web/src/pages/news/rss.xml.ts)                                               | RSS feed endpoint                                       |
+| [apps/web/src/pages/about/henley-honours.astro](../apps/web/src/pages/about/henley-honours.astro)                         | Henley honours record with filter pills                 |
+| [apps/web/src/pages/about/olympians/index.astro](../apps/web/src/pages/about/olympians/index.astro)                       | Olympians index                                         |
+| [apps/web/src/pages/about/olympians/[slug].astro](../apps/web/src/pages/about/olympians/%5Bslug%5D.astro)                 | Olympian detail page                                    |
+| [apps/web/src/components/search/SearchDialog.astro](../apps/web/src/components/search/SearchDialog.astro)                 | Pagefind-powered search dialog                          |
+| [apps/web/src/components/layout/LiveRaceBanner.astro](../apps/web/src/components/layout/LiveRaceBanner.astro)             | Editor-driven live race banner                          |
+| [apps/web/src/components/seo/JsonLd.astro](../apps/web/src/components/seo/JsonLd.astro)                                   | Generic JSON-LD injector                                |
+| [apps/web/src/components/news/Pagination.astro](../apps/web/src/components/news/Pagination.astro)                         | Accessible pagination with windowed pages               |
+| [apps/web/src/components/news/ShareButtons.astro](../apps/web/src/components/news/ShareButtons.astro)                     | Twitter / Facebook / copy-link share row                |
+| [apps/web/src/lib/readingTime.ts](../apps/web/src/lib/readingTime.ts)                                                     | PortableText word-count → minutes label                 |
+| [apps/web/public/robots.txt](../apps/web/public/robots.txt)                                                               | Crawler policy + sitemap pointer                        |
 | [apps/web/playwright.config.ts](../apps/web/playwright.config.ts)                                                         | Playwright config                                       |
 | [apps/web/vitest.config.ts](../apps/web/vitest.config.ts)                                                                 | Vitest config                                           |
 | [.github/workflows/ci.yml](../.github/workflows/ci.yml)                                                                   | CI pipeline                                             |

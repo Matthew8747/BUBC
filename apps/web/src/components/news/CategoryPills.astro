@@ -1,0 +1,56 @@
+---
+/**
+ * CategoryPills — filter pills above a news listing.
+ *
+ * The "All" pill links back to /news/. Each category links to /news/category/<slug>/.
+ * Active state is derived from the current URL.
+ */
+import type { NewsCategory } from '../../lib/types';
+
+interface Props {
+  categories: NewsCategory[];
+  activeSlug?: string;
+}
+
+const { categories, activeSlug } = Astro.props;
+const isAllActive = !activeSlug;
+---
+
+{
+  categories.length > 0 && (
+    <nav aria-label="Filter news by category" class="flex flex-wrap items-center gap-2">
+      <a
+        href="/news/"
+        aria-current={isAllActive ? 'page' : undefined}
+        class:list={[
+          'inline-flex h-9 items-center rounded-full px-4 text-xs font-medium uppercase tracking-[0.12em] transition-colors',
+          isAllActive
+            ? 'bg-[--color-navy] text-[--color-paper]'
+            : 'border border-[--color-line] text-[--color-ink] hover:border-[--color-navy]',
+        ]}
+      >
+        All news
+      </a>
+      {categories.map((cat) => {
+        const active = cat.slug === activeSlug;
+        return (
+          <a
+            href={`/news/category/${cat.slug}/`}
+            aria-current={active ? 'page' : undefined}
+            class:list={[
+              'inline-flex h-9 items-center rounded-full px-4 text-xs font-medium uppercase tracking-[0.12em] transition-colors',
+              active
+                ? 'bg-[--color-navy] text-[--color-paper]'
+                : 'border border-[--color-line] text-[--color-ink] hover:border-[--color-navy]',
+            ]}
+          >
+            {cat.title}
+            {typeof cat.postCount === 'number' && cat.postCount > 0 && (
+              <span class="ml-2 opacity-60">{cat.postCount}</span>
+            )}
+          </a>
+        );
+      })}
+    </nav>
+  )
+}

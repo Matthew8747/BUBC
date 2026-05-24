@@ -1,0 +1,104 @@
+---
+/**
+ * LiveRaceBanner — top-of-page "follow the racing" callout.
+ *
+ * Driven entirely by `settings.liveRaceBanner` in Sanity. When active, sits
+ * above the Header (so it doesn't disturb the sticky nav) and links out to
+ * whatever official live tracker the editor pasted in (British Rowing, HRR,
+ * etc.). Per FEATURES.md R5 decision: banner-only, no embedded iframes.
+ *
+ * Per-session dismiss: closing the banner sets a sessionStorage flag keyed on
+ * the event name, so it re-appears next session and re-appears immediately if
+ * the editor changes the event.
+ */
+import type { LiveRaceBanner } from '../../lib/types';
+
+interface Props {
+  banner: LiveRaceBanner;
+}
+
+const { banner } = Astro.props;
+const tone = banner.tone ?? 'navy';
+const eventKey = (banner.eventName ?? '').trim();
+
+const toneClass: Record<NonNullable<LiveRaceBanner['tone']>, string> = {
+  navy: 'bg-[--color-navy] text-[--color-paper]',
+  gold: 'bg-[--color-gold] text-[--color-ink]',
+  blade: 'bg-[--color-blade] text-[--color-paper]',
+};
+---
+
+<aside
+  id="live-race-banner"
+  data-live-banner
+  data-event-key={eventKey}
+  class:list={['relative z-30 hidden text-sm', toneClass[tone]]}
+  aria-label="Live race"
+>
+  <div
+    class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center gap-x-6 gap-y-2"
+  >
+    <span class="inline-flex h-2 w-2 rounded-full bg-current animate-pulse" aria-hidden="true"
+    ></span>
+    <span class="font-medium tracking-wide uppercase text-xs">{banner.eventName ?? 'Live'}</span>
+    {banner.message && <span class="opacity-90">{banner.message}</span>}
+    {
+      banner.liveResultsUrl && (
+        <a
+          href={banner.liveResultsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="ml-auto inline-flex items-center gap-1 underline underline-offset-2 hover:opacity-80 font-medium"
+        >
+          {banner.ctaLabel ?? 'Follow live'}
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path
+              d="M3 6h6M6 3l3 3-3 3"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </a>
+      )
+    }
+    <button
+      type="button"
+      data-live-banner-close
+      aria-label="Dismiss this banner"
+      class="inline-flex h-6 w-6 items-center justify-center opacity-80 hover:opacity-100"
+    >
+      <svg width="12" height="12" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <path
+          d="M5 5l12 12M17 5L5 17"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"></path>
+      </svg>
+    </button>
+  </div>
+</aside>
+
+<script>
+  const banner = document.querySelector<HTMLElement>('[data-live-banner]');
+  if (banner) {
+    const eventKey = banner.dataset.eventKey ?? '';
+    const storageKey = `bubc.liveBanner.dismissed:${eventKey}`;
+    if (eventKey && sessionStorage.getItem(storageKey) === '1') {
+      // stays hidden
+    } else {
+      banner.classList.remove('hidden');
+    }
+    banner.querySelector('[data-live-banner-close]')?.addEventListener('click', () => {
+      banner.classList.add('hidden');
+      if (eventKey) {
+        try {
+          sessionStorage.setItem(storageKey, '1');
+        } catch {
+          /* sessionStorage may be disabled — non-fatal */
+        }
+      }
+    });
+  }
+</script>

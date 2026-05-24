@@ -1,0 +1,17 @@
+---
+/**
+ * JsonLd — render arbitrary structured data as a <script type="application/ld+json">.
+ *
+ * The value is JSON-stringified inside the script, so embedded HTML in strings
+ * is fine but raw HTML in the value would break parsing. Sanitization of any
+ * string values is the caller's job.
+ */
+interface Props {
+  data: unknown;
+}
+
+const { data } = Astro.props;
+const json = JSON.stringify(data);
+---
+
+<script is:inline type="application/ld+json" set:html={json} />

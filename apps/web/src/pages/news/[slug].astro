@@ -1,0 +1,221 @@
+---
+/**
+ * News post detail — /news/<slug>/
+ *
+ * Editorial article template. Pre-rendered at build time via getStaticPaths.
+ * Returns 404 (Astro convention: throw to bail) if a slug isn't found in
+ * Sanity — which can only happen if the dataset changed between build and
+ * deploy, since the slug list seeds the static paths.
+ */
+import PageLayout from '../../layouts/PageLayout.astro';
+import Container from '../../components/ui/Container.astro';
+import Section from '../../components/ui/Section.astro';
+import Tag from '../../components/ui/Tag.astro';
+import Picture from '../../components/content/Picture.astro';
+import Placeholder from '../../components/content/Placeholder.astro';
+import PortableText from '../../components/content/PortableText.astro';
+import ShareButtons from '../../components/news/ShareButtons.astro';
+import JsonLd from '../../components/seo/JsonLd.astro';
+import { safeFetch, urlFor } from '../../lib/sanity';
+import {
+  allNewsSlugsQuery,
+  newsPostBySlugQuery,
+  previousPostQuery,
+  nextPostQuery,
+} from '../../lib/queries';
+import { readingTimeLabel } from '../../lib/readingTime';
+import { SITE } from '../../lib/seo';
+import type { NewsPostDetail, PostRef } from '../../lib/types';
+
+export async function getStaticPaths() {
+  const slugs = (await safeFetch<{ slug: string }[]>(allNewsSlugsQuery)) ?? [];
+  return slugs.filter((s) => s.slug).map((s) => ({ params: { slug: s.slug } }));
+}
+
+const { slug } = Astro.params;
+const post = await safeFetch<NewsPostDetail>(newsPostBySlugQuery, { slug });
+
+if (!post) {
+  return Astro.redirect('/404');
+}
+
+const [prev, next] = await Promise.all([
+  safeFetch<PostRef | null>(previousPostQuery, { publishDate: post.publishDate }),
+  safeFetch<PostRef | null>(nextPostQuery, { publishDate: post.publishDate }),
+]);
+
+const datetime = new Date(post.publishDate);
+const dateLabel = datetime.toLocaleDateString('en-GB', {
+  weekday: 'long',
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+const dateIso = datetime.toISOString();
+
+const reading = post.body ? readingTimeLabel(post.body) : null;
+const canonicalUrl = `${SITE.url}/news/${slug}/`;
+
+const ogImage = post.heroImage?.asset
+  ? urlFor(post.heroImage).width(1200).height(630).fit('crop').auto('format').url()
+  : undefined;
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'NewsArticle',
+  headline: post.title,
+  description: post.excerpt,
+  datePublished: dateIso,
+  dateModified: dateIso,
+  author: post.author
+    ? { '@type': 'Person', name: post.author }
+    : { '@type': 'Organization', name: SITE.name },
+  publisher: {
+    '@type': 'Organization',
+    name: SITE.name,
+    url: SITE.url,
+    logo: { '@type': 'ImageObject', url: `${SITE.url}/favicon.svg` },
+  },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
+  ...(ogImage ? { image: [ogImage] } : {}),
+  ...(post.category ? { articleSection: post.category.title } : {}),
+};
+---
+
+<PageLayout
+  seo={{
+    title: post.seo?.title ?? post.title,
+    description: post.seo?.description ?? post.excerpt,
+    image: ogImage,
+    canonical: canonicalUrl,
+    noIndex: post.seo?.noIndex,
+  }}
+>
+  <JsonLd data={articleSchema} slot="head" />
+
+  <article>
+    {/* Hero image — full-bleed on its own; title block sits below for legibility. */}
+    {
+      post.heroImage?.asset ? (
+        <div class="relative w-full">
+          <Picture
+            image={post.heroImage}
+            ratio="21/9"
+            sizes="100vw"
+            priority
+            fallbackLabel={post.title}
+          />
+        </div>
+      ) : (
+        <Placeholder ratio="21/9" label={post.title} />
+      )
+    }
+
+    <Section spacing="md">
+      <Container width="narrow">
+        <p class="text-sm text-[--color-mute] mb-6">
+          <a href="/news/" class="hover:text-[--color-navy]">All news</a>
+          {
+            post.category && (
+              <>
+                <span class="mx-2 opacity-50">/</span>
+                <a href={`/news/category/${post.category.slug}/`} class="hover:text-[--color-navy]">
+                  {post.category.title}
+                </a>
+              </>
+            )
+          }
+        </p>
+
+        <header>
+          {post.category && <Tag tone="gold">{post.category.title}</Tag>}
+          <h1
+            class="mt-4 font-display text-4xl sm:text-5xl md:text-6xl leading-[1.05] text-balance"
+          >
+            {post.title}
+          </h1>
+          <p class="mt-6 text-lg text-[--color-mute]">{post.excerpt}</p>
+
+          <div
+            class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-[--color-mute] border-t border-b border-[--color-line] py-4"
+          >
+            <time datetime={dateIso}>{dateLabel}</time>
+            {post.author && <span>By {post.author}</span>}
+            {reading && <span>{reading}</span>}
+          </div>
+        </header>
+
+        {post.body && <PortableText value={post.body} class="mt-10" />}
+
+        {
+          (post.relatedAthletes?.length || post.relatedSquads?.length) && (
+            <aside class="mt-16 pt-10 border-t border-[--color-line]">
+              <h2 class="text-xl font-display mb-4">Related</h2>
+              <div class="flex flex-wrap gap-2">
+                {post.relatedSquads?.map((s) => (
+                  <a
+                    href={`/squads/${s.slug}/`}
+                    class="inline-flex items-center rounded-full border border-[--color-line] px-3 h-8 text-xs uppercase tracking-[0.1em] hover:border-[--color-navy] transition-colors"
+                  >
+                    {s.name}
+                  </a>
+                ))}
+                {post.relatedAthletes?.map((a) => (
+                  <span class="inline-flex items-center rounded-full bg-[--color-bone] px-3 h-8 text-xs uppercase tracking-[0.1em] text-[--color-ink]">
+                    {a.name}
+                  </span>
+                ))}
+              </div>
+            </aside>
+          )
+        }
+
+        <div class="mt-12">
+          <ShareButtons title={post.title} url={canonicalUrl} />
+        </div>
+
+        {
+          (prev || next) && (
+            <nav
+              class="mt-16 pt-8 border-t border-[--color-line] grid sm:grid-cols-2 gap-6"
+              aria-label="More posts"
+            >
+              <div class="text-left">
+                {prev ? (
+                  <a href={`/news/${prev.slug}/`} class="group block">
+                    <span class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">
+                      ← Previous
+                    </span>
+                    <span class="block mt-2 font-display text-lg group-hover:text-[--color-gold]">
+                      {prev.title}
+                    </span>
+                  </a>
+                ) : (
+                  <span class="text-xs uppercase tracking-[0.12em] text-[--color-mute]/40">
+                    The earliest post
+                  </span>
+                )}
+              </div>
+              <div class="sm:text-right">
+                {next ? (
+                  <a href={`/news/${next.slug}/`} class="group block">
+                    <span class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">
+                      Next →
+                    </span>
+                    <span class="block mt-2 font-display text-lg group-hover:text-[--color-gold]">
+                      {next.title}
+                    </span>
+                  </a>
+                ) : (
+                  <span class="text-xs uppercase tracking-[0.12em] text-[--color-mute]/40">
+                    The latest post
+                  </span>
+                )}
+              </div>
+            </nav>
+          )
+        }
+      </Container>
+    </Section>
+  </article>
+</PageLayout>

@@ -1,0 +1,91 @@
+---
+/**
+ * News by category — `/news/category/<slug>/`.
+ *
+ * Pre-builds one route per category. Falls back to a placeholder block if the
+ * category is real but empty (rare but possible during draft work).
+ */
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHero from '../../../components/layout/PageHero.astro';
+import Container from '../../../components/ui/Container.astro';
+import Section from '../../../components/ui/Section.astro';
+import NewsCard from '../../../components/news/NewsCard.astro';
+import CategoryPills from '../../../components/news/CategoryPills.astro';
+import { safeFetch } from '../../../lib/sanity';
+import {
+  newsCategoriesQuery,
+  newsByCategoryQuery,
+  categoryBySlugQuery,
+} from '../../../lib/queries';
+import type { NewsCardData, NewsCategory } from '../../../lib/types';
+
+export async function getStaticPaths() {
+  const cats = (await safeFetch<NewsCategory[]>(newsCategoriesQuery)) ?? [];
+  return cats
+    .filter((c) => c.slug)
+    .map((c) => ({ params: { slug: c.slug }, props: { category: c } }));
+}
+
+const { slug } = Astro.params;
+const { category: initialCategory } = Astro.props;
+
+const [category, posts, categories] = await Promise.all([
+  initialCategory
+    ? Promise.resolve(initialCategory)
+    : safeFetch<NewsCategory>(categoryBySlugQuery, { slug }),
+  safeFetch<NewsCardData[]>(newsByCategoryQuery, { slug }).then((r) => r ?? []),
+  safeFetch<NewsCategory[]>(newsCategoriesQuery).then((r) => r ?? []),
+]);
+
+if (!category) {
+  return Astro.redirect('/news/');
+}
+---
+
+<PageLayout
+  seo={{
+    title: `${category.title} · News`,
+    description: category.description ?? `News posts in ${category.title}.`,
+  }}
+>
+  <PageHero eyebrow="News" headline={category.title} lead={category.description} />
+
+  <Section spacing="lg">
+    <Container>
+      <p class="text-sm text-[--color-mute] mb-6">
+        <a href="/news/" class="hover:text-[--color-navy]">All news</a>
+        <span class="mx-2 opacity-50">/</span>
+        <span class="text-[--color-ink]">{category.title}</span>
+      </p>
+
+      {
+        categories.length > 0 && (
+          <CategoryPills categories={categories} activeSlug={category.slug} />
+        )
+      }
+
+      <div class="mt-10">
+        {
+          posts.length > 0 ? (
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
+              {posts.map((post, i) => (
+                <NewsCard post={post} priority={i === 0} />
+              ))}
+            </div>
+          ) : (
+            <div class="rounded border border-dashed border-[--color-line] bg-[--color-bone]/60 p-10 text-center">
+              <h2 class="font-display text-2xl">Nothing here yet</h2>
+              <p class="mt-3 text-sm text-[--color-mute] max-w-md mx-auto">
+                No posts have been tagged <strong>{category.title}</strong> yet. Try{' '}
+                <a href="/news/" class="underline">
+                  all news
+                </a>
+                .
+              </p>
+            </div>
+          )
+        }
+      </div>
+    </Container>
+  </Section>
+</PageLayout>

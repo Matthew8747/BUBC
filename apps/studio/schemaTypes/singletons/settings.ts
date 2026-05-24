@@ -14,6 +14,7 @@ export const settings = defineType({
     {name: 'nav', title: 'Navigation'},
     {name: 'footer', title: 'Footer'},
     {name: 'social', title: 'Social'},
+    {name: 'race', title: 'Live race banner'},
   ],
   fields: [
     defineField({
@@ -125,6 +126,65 @@ export const settings = defineType({
       type: 'text',
       rows: 3,
       group: 'footer',
+    }),
+
+    // Live race banner -------------------------------------------------------
+    defineField({
+      name: 'liveRaceBanner',
+      title: 'Live race banner',
+      description:
+        "Optional callout pinned above the header on every page. Use it during BUCS, HRR, or Henley Women's to point at the official live tracker. Turn off when racing's over.",
+      type: 'object',
+      group: 'race',
+      options: {collapsible: true, collapsed: true},
+      fields: [
+        {
+          name: 'active',
+          type: 'boolean',
+          title: 'Show banner',
+          initialValue: false,
+        },
+        {
+          name: 'eventName',
+          type: 'string',
+          title: 'Event name',
+          description: 'Short label that appears in upper-case at the start.',
+        },
+        {
+          name: 'message',
+          type: 'string',
+          title: 'Message',
+          description: 'Optional context, e.g. "BUBC Men race the Temple at 12:45".',
+        },
+        {
+          name: 'liveResultsUrl',
+          type: 'url',
+          title: 'Live results URL',
+          description: 'External link — usually British Rowing or HRR official site.',
+          validation: (rule) =>
+            rule.uri({scheme: ['http', 'https'], allowRelative: false}).warning(),
+        },
+        {
+          name: 'ctaLabel',
+          type: 'string',
+          title: 'Link label',
+          description: 'Defaults to "Follow live".',
+        },
+        {
+          name: 'tone',
+          type: 'string',
+          title: 'Tone',
+          options: {
+            list: [
+              {title: 'Navy (default)', value: 'navy'},
+              {title: 'Gold (fundraising)', value: 'gold'},
+              {title: 'Blade red (race day)', value: 'blade'},
+            ],
+            layout: 'radio',
+          },
+          initialValue: 'navy',
+        },
+      ],
     }),
 
     // Social -----------------------------------------------------------------

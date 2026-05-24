@@ -1,0 +1,99 @@
+---
+/**
+ * News index — page 1.
+ *
+ * Editorial listing of every news post (newest first). Hand-paginated rather
+ * than using `paginate()` so the route layout stays clean against the
+ * `[slug].astro` and `category/[slug].astro` siblings:
+ *   /news/                  → this page
+ *   /news/page/2/, /3/, …   → page/[num].astro
+ *   /news/[slug]/           → post detail
+ *   /news/category/[slug]/  → category listings
+ *
+ * Falls back to a single editorial empty state when Sanity returns nothing —
+ * a meaningful "the comms officer hasn't posted yet" message, not Lorem ipsum.
+ */
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/layout/PageHero.astro';
+import Container from '../../components/ui/Container.astro';
+import Section from '../../components/ui/Section.astro';
+import NewsCard from '../../components/news/NewsCard.astro';
+import CategoryPills from '../../components/news/CategoryPills.astro';
+import Pagination from '../../components/news/Pagination.astro';
+import { safeFetch } from '../../lib/sanity';
+import { newsIndexQuery, newsCategoriesQuery } from '../../lib/queries';
+import type { NewsCardData, NewsCategory } from '../../lib/types';
+
+export const PAGE_SIZE = 9;
+
+const [allPosts, categories] = await Promise.all([
+  safeFetch<NewsCardData[]>(newsIndexQuery).then((r) => r ?? []),
+  safeFetch<NewsCategory[]>(newsCategoriesQuery).then((r) => r ?? []),
+]);
+
+const posts = allPosts.slice(0, PAGE_SIZE);
+const totalPages = Math.max(1, Math.ceil(allPosts.length / PAGE_SIZE));
+const hasPosts = posts.length > 0;
+---
+
+<PageLayout
+  seo={{
+    title: 'News',
+    description: 'Race reports, squad updates, and announcements from the boathouse.',
+  }}
+>
+  <PageHero
+    eyebrow="From the boathouse"
+    headline="News & reports"
+    lead="Race weekends, squad announcements, and the long quiet work between."
+  />
+
+  <Section spacing="lg">
+    <Container>
+      {categories.length > 0 && <CategoryPills categories={categories} />}
+
+      <div class="mt-10">
+        {
+          hasPosts ? (
+            <>
+              <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
+                {posts.map((post, i) => (
+                  <NewsCard post={post} priority={i === 0} />
+                ))}
+              </div>
+
+              <div class="mt-16">
+                <Pagination current={1} total={totalPages} base="/news/" />
+              </div>
+            </>
+          ) : (
+            <div class="rounded border border-dashed border-[--color-line] bg-[--color-bone]/60 p-10 text-center">
+              <h2 class="font-display text-2xl">No posts yet</h2>
+              <p class="mt-3 text-sm text-[--color-mute] max-w-md mx-auto">
+                The comms officer hasn't published anything yet. Check back at the start of term, or
+                subscribe to the RSS feed so the first post finds you.
+              </p>
+              <p class="mt-6">
+                <a
+                  href="/news/rss.xml"
+                  class="inline-flex items-center gap-2 text-sm font-medium text-[--color-navy] hover:text-[--color-gold]"
+                >
+                  Subscribe via RSS
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path
+                      d="M3 7h8M7 3l4 4-4 4"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </a>
+              </p>
+            </div>
+          )
+        }
+      </div>
+    </Container>
+  </Section>
+</PageLayout>

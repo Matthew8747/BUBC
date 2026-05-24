@@ -54,7 +54,15 @@ export const settingsQuery = /* groq */ `
     },
     footerNote,
     social[] { platform, url },
-    logo { ${imageBlockFields} }
+    logo { ${imageBlockFields} },
+    liveRaceBanner {
+      active,
+      eventName,
+      message,
+      liveResultsUrl,
+      ctaLabel,
+      tone
+    }
   }
 `;
 
@@ -137,6 +145,33 @@ export const newsIndexQuery = /* groq */ `
   }
 `;
 
+export const newsByCategoryQuery = /* groq */ `
+  *[_type == "newsPost" && category->slug.current == $slug] | order(publishDate desc) {
+    _id, title, "slug": slug.current, publishDate, excerpt, author,
+    "category": category->{ title, "slug": slug.current },
+    heroImage { ${imageBlockFields} }
+  }
+`;
+
+export const newsCategoriesQuery = /* groq */ `
+  *[_type == "category"] | order(title asc) {
+    _id, title, "slug": slug.current, description,
+    "postCount": count(*[_type == "newsPost" && references(^._id)])
+  }
+`;
+
+export const categoryBySlugQuery = /* groq */ `
+  *[_type == "category" && slug.current == $slug][0] {
+    _id, title, "slug": slug.current, description
+  }
+`;
+
+export const allNewsSlugsQuery = /* groq */ `
+  *[_type == "newsPost" && defined(slug.current)] | order(publishDate desc) {
+    "slug": slug.current, publishDate
+  }
+`;
+
 export const newsPostBySlugQuery = /* groq */ `
   *[_type == "newsPost" && slug.current == $slug][0] {
     _id, title, publishDate, excerpt, author,
@@ -146,6 +181,18 @@ export const newsPostBySlugQuery = /* groq */ `
     relatedAthletes[]->{ name, "slug": slug.current, photo { ${imageBlockFields} } },
     relatedSquads[]->{ name, "slug": slug.current },
     seo { ${seoFields} }
+  }
+`;
+
+/** Adjacent posts for prev/next nav on a post template. Two single fetches keep GROQ simple. */
+export const previousPostQuery = /* groq */ `
+  *[_type == "newsPost" && publishDate < $publishDate] | order(publishDate desc)[0] {
+    title, "slug": slug.current
+  }
+`;
+export const nextPostQuery = /* groq */ `
+  *[_type == "newsPost" && publishDate > $publishDate] | order(publishDate asc)[0] {
+    title, "slug": slug.current
   }
 `;
 
@@ -200,6 +247,49 @@ export const activeCampaignsQuery = /* groq */ `
 export const buyABoatQuery = /* groq */ `
   *[_type == "boatForSale"] | order(priority asc) {
     _id, boatType, priceRange, status, notes
+  }
+`;
+
+// ---------------------------------------------------------------------------
+// Henley Honours
+// ---------------------------------------------------------------------------
+
+export const henleyHonoursQuery = /* groq */ `
+  *[_type == "henleyHonour"] | order(year desc, regatta asc) {
+    _id, year, regatta, event, crewName, cox, coach, finish, opposition, notes,
+    athletes[] {
+      seat,
+      name,
+      "athlete": athlete->{ name, "slug": slug.current }
+    }
+  }
+`;
+
+// ---------------------------------------------------------------------------
+// Alumni / Olympians
+// ---------------------------------------------------------------------------
+
+export const olympiansQuery = /* groq */ `
+  *[_type == "olympian"] | order(coalesce(olympicYears[0].year, 0) desc, name asc) {
+    _id, name, "slug": slug.current, bubcYears, currentRole,
+    photo { ${imageBlockFields} },
+    olympicYears[] { year, host, event, medal, finalPlace }
+  }
+`;
+
+export const olympianBySlugQuery = /* groq */ `
+  *[_type == "olympian" && slug.current == $slug][0] {
+    _id, name, "slug": slug.current, bubcYears, currentRole,
+    photo { ${imageBlockFields} },
+    olympicYears[] { year, host, event, medal, finalPlace },
+    story,
+    seo { ${seoFields} }
+  }
+`;
+
+export const allOlympianSlugsQuery = /* groq */ `
+  *[_type == "olympian" && defined(slug.current)] {
+    "slug": slug.current
   }
 `;
 

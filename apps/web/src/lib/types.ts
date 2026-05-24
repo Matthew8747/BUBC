@@ -72,6 +72,17 @@ export interface Settings {
   footerNote?: string;
   social?: { platform: string; url: string }[];
   logo?: SanityImage;
+  liveRaceBanner?: LiveRaceBanner;
+}
+
+export interface LiveRaceBanner {
+  active?: boolean;
+  eventName?: string;
+  message?: string;
+  liveResultsUrl?: string;
+  ctaLabel?: string;
+  /** 'gold' for fundraising, 'blade' for race day live indicator, 'navy' for general. */
+  tone?: 'navy' | 'gold' | 'blade';
 }
 
 export interface NewsCardData {
@@ -80,8 +91,87 @@ export interface NewsCardData {
   slug: string;
   publishDate: string;
   excerpt: string;
+  author?: string;
   category?: { title: string; slug: string };
   heroImage?: SanityImage;
+}
+
+export interface NewsCategory {
+  _id: string;
+  title: string;
+  slug: string;
+  description?: string;
+  postCount?: number;
+}
+
+export interface NewsPostDetail {
+  _id: string;
+  title: string;
+  publishDate: string;
+  excerpt: string;
+  author?: string;
+  category?: { title: string; slug: string };
+  heroImage?: SanityImage;
+  body?: unknown;
+  relatedAthletes?: { name: string; slug: string; photo?: SanityImage }[];
+  relatedSquads?: { name: string; slug: string }[];
+  seo?: Seo;
+}
+
+export interface PostRef {
+  title: string;
+  slug: string;
+}
+
+// ---------------------------------------------------------------------------
+// Henley Honours
+// ---------------------------------------------------------------------------
+
+export interface HenleyHonourSeat {
+  seat?: string;
+  name?: string;
+  athlete?: { name: string; slug: string };
+}
+
+export interface HenleyHonour {
+  _id: string;
+  year: number;
+  regatta: 'hrr' | 'hwr';
+  event: string;
+  crewName?: string;
+  cox?: string;
+  coach?: string;
+  finish: string;
+  opposition?: string;
+  notes?: string;
+  athletes?: HenleyHonourSeat[];
+}
+
+// ---------------------------------------------------------------------------
+// Olympians
+// ---------------------------------------------------------------------------
+
+export interface OlympicAppearance {
+  year: number;
+  host?: string;
+  event?: string;
+  medal?: 'gold' | 'silver' | 'bronze' | 'none';
+  finalPlace?: number;
+}
+
+export interface OlympianCard {
+  _id: string;
+  name: string;
+  slug: string;
+  bubcYears?: string;
+  currentRole?: string;
+  photo?: SanityImage;
+  olympicYears?: OlympicAppearance[];
+}
+
+export interface OlympianDetail extends OlympianCard {
+  story?: unknown;
+  seo?: Seo;
 }
 
 export interface SquadCardData {
