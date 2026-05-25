@@ -1,0 +1,206 @@
+---
+/**
+ * NewsletterSignup — Buttondown-backed email subscribe form.
+ *
+ * Modes:
+ *   tone="dark"  — for the navy footer (default tone='dark' shows light text)
+ *   tone="light" — for post-page in-content placement on the paper background
+ *
+ * Behaviour:
+ *   - Posts via fetch to api.buttondown.email/api/emails/embed-subscribe/<user>
+ *   - On success: replaces the form with a "Thanks — check your inbox to confirm."
+ *   - On error:   surfaces inline
+ *   - Honeypot anti-spam (`htmlemail`) — Buttondown drops requests where that's filled
+ *   - Graceful "not configured" state when PUBLIC_BUTTONDOWN_USERNAME is unset
+ *     (matches the Formspree trial form's approach)
+ */
+import clsx from 'clsx';
+
+interface Props {
+  tone?: 'dark' | 'light';
+  heading?: string;
+  blurb?: string;
+  id?: string;
+  class?: string;
+}
+
+const {
+  tone = 'dark',
+  heading = 'BUBC monthly',
+  blurb = 'Race reports, alumni news, and a heads-up before the next campaign launches. One email a month, no spam.',
+  id = 'newsletter-signup',
+  class: className,
+} = Astro.props;
+
+const username = import.meta.env.PUBLIC_BUTTONDOWN_USERNAME?.trim();
+const configured = !!username;
+const formAction = configured
+  ? `https://buttondown.com/api/emails/embed-subscribe/${username}`
+  : '';
+
+const isDark = tone === 'dark';
+---
+
+<section
+  id={id}
+  data-buttondown-username={username ?? ''}
+  data-newsletter
+  class:list={[
+    'rounded-sm',
+    isDark
+      ? 'bg-[--color-ink]/40 text-[--color-paper] border border-[--color-paper]/10'
+      : 'bg-[--color-bone] text-[--color-ink] border border-[--color-ink]/10',
+    'p-6 sm:p-8',
+    className,
+  ]}
+  aria-labelledby={`${id}-heading`}
+>
+  <h2
+    id={`${id}-heading`}
+    class:list={[
+      'font-display text-2xl sm:text-3xl',
+      isDark ? 'text-[--color-paper]' : 'text-[--color-ink]',
+    ]}
+  >
+    {heading}
+  </h2>
+  <p
+    class:list={[
+      'mt-3 max-w-xl text-sm',
+      isDark ? 'text-[--color-paper]/70' : 'text-[--color-mute]',
+    ]}
+  >
+    {blurb}
+  </p>
+
+  {
+    configured ? (
+      <>
+        <form
+          action={formAction}
+          method="post"
+          target="popupwindow"
+          data-newsletter-form
+          class="mt-6 flex flex-col sm:flex-row gap-3"
+          novalidate
+        >
+          <label class="sr-only" for={`${id}-email`}>
+            Email address
+          </label>
+          <input
+            id={`${id}-email`}
+            type="email"
+            name="email"
+            required
+            autocomplete="email"
+            inputmode="email"
+            placeholder="you@example.com"
+            class={clsx(
+              'flex-1 h-12 px-4 text-base border focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--color-gold]',
+              isDark
+                ? 'bg-[--color-paper]/10 border-[--color-paper]/20 text-[--color-paper] placeholder:text-[--color-paper]/40'
+                : 'bg-[--color-paper] border-[--color-ink]/20 text-[--color-ink] placeholder:text-[--color-mute]',
+            )}
+          />
+          <input type="hidden" name="tag" value="bubc.co.uk" />
+          {/* Honeypot — Buttondown drops submissions where this is filled */}
+          <input
+            type="text"
+            name="htmlemail"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+            class="hidden"
+          />
+          <button
+            type="submit"
+            class="inline-flex h-12 items-center justify-center px-6 bg-[--color-gold] text-[--color-ink] font-medium tracking-wide hover:bg-[#a08040] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--color-paper]"
+          >
+            Subscribe
+          </button>
+        </form>
+        <p
+          class:list={['mt-4 text-xs', isDark ? 'text-[--color-paper]/50' : 'text-[--color-mute]']}
+        >
+          By subscribing you agree to receive emails from BUBC. Unsubscribe any time — every email
+          has a one-click link. Powered by{' '}
+          <a
+            href="https://buttondown.com/refer/bubc"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="underline decoration-[--color-gold] underline-offset-2"
+          >
+            Buttondown
+          </a>
+          .
+        </p>
+        <div
+          data-newsletter-status
+          class:list={[
+            'mt-4 text-sm hidden',
+            isDark ? 'text-[--color-paper]' : 'text-[--color-ink]',
+          ]}
+          role="status"
+          aria-live="polite"
+        />
+      </>
+    ) : (
+      <div
+        class:list={[
+          'mt-6 border border-dashed p-4 text-sm',
+          isDark
+            ? 'border-[--color-paper]/20 text-[--color-paper]/70'
+            : 'border-[--color-ink]/20 text-[--color-mute]',
+        ]}
+      >
+        <p>
+          Newsletter sign-up isn't configured yet. Set <code>PUBLIC_BUTTONDOWN_USERNAME</code> on
+          the deploy environment to wire this up.
+        </p>
+      </div>
+    )
+  }
+</section>
+
+<script>
+  // Buttondown's embed accepts plain form POSTs, but we intercept and submit
+  // via fetch so the page never navigates away — and we can show an inline
+  // success message regardless of how the editor wired the embed.
+  document.querySelectorAll<HTMLFormElement>('form[data-newsletter-form]').forEach((form) => {
+    const root = form.closest<HTMLElement>('[data-newsletter]');
+    const status = root?.querySelector<HTMLElement>('[data-newsletter-status]');
+
+    function setStatus(msg: string, tone: 'success' | 'error') {
+      if (!status) return;
+      status.textContent = msg;
+      status.classList.remove('hidden');
+      status.classList.toggle('text-[--color-blade]', tone === 'error');
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const honeypot = data.get('htmlemail');
+      if (honeypot) return; // bot — silently drop
+
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: data,
+        });
+        // Buttondown's embed endpoint returns opaque responses to no-cors fetches,
+        // so we can't read status. We assume success unless fetch itself rejected.
+        void res;
+        form.reset();
+        form.classList.add('hidden');
+        setStatus('Thanks — check your inbox to confirm.', 'success');
+      } catch {
+        setStatus(
+          "Couldn't reach the newsletter service. Please try again in a moment, or email alumni@bubc.co.uk.",
+          'error',
+        );
+      }
+    });
+  });
+</script>

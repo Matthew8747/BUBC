@@ -1,9 +1,25 @@
 packages:
   - 'apps/*'
   - 'packages/*'
+
+# Whitelist of dependencies allowed to run postinstall scripts.
+# esbuild needs its native binary; @resvg/resvg-js has prebuilt binaries;
+# @parcel/watcher is used by Sanity dev; sharp is image processing.
 onlyBuiltDependencies:
   - esbuild
   - sharp
+  - '@parcel/watcher'
+  - '@resvg/resvg-js'
+  - '@sentry-internal/node-cpu-profiler'
+  - core-js
+
+# Per-package explicit allow/deny. puppeteer comes in via pa11y-ci — we don't
+# want it to download a 150MB Chromium binary on every install. CI uses
+# Playwright's Chromium (already installed for e2e) or system Chrome.
 allowBuilds:
   esbuild: true
   sharp: true
+  '@parcel/watcher': true
+  '@resvg/resvg-js': true
+  core-js: true
+  puppeteer: false

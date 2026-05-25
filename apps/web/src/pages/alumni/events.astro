@@ -1,0 +1,193 @@
+---
+/**
+ * Alumni events — /alumni/events/
+ *
+ * Upcoming events (date >= today) plus a short archive of recent past events.
+ * Reads from the existing `event` schema, filtered to `type == "alumni"`.
+ */
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/layout/PageHero.astro';
+import Container from '../../components/ui/Container.astro';
+import Section from '../../components/ui/Section.astro';
+import Eyebrow from '../../components/ui/Eyebrow.astro';
+import Button from '../../components/ui/Button.astro';
+import Picture from '../../components/content/Picture.astro';
+import PortableText from '../../components/content/PortableText.astro';
+import JsonLd from '../../components/seo/JsonLd.astro';
+import { safeFetch } from '../../lib/sanity';
+import { upcomingAlumniEventsQuery, pastAlumniEventsQuery } from '../../lib/queries';
+import { SITE } from '../../lib/seo';
+import { ogImage } from '../../lib/og/url';
+import type { EventCardData } from '../../lib/types';
+
+const [upcoming, past] = await Promise.all([
+  safeFetch<EventCardData[]>(upcomingAlumniEventsQuery),
+  safeFetch<EventCardData[]>(pastAlumniEventsQuery),
+]);
+
+function fmtDate(iso?: string): string {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('en-GB', {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+}
+
+function dateRange(start?: string, end?: string): string {
+  if (!start) return '';
+  const s = fmtDate(start);
+  if (!end || end === start) return s;
+  return `${s} – ${fmtDate(end)}`;
+}
+
+const eventList = upcoming ?? [];
+
+const breadcrumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'Alumni', item: `${SITE.url}/alumni/` },
+    { '@type': 'ListItem', position: 3, name: 'Events', item: `${SITE.url}/alumni/events/` },
+  ],
+};
+
+// JSON-LD: one Event entry per upcoming event so Google can index them.
+const eventJsonLd = eventList.length
+  ? {
+      '@context': 'https://schema.org',
+      '@graph': eventList.map((e) => ({
+        '@type': 'Event',
+        name: e.title,
+        startDate: e.date,
+        ...(e.endDate ? { endDate: e.endDate } : {}),
+        ...(e.location
+          ? {
+              location: {
+                '@type': 'Place',
+                name: e.location,
+              },
+            }
+          : {}),
+        eventStatus: 'https://schema.org/EventScheduled',
+        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+        organizer: {
+          '@type': 'Organization',
+          name: SITE.name,
+          url: SITE.url,
+        },
+        url: `${SITE.url}/alumni/events/`,
+      })),
+    }
+  : null;
+---
+
+<PageLayout
+  seo={{
+    title: 'Alumni events',
+    description:
+      'Upcoming and recent alumni events at the University of Bath Boat Club — dinners, Henley hospitality, reunions.',
+    image: ogImage({ kind: 'page', slug: 'alumni-events' }),
+  }}
+>
+  <JsonLd data={breadcrumbs} slot="head" />
+  {eventJsonLd && <JsonLd data={eventJsonLd} slot="head" />}
+
+  <PageHero
+    eyebrow="Alumni"
+    headline="Come back to the river."
+    lead="Alumni events run year-round — the annual dinner, Henley hospitality, boathouse open days. RSVP straight from each entry."
+  />
+
+  <Section spacing="md">
+    <Container>
+      <p class="text-sm text-[--color-mute] mb-10">
+        <a href="/alumni/" class="hover:text-[--color-navy]">Alumni</a>
+        <span class="mx-2 opacity-50">/</span>
+        <span class="text-[--color-ink]">Events</span>
+      </p>
+
+      <Eyebrow>Upcoming</Eyebrow>
+      <h2 class="mt-3 font-display text-3xl sm:text-4xl">What's next.</h2>
+
+      {
+        eventList.length === 0 ? (
+          <p class="mt-8 italic text-[--color-mute] max-w-2xl">
+            No alumni events on the calendar at the moment. Sign up to the alumni list to be the
+            first to hear about the next dinner or Henley meet —{' '}
+            <a
+              class="underline decoration-[--color-gold] underline-offset-4"
+              href="mailto:alumni@bubc.co.uk?subject=Alumni%20list"
+            >
+              alumni@bubc.co.uk
+            </a>
+            .
+          </p>
+        ) : (
+          <ul class="mt-10 grid lg:grid-cols-2 gap-10">
+            {eventList.map((e) => (
+              <li>
+                <article class="flex flex-col bg-[--color-bone]">
+                  <Picture
+                    image={e.heroImage}
+                    ratio="3/2"
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    fallbackLabel={e.title}
+                  />
+                  <div class="p-6 sm:p-8 flex flex-col gap-4">
+                    <p class="text-xs uppercase tracking-[0.14em] text-[--color-gold] font-medium tabular-nums">
+                      {dateRange(e.date, e.endDate)}
+                    </p>
+                    <h3 class="font-display text-2xl">{e.title}</h3>
+                    {e.location && <p class="text-sm text-[--color-mute]">{e.location}</p>}
+                    {e.description != null && (
+                      <div class="text-sm">
+                        <PortableText value={e.description} />
+                      </div>
+                    )}
+                    {e.registerUrl && (
+                      <div class="mt-2">
+                        <Button
+                          href={e.registerUrl}
+                          variant="solid"
+                          external={!e.registerUrl.startsWith('mailto:')}
+                        >
+                          {e.registerUrl.startsWith('mailto:') ? 'RSVP by email' : 'Register'}
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </article>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </Container>
+  </Section>
+
+  {
+    past && past.length > 0 && (
+      <Section tone="bone" spacing="md">
+        <Container>
+          <Eyebrow>Recent</Eyebrow>
+          <h2 class="mt-3 font-display text-3xl">Past alumni events.</h2>
+          <ul class="mt-8 divide-y divide-[--color-ink]/10 border-y border-[--color-ink]/10">
+            {past.map((e) => (
+              <li class="py-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                <p class="font-display text-lg">{e.title}</p>
+                <p class="text-sm text-[--color-mute] tabular-nums">
+                  {fmtDate(e.date)}
+                  {e.location && <span class="mx-2 opacity-50">·</span>}
+                  {e.location && <span>{e.location}</span>}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </Container>
+      </Section>
+    )
+  }
+</PageLayout>

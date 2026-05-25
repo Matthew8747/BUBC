@@ -22,8 +22,11 @@ import PortableText from '../../components/content/PortableText.astro';
 import PhotoGallery from '../../components/content/PhotoGallery.astro';
 import TrainingScheduleTable from '../../components/squad/TrainingScheduleTable.astro';
 import CoachStrip from '../../components/squad/CoachStrip.astro';
+import JsonLd from '../../components/seo/JsonLd.astro';
 import { safeFetch } from '../../lib/sanity';
 import { allSquadSlugsQuery, squadBySlugQuery } from '../../lib/queries';
+import { ogImage } from '../../lib/og/url';
+import { SITE } from '../../lib/seo';
 import type { SquadDetail } from '../../lib/types';
 
 export const getStaticPaths = (async () => {
@@ -55,14 +58,46 @@ const seo = {
   title: data?.seo?.title ?? name,
   description: data?.seo?.description ?? lead,
   noIndex: data?.seo?.noIndex,
+  image:
+    data?.seo?.image?.asset?.url ??
+    data?.heroImage?.asset?.url ??
+    ogImage({ kind: 'squad', slug: slug ?? 'squads' }),
 };
 
 const tierLabel = `${tier}${gender && gender !== 'mixed' ? ` · ${gender}` : ''}`;
 
 const sortedAchievements = (data?.achievements ?? []).slice().sort((a, b) => b.year - a.year);
+
+const squadJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsTeam',
+  name: `BUBC ${name}`,
+  sport: 'Rowing',
+  url: `${SITE.url}/squads/${slug}/`,
+  parentOrganization: {
+    '@type': 'SportsOrganization',
+    name: SITE.name,
+    url: SITE.url,
+  },
+  ...(gender
+    ? { gender: gender === 'mixed' ? 'Mixed' : gender === 'men' ? 'Male' : 'Female' }
+    : {}),
+};
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'Squads', item: `${SITE.url}/squads/` },
+    { '@type': 'ListItem', position: 3, name, item: `${SITE.url}/squads/${slug}/` },
+  ],
+};
 ---
 
 <PageLayout seo={seo}>
+  <JsonLd data={squadJsonLd} slot="head" />
+  <JsonLd data={breadcrumbJsonLd} slot="head" />
   <PageHero
     eyebrow={tierLabel}
     headline={name}

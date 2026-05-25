@@ -1,0 +1,247 @@
+---
+/**
+ * Sponsor index — /support/sponsor/
+ *
+ * Partner page grouped by tier (headline → gold → silver → supporter).
+ * Tiers above silver get larger logos and more prose; supporters get a logo
+ * grid. Closes with a CTA to the Sponsorship pack (PDF — placeholder until
+ * draft content arrives, decision F5).
+ */
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/layout/PageHero.astro';
+import Container from '../../components/ui/Container.astro';
+import Section from '../../components/ui/Section.astro';
+import Eyebrow from '../../components/ui/Eyebrow.astro';
+import Button from '../../components/ui/Button.astro';
+import Picture from '../../components/content/Picture.astro';
+import JsonLd from '../../components/seo/JsonLd.astro';
+import { safeFetch } from '../../lib/sanity';
+import { allSponsorsQuery } from '../../lib/queries';
+import { SITE } from '../../lib/seo';
+import { ogImage } from '../../lib/og/url';
+import type { SponsorFullData } from '../../lib/types';
+
+const sponsors = (await safeFetch<SponsorFullData[]>(allSponsorsQuery)) ?? [];
+
+type Tier = SponsorFullData['tier'];
+const tiers: { id: Tier; label: string; blurb: string }[] = [
+  {
+    id: 'headline',
+    label: 'Headline partner',
+    blurb:
+      'Most visible: name on the kit, recognition at every regatta, named race-day hospitality, alumni dinner placement.',
+  },
+  {
+    id: 'gold',
+    label: 'Gold partner',
+    blurb:
+      'Branded blades, AIO presence, club newsletter mention, hosting at the boathouse and home regattas.',
+  },
+  {
+    id: 'silver',
+    label: 'Silver partner',
+    blurb: 'Logo on the season kit, listing across the support pages, race-day acknowledgement.',
+  },
+  {
+    id: 'supporter',
+    label: 'Supporter',
+    blurb: 'Listed publicly. Often local businesses and alumni-owned firms supporting their club.',
+  },
+];
+
+const grouped: Record<Tier, SponsorFullData[]> = {
+  headline: sponsors.filter((s) => s.tier === 'headline'),
+  gold: sponsors.filter((s) => s.tier === 'gold'),
+  silver: sponsors.filter((s) => s.tier === 'silver'),
+  supporter: sponsors.filter((s) => s.tier === 'supporter'),
+};
+
+const breadcrumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'Support', item: `${SITE.url}/support/` },
+    { '@type': 'ListItem', position: 3, name: 'Sponsor', item: `${SITE.url}/support/sponsor/` },
+  ],
+};
+---
+
+<PageLayout
+  seo={{
+    title: 'Sponsor BUBC',
+    description:
+      'Partner with the University of Bath Boat Club. Tiered sponsorship — boats, kit, regatta presence, and alumni access.',
+    image: ogImage({ kind: 'page', slug: 'sponsor' }),
+  }}
+>
+  <JsonLd data={breadcrumbs} slot="head" />
+
+  <PageHero
+    eyebrow="Support"
+    headline="Sponsor a club that races."
+    lead="Bath finishes at the sharp end of BUCS, Henley and the head racing circuit. Partners get visibility in front of students, parents, alumni and the wider rowing community — and they fund the difference between competing and winning."
+    ctas={[
+      {
+        label: 'Email the sponsorship team',
+        variant: 'gold',
+        link: { label: 'Contact', url: 'mailto:sponsorship@bubc.co.uk', external: true },
+      },
+      {
+        label: 'Skip to current partners',
+        variant: 'ghost',
+        link: { label: 'Partners', url: '#partners' },
+      },
+    ]}
+  />
+
+  <Section spacing="md">
+    <Container width="narrow">
+      <p class="text-sm text-[--color-mute] mb-8">
+        <a href="/support/" class="hover:text-[--color-navy]">Support</a>
+        <span class="mx-2 opacity-50">/</span>
+        <span class="text-[--color-ink]">Sponsor</span>
+      </p>
+
+      <Eyebrow>Tiers</Eyebrow>
+      <h2 class="mt-3 font-display text-3xl sm:text-4xl">Partnership levels.</h2>
+      <p class="mt-4 text-[--color-mute]">
+        Each tier is designed around what the club can offer transparently — visibility, hosting,
+        boat-naming rights. Specifics are written into a partnership agreement; tiers below are the
+        starting point.
+      </p>
+
+      <dl class="mt-10 space-y-6">
+        {
+          tiers.map((t) => (
+            <div class="border-l-4 border-[--color-gold] bg-[--color-bone]/50 p-5">
+              <dt class="font-display text-xl">{t.label}</dt>
+              <dd class="mt-2 text-[--color-mute] leading-relaxed">{t.blurb}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </Container>
+  </Section>
+
+  <Section tone="bone" spacing="md" id="partners">
+    <Container>
+      <Eyebrow>Current partners</Eyebrow>
+      <h2 class="mt-3 font-display text-3xl sm:text-4xl">Who's backing BUBC right now.</h2>
+
+      {
+        sponsors.length === 0 ? (
+          <p class="mt-8 italic text-[--color-mute]">
+            We're between sponsor cycles. If you'd like to be one of the first partners listed here,
+            email{' '}
+            <a
+              class="underline decoration-[--color-gold] underline-offset-4"
+              href="mailto:sponsorship@bubc.co.uk"
+            >
+              sponsorship@bubc.co.uk
+            </a>
+            .
+          </p>
+        ) : (
+          tiers.map((t) =>
+            grouped[t.id].length === 0 ? null : (
+              <div class="mt-10">
+                <h3 class="font-display text-2xl">{t.label}s</h3>
+                {t.id === 'headline' || t.id === 'gold' ? (
+                  <ul class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+                    {grouped[t.id].map((s) => (
+                      <li>
+                        <article class="bg-[--color-paper] p-6 flex flex-col gap-4 h-full">
+                          <a
+                            href={s.website ?? '#'}
+                            target={s.website ? '_blank' : undefined}
+                            rel={s.website ? 'noopener noreferrer' : undefined}
+                            class="block aspect-[3/2] bg-white grid place-items-center p-4"
+                            aria-label={`${s.name} website`}
+                          >
+                            <Picture
+                              image={s.logo}
+                              ratio="3/2"
+                              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                              fallbackLabel={s.name}
+                              class="w-full h-full object-contain"
+                            />
+                          </a>
+                          <div>
+                            <h4 class="font-display text-xl">{s.name}</h4>
+                            {s.since && (
+                              <p class="mt-1 text-xs uppercase tracking-[0.12em] text-[--color-gold]">
+                                Partner since {new Date(s.since).getFullYear()}
+                              </p>
+                            )}
+                            {s.description && (
+                              <p class="mt-3 text-sm text-[--color-mute] leading-relaxed">
+                                {s.description}
+                              </p>
+                            )}
+                            {s.website && (
+                              <a
+                                href={s.website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="mt-4 inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.12em] text-[--color-navy] hover:text-[--color-gold]"
+                              >
+                                Visit
+                                <span aria-hidden="true">→</span>
+                              </a>
+                            )}
+                          </div>
+                        </article>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <ul class="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {grouped[t.id].map((s) => (
+                      <li>
+                        <a
+                          href={s.website ?? '#'}
+                          target={s.website ? '_blank' : undefined}
+                          rel={s.website ? 'noopener noreferrer' : undefined}
+                          class="group block bg-[--color-paper] aspect-[3/2] grid place-items-center p-5 hover:bg-white transition-colors"
+                          title={s.name}
+                        >
+                          <Picture
+                            image={s.logo}
+                            ratio="3/2"
+                            sizes="(min-width: 1024px) 22vw, (min-width: 640px) 30vw, 50vw"
+                            fallbackLabel={s.name}
+                            class="w-full h-full object-contain"
+                          />
+                          <span class="sr-only">{s.name}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ),
+          )
+        )
+      }
+    </Container>
+  </Section>
+
+  <Section tone="navy" spacing="md">
+    <Container class="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+      <div class="max-w-xl">
+        <Eyebrow tone="paper">Get in touch</Eyebrow>
+        <h2 class="mt-4 font-display text-3xl sm:text-4xl text-[--color-paper]">
+          Sponsorship is a conversation.
+        </h2>
+        <p class="mt-4 text-[--color-paper]/80">
+          Tell us what you're looking for and we'll build a partnership that fits. Pack with full
+          tier details and audience figures is available on request.
+        </p>
+      </div>
+      <Button href="mailto:sponsorship@bubc.co.uk" variant="gold" size="lg" external>
+        sponsorship@bubc.co.uk
+      </Button>
+    </Container>
+  </Section>
+</PageLayout>

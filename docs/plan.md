@@ -594,16 +594,20 @@ Build in this order, each as its own PR:
 
 **Goal:** the things that make this CV-worthy.
 
-- [ ] Newsletter signup (Buttondown or Beehiiv) in footer + post pages
-- [ ] Strava club embed on Home and Squad pages
-- [ ] **Fleet visualiser** — SVG of boathouse bays, clickable boats → detail page
-- [ ] **Donation thermometer** for active campaigns — pulled from campaign doc
-- [ ] **Race countdown banner** for HRR/BUCS — driven by next-event field in settings
-- [ ] Cloudflare Web Analytics installed
-- [ ] OG image generation per page (use `satori` at build time)
-- [ ] Structured data: Organization, SportsTeam, BreadcrumbList, NewsArticle, Event
+- [x] Newsletter signup (**Buttondown**) in footer + post pages — graceful "not configured" state when env var unset
+- [ ] Strava club embed on Home and Squad pages — deferred (needs club Strava account)
+- [x] ~~Fleet visualiser SVG~~ → standard fleet grid + boat detail pages (user decision, B4)
+- [x] **Donation thermometer** for active campaigns — used on donate page + campaign detail
+- [x] **Race countdown banner** for HRR/BUCS — covered by R5 live race banner (session 4)
+- [x] Cloudflare Web Analytics beacon (gated on token env var)
+- [x] OG image generation per page (`satori` + `resvg-js`, build-time, ~30 static + dynamic per content)
+- [x] Structured data: SportsOrganization + WebSite (global), NewsArticle, Person, SportsTeam, Event, BreadcrumbList per template
+- [x] **Sentry browser** error tracking — dynamic import, tree-shaken when DSN unset, bot UA filter
+- [x] **Lighthouse CI** — `@lhci/cli` in CI, advisory for two weeks then required
+- [x] **Pa11y CI** — `pa11y-ci` across 24 URLs in CI, advisory initially
+- [x] All 18 × **301 redirects** from §1 URL migration map
 
-**Acceptance:** fleet visualiser works keyboard-only; OG images render correctly when shared to Twitter/LinkedIn; structured data validates in Google Rich Results Test.
+**Acceptance:** OG images render correctly when shared to Twitter/LinkedIn; structured data validates in Google Rich Results Test; Lighthouse + Pa11y CI run on every PR as advisory. _Status: complete (session 5)._
 
 ### Phase 6 — Migration & launch (Days 22–25)
 

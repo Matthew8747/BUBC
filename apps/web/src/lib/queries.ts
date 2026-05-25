@@ -232,6 +232,30 @@ export const fleetQuery = /* groq */ `
   }
 `;
 
+/** Full fleet including retired — drives /boathouse/fleet/. */
+export const fullFleetQuery = /* groq */ `
+  *[_type == "boat"] | order(status asc, class asc, name asc) {
+    _id, name, "slug": slug.current, make, class, weight, yearBought, donor, status,
+    photo { ${imageBlockFields} }
+  }
+`;
+
+export const allBoatSlugsQuery = /* groq */ `
+  *[_type == "boat" && defined(slug.current)] {
+    "slug": slug.current
+  }
+`;
+
+export const boatBySlugQuery = /* groq */ `
+  *[_type == "boat" && slug.current == $slug][0] {
+    _id, name, "slug": slug.current, make, class, weight, yearBought, donor, status,
+    namingCeremonyDate, bayNumber,
+    photo { ${imageBlockFields} },
+    story,
+    currentCrew[]->{ name, "slug": slug.current, photo { ${imageBlockFields} } }
+  }
+`;
+
 // ---------------------------------------------------------------------------
 // Fundraising
 // ---------------------------------------------------------------------------
@@ -244,9 +268,57 @@ export const activeCampaignsQuery = /* groq */ `
   }
 `;
 
+export const allCampaignsQuery = /* groq */ `
+  *[_type == "campaign"] | order(
+    select(status == "active" => 0, status == "reached" => 1, 2),
+    _createdAt desc
+  ) {
+    _id, title, "slug": slug.current, shortDescription, status,
+    goalAmount, raisedAmount, donorCount, donateUrl,
+    heroImage { ${imageBlockFields} }
+  }
+`;
+
+export const allCampaignSlugsQuery = /* groq */ `
+  *[_type == "campaign" && defined(slug.current)] {
+    "slug": slug.current
+  }
+`;
+
+export const campaignBySlugQuery = /* groq */ `
+  *[_type == "campaign" && slug.current == $slug][0] {
+    _id, title, "slug": slug.current, status,
+    shortDescription, story, donateUrl,
+    goalAmount, raisedAmount, donorCount,
+    heroImage { ${imageBlockFields} },
+    gallery[] { ${imageBlockFields} },
+    seo { ${seoFields} }
+  }
+`;
+
+export const allSponsorsQuery = /* groq */ `
+  *[_type == "sponsor"] | order(
+    select(tier == "headline" => 0, tier == "gold" => 1, tier == "silver" => 2, 3),
+    name asc
+  ) {
+    _id, name, "slug": slug.current, website, tier, since, description,
+    logo { ${imageBlockFields} }
+  }
+`;
+
 export const buyABoatQuery = /* groq */ `
   *[_type == "boatForSale"] | order(priority asc) {
     _id, boatType, priceRange, status, notes
+  }
+`;
+
+// ---------------------------------------------------------------------------
+// Upcoming events (used by structured-data injection)
+// ---------------------------------------------------------------------------
+
+export const upcomingEventsQuery = /* groq */ `
+  *[_type == "event" && date >= now()] | order(date asc)[0..9] {
+    _id, title, "slug": slug.current, type, date, endDate, location, registerUrl
   }
 `;
 
@@ -266,30 +338,62 @@ export const henleyHonoursQuery = /* groq */ `
 `;
 
 // ---------------------------------------------------------------------------
-// Alumni / Olympians
+// Alumni / Olympians (shared `olympian` doc, category-driven display)
 // ---------------------------------------------------------------------------
 
+const alumniProfileFields = /* groq */ `
+  _id, name, "slug": slug.current,
+  category, bubcYears, currentRole, location, careerHighlight,
+  photo { ${imageBlockFields} },
+  olympicYears[] { year, host, event, medal, finalPlace },
+  internationalAppearances[] { year, team, event, boat, medal, finalPlace },
+  boatRaceAppearances[] { year, university, boat, result }
+`;
+
+/** Olympians-only — keeps /about/olympians/ unchanged. */
 export const olympiansQuery = /* groq */ `
-  *[_type == "olympian"] | order(coalesce(olympicYears[0].year, 0) desc, name asc) {
-    _id, name, "slug": slug.current, bubcYears, currentRole,
-    photo { ${imageBlockFields} },
-    olympicYears[] { year, host, event, medal, finalPlace }
+  *[_type == "olympian" && (category == "olympian" || !defined(category))]
+    | order(coalesce(olympicYears[0].year, 0) desc, name asc) {
+    ${alumniProfileFields}
   }
 `;
 
 export const olympianBySlugQuery = /* groq */ `
   *[_type == "olympian" && slug.current == $slug][0] {
-    _id, name, "slug": slug.current, bubcYears, currentRole,
-    photo { ${imageBlockFields} },
-    olympicYears[] { year, host, event, medal, finalPlace },
+    ${alumniProfileFields},
     story,
     seo { ${seoFields} }
   }
 `;
 
 export const allOlympianSlugsQuery = /* groq */ `
-  *[_type == "olympian" && defined(slug.current)] {
+  *[_type == "olympian" && (category == "olympian" || !defined(category)) && defined(slug.current)] {
     "slug": slug.current
+  }
+`;
+
+/** All alumni profiles regardless of category — drives /alumni/. */
+export const alumniProfilesQuery = /* groq */ `
+  *[_type == "olympian"] | order(
+    coalesce(olympicYears[0].year, internationalAppearances[0].year, boatRaceAppearances[0].year, 0) desc,
+    name asc
+  ) {
+    ${alumniProfileFields}
+  }
+`;
+
+export const upcomingAlumniEventsQuery = /* groq */ `
+  *[_type == "event" && type == "alumni" && date >= now()] | order(date asc) {
+    _id, title, "slug": slug.current, type, date, endDate, location,
+    description, registerUrl,
+    heroImage { ${imageBlockFields} }
+  }
+`;
+
+export const pastAlumniEventsQuery = /* groq */ `
+  *[_type == "event" && type == "alumni" && date < now()] | order(date desc)[0..11] {
+    _id, title, "slug": slug.current, type, date, endDate, location,
+    heroImage { ${imageBlockFields} }
   }
 `;
 

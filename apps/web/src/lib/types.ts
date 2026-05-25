@@ -148,28 +148,55 @@ export interface HenleyHonour {
 }
 
 // ---------------------------------------------------------------------------
-// Olympians
+// Alumni / Olympians (one schema, category-driven views)
 // ---------------------------------------------------------------------------
+
+export type AlumniCategory = 'olympian' | 'international' | 'boatRace' | 'notableCareer';
+export type Medal = 'gold' | 'silver' | 'bronze' | 'none';
 
 export interface OlympicAppearance {
   year: number;
   host?: string;
   event?: string;
-  medal?: 'gold' | 'silver' | 'bronze' | 'none';
+  medal?: Medal;
   finalPlace?: number;
 }
 
-export interface OlympianCard {
+export interface InternationalAppearance {
+  year: number;
+  team?: string;
+  event?: string;
+  boat?: string;
+  medal?: Medal;
+  finalPlace?: number;
+}
+
+export interface BoatRaceAppearance {
+  year: number;
+  university: 'oxford' | 'cambridge';
+  boat?: 'blue' | 'reserves';
+  result?: 'won' | 'lost';
+}
+
+export interface AlumniProfileCard {
   _id: string;
   name: string;
   slug: string;
+  category?: AlumniCategory;
   bubcYears?: string;
   currentRole?: string;
+  location?: string;
+  careerHighlight?: string;
   photo?: SanityImage;
   olympicYears?: OlympicAppearance[];
+  internationalAppearances?: InternationalAppearance[];
+  boatRaceAppearances?: BoatRaceAppearance[];
 }
 
-export interface OlympianDetail extends OlympianCard {
+/** Backwards-compatible alias used by the existing olympians pages. */
+export type OlympianCard = AlumniProfileCard;
+
+export interface OlympianDetail extends AlumniProfileCard {
   story?: unknown;
   seo?: Seo;
 }
@@ -303,6 +330,13 @@ export interface BoatCardData {
   photo?: SanityImage;
 }
 
+export interface BoatDetail extends BoatCardData {
+  namingCeremonyDate?: string;
+  bayNumber?: number;
+  story?: unknown;
+  currentCrew?: { name: string; slug: string; photo?: SanityImage }[];
+}
+
 // ---------------------------------------------------------------------------
 // Fundraising
 // ---------------------------------------------------------------------------
@@ -312,11 +346,18 @@ export interface CampaignData {
   title: string;
   slug: string;
   shortDescription: string;
+  status?: 'active' | 'reached' | 'closed';
   goalAmount: number;
   raisedAmount: number;
   donorCount?: number;
   donateUrl: string;
   heroImage?: SanityImage;
+}
+
+export interface CampaignDetail extends CampaignData {
+  story?: unknown;
+  gallery?: SanityImage[];
+  seo?: Seo;
 }
 
 export interface BoatForSaleData {
@@ -325,6 +366,40 @@ export interface BoatForSaleData {
   priceRange: string;
   status: 'needed' | 'funded' | 'delivered';
   notes?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Sponsors (full record including description and metadata)
+// ---------------------------------------------------------------------------
+
+export interface SponsorFullData {
+  _id: string;
+  name: string;
+  slug: string;
+  website?: string;
+  tier: 'headline' | 'gold' | 'silver' | 'supporter';
+  since?: string;
+  description?: string;
+  logo?: SanityImage;
+}
+
+// ---------------------------------------------------------------------------
+// Events
+// ---------------------------------------------------------------------------
+
+export type EventType = 'regatta' | 'head' | 'camp' | 'social' | 'alumni' | 'fundraiser';
+
+export interface EventCardData {
+  _id: string;
+  title: string;
+  slug: string;
+  type: EventType;
+  date: string;
+  endDate?: string;
+  location?: string;
+  description?: unknown;
+  registerUrl?: string;
+  heroImage?: SanityImage;
 }
 
 // ---------------------------------------------------------------------------

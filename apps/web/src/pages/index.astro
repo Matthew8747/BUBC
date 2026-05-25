@@ -8,6 +8,7 @@ import SponsorStrip from '../components/home/SponsorStrip.astro';
 import ClosingCtas from '../components/home/ClosingCtas.astro';
 import { safeFetch } from '../lib/sanity';
 import { homePageQuery } from '../lib/queries';
+import { ogImage } from '../lib/og/url';
 import type { HomePage } from '../lib/types';
 
 // Pulls the homePage singleton if it exists in Sanity. When the dataset is
@@ -21,6 +22,7 @@ const seo = {
     data?.seo?.description ??
     'University of Bath Boat Club — performance student rowing from the River Avon since 1965.',
   noIndex: data?.seo?.noIndex,
+  image: ogImage({ kind: 'page', slug: 'home' }),
 };
 ---
 

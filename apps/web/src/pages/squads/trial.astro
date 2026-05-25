@@ -22,6 +22,7 @@ import Field from '../../components/form/Field.astro';
 import Textarea from '../../components/form/Textarea.astro';
 import RadioGroup from '../../components/form/RadioGroup.astro';
 import Checkbox from '../../components/form/Checkbox.astro';
+import { ogImage } from '../../lib/og/url';
 
 const formId = import.meta.env.PUBLIC_FORMSPREE_TRIAL_ID;
 const isConfigured = Boolean(formId);
@@ -32,6 +33,7 @@ const isConfigured = Boolean(formId);
     title: 'Trial with us',
     description:
       'Trial for the University of Bath Boat Club. Open to all Bath students. September and January intakes.',
+    image: ogImage({ kind: 'page', slug: 'trial' }),
   }}
 >
   <Section spacing="lg">

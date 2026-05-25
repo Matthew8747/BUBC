@@ -1,0 +1,38 @@
+{
+  "defaults": {
+    "standard": "WCAG2AA",
+    "runners": ["axe", "htmlcs"],
+    "timeout": 30000,
+    "wait": 500,
+    "chromeLaunchConfig": {
+      "args": ["--no-sandbox", "--headless=new", "--disable-dev-shm-usage"]
+    },
+    "ignore": ["color-contrast"]
+  },
+  "urls": [
+    "http://localhost:4322/",
+    "http://localhost:4322/squads/",
+    "http://localhost:4322/squads/trial/",
+    "http://localhost:4322/coaching/",
+    "http://localhost:4322/boathouse/",
+    "http://localhost:4322/boathouse/fleet/",
+    "http://localhost:4322/news/",
+    "http://localhost:4322/alumni/",
+    "http://localhost:4322/alumni/meles/",
+    "http://localhost:4322/alumni/events/",
+    "http://localhost:4322/about/",
+    "http://localhost:4322/about/history/",
+    "http://localhost:4322/about/henley-honours/",
+    "http://localhost:4322/about/olympians/",
+    "http://localhost:4322/committee/",
+    "http://localhost:4322/welfare/",
+    "http://localhost:4322/contact/",
+    "http://localhost:4322/support/",
+    "http://localhost:4322/support/donate/",
+    "http://localhost:4322/support/buy-a-boat/",
+    "http://localhost:4322/support/sponsor/",
+    "http://localhost:4322/support/campaigns/",
+    "http://localhost:4322/styleguide/",
+    "http://localhost:4322/404/"
+  ]
+}

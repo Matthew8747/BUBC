@@ -145,9 +145,16 @@ const seo = {
           <h2 class="mt-4 font-display text-3xl sm:text-4xl">Boats with names.</h2>
           <p class="mt-4 text-[--color-mute]">
             Every BUBC racing shell carries a name and a story — donors, christenings, crews. A
-            taste of the current fleet below; the full fleet visualiser is in the works.
+            taste of the current fleet below; browse the full fleet for each boat's profile.
           </p>
         </div>
+        <a
+          href="/boathouse/fleet/"
+          class="hidden sm:inline-flex items-center gap-2 text-sm font-medium tracking-wide hover:text-[--color-gold]"
+        >
+          View the full fleet
+          <span aria-hidden="true">→</span>
+        </a>
       </div>
 
       {
@@ -155,15 +162,25 @@ const seo = {
           <ul class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {fleetTeaser.map((boat) => (
               <li>
-                <article class="flex flex-col">
+                <article class="group relative flex flex-col">
+                  <a
+                    href={`/boathouse/fleet/${boat.slug}/`}
+                    class="absolute inset-0 z-10"
+                    aria-label={`${boat.name} — full profile`}
+                  >
+                    <span class="sr-only">Profile</span>
+                  </a>
                   <Picture
                     image={boat.photo}
                     ratio="4/5"
                     sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                     fallbackLabel={boat.name}
+                    class="transition-transform duration-500 group-hover:scale-[1.02]"
                   />
                   <div class="mt-4">
-                    <h3 class="font-display text-xl">{boat.name}</h3>
+                    <h3 class="font-display text-xl group-hover:underline decoration-[--color-gold] underline-offset-4">
+                      {boat.name}
+                    </h3>
                     <p class="mt-1 text-sm text-[--color-mute]">
                       {boat.make} · {boat.class}
                       {boat.yearBought ? ` · ${boat.yearBought}` : ''}
@@ -180,14 +197,20 @@ const seo = {
           </ul>
         ) : (
           <p class="mt-8 italic text-[--color-mute]">
-            Fleet profiles will be published as boat-by-boat photography is completed.
+            Fleet profiles will be published as boat-by-boat photography is completed. The full
+            fleet directory is at{' '}
+            <a href="/boathouse/fleet/" class="underline">
+              /boathouse/fleet/
+            </a>
+            .
           </p>
         )
       }
 
       <div class="mt-10 flex flex-wrap gap-3">
+        <Button href="/boathouse/fleet/" variant="solid">View the fleet</Button>
         <Button href="/support/buy-a-boat/" variant="ghost">Buy a boat</Button>
-        <Button href="/support/donate/" variant="solid">Support the fleet</Button>
+        <Button href="/support/donate/" variant="ghost">Support the fleet</Button>
       </div>
     </Container>
   </Section>

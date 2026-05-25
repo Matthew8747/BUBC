@@ -27,6 +27,10 @@ const meta = resolveSeo(seo, Astro.url);
 // don't ship the script on local/dev builds. Set PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN
 // in Vercel after creating a "Web Analytics" site at <https://dash.cloudflare.com>.
 const cfAnalyticsToken = import.meta.env.PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN;
+
+// Sentry — only mount the client init script when a DSN is set so the dep
+// gets tree-shaken away on unconfigured deploys. See lib/sentry.ts.
+const sentryEnabled = !!import.meta.env.PUBLIC_SENTRY_DSN;
 ---
 
 <!doctype html>
@@ -115,5 +119,7 @@ const cfAnalyticsToken = import.meta.env.PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN;
         />
       )
     }
+
+    {sentryEnabled && <script>import {initSentry} from '../lib/sentry'; initSentry();</script>}
   </body>
 </html>

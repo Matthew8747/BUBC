@@ -5,6 +5,7 @@
  * Driven by static link lists for now; will read from Sanity settings (T16).
  */
 import Container from '../ui/Container.astro';
+import NewsletterSignup from './NewsletterSignup.astro';
 
 interface Link {
   label: string;
@@ -27,7 +28,6 @@ const columns: Column[] = [
       { label: 'Olympians', href: '/about/olympians/' },
       { label: 'Committee', href: '/committee/' },
       { label: 'Welfare & safeguarding', href: '/welfare/' },
-      { label: 'Press kit', href: '/press/' },
     ],
   },
   {
@@ -38,6 +38,7 @@ const columns: Column[] = [
       { label: 'Novice', href: '/squads/novice/' },
       { label: 'Trial with us', href: '/squads/trial/' },
       { label: 'Coaching', href: '/coaching/' },
+      { label: 'Boathouse fleet', href: '/boathouse/fleet/' },
     ],
   },
   {
@@ -50,8 +51,11 @@ const columns: Column[] = [
     ],
   },
   {
-    heading: 'Connect',
+    heading: 'Alumni & connect',
     links: [
+      { label: 'Alumni', href: '/alumni/' },
+      { label: 'Meles BC', href: '/alumni/meles/' },
+      { label: 'Alumni events', href: '/alumni/events/' },
       { label: 'Instagram', href: 'https://instagram.com/bathuniboatclub', external: true },
       { label: 'YouTube', href: 'https://youtube.com/@bathuniboatclub', external: true },
       { label: 'Strava', href: 'https://www.strava.com/clubs/bubc', external: true },
@@ -81,28 +85,32 @@ const year = new Date().getFullYear();
   </div>
 
   <Container class="py-16 sm:py-20">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-12">
-      {
-        columns.map((col) => (
-          <div>
-            <h3 class="font-display text-xl mb-4">{col.heading}</h3>
-            <ul class="space-y-2.5">
-              {col.links.map((l) => (
-                <li>
-                  <a
-                    href={l.href}
-                    target={l.external ? '_blank' : undefined}
-                    rel={l.external ? 'noopener noreferrer' : undefined}
-                    class="text-sm text-[--color-paper]/80 hover:text-[--color-gold] transition-colors"
-                  >
-                    {l.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))
-      }
+    <div class="grid lg:grid-cols-[2fr_1fr] gap-12 lg:gap-16 items-start">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-12">
+        {
+          columns.map((col) => (
+            <div>
+              <h3 class="font-display text-xl mb-4">{col.heading}</h3>
+              <ul class="space-y-2.5">
+                {col.links.map((l) => (
+                  <li>
+                    <a
+                      href={l.href}
+                      target={l.external ? '_blank' : undefined}
+                      rel={l.external ? 'noopener noreferrer' : undefined}
+                      class="text-sm text-[--color-paper]/80 hover:text-[--color-gold] transition-colors"
+                    >
+                      {l.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+
+      <NewsletterSignup id="footer-newsletter" tone="dark" />
     </div>
 
     <div

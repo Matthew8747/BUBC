@@ -1,0 +1,200 @@
+---
+/**
+ * Meles Boat Club — /alumni/meles/
+ *
+ * Landing for the BUBC alumni rowing club. Reads an optional Sanity `page`
+ * doc with slug `meles` for the editorial body; falls back to a sensible
+ * default if the page hasn't been authored yet. Includes a #join anchor
+ * because the legacy WordPress URL `/join-meles-bc/` redirects here.
+ */
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/layout/PageHero.astro';
+import Container from '../../components/ui/Container.astro';
+import Section from '../../components/ui/Section.astro';
+import Eyebrow from '../../components/ui/Eyebrow.astro';
+import Button from '../../components/ui/Button.astro';
+import PortableText from '../../components/content/PortableText.astro';
+import JsonLd from '../../components/seo/JsonLd.astro';
+import { safeFetch } from '../../lib/sanity';
+import { pageBySlugQuery } from '../../lib/queries';
+import { SITE } from '../../lib/seo';
+import { ogImage } from '../../lib/og/url';
+import type { PageDoc } from '../../lib/types';
+
+const page = await safeFetch<PageDoc>(pageBySlugQuery, { slug: 'meles' });
+
+const breadcrumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'Alumni', item: `${SITE.url}/alumni/` },
+    { '@type': 'ListItem', position: 3, name: 'Meles', item: `${SITE.url}/alumni/meles/` },
+  ],
+};
+
+const seo = page?.seo
+  ? {
+      title: page.seo.title ?? 'Meles Boat Club',
+      description: page.seo.description ?? 'Meles Boat Club — the BUBC alumni rowing club.',
+      image: page.seo.image?.asset?.url ?? ogImage({ kind: 'page', slug: 'meles' }),
+    }
+  : {
+      title: 'Meles Boat Club',
+      description:
+        'Meles Boat Club is the BUBC alumni rowing arm — Henley Masters, head racing, social rowing for graduates of the club.',
+      image: ogImage({ kind: 'page', slug: 'meles' }),
+    };
+---
+
+<PageLayout seo={seo}>
+  <JsonLd data={breadcrumbs} slot="head" />
+
+  <PageHero
+    eyebrow="Alumni"
+    headline={page?.title ?? 'Meles Boat Club.'}
+    lead={page?.intro ??
+      'The BUBC alumni rowing arm. Henley Masters, head racing, and an excuse to come back to the river that taught you how to pull on an oar.'}
+    image={page?.heroImage}
+  />
+
+  <Section spacing="md">
+    <Container width="prose">
+      <p class="text-sm text-[--color-mute] mb-8">
+        <a href="/alumni/" class="hover:text-[--color-navy]">Alumni</a>
+        <span class="mx-2 opacity-50">/</span>
+        <span class="text-[--color-ink]">Meles</span>
+      </p>
+
+      {
+        page?.body != null ? (
+          <PortableText value={page.body} />
+        ) : (
+          <div class="prose">
+            <p>
+              <span class="lead">
+                Meles is the alumni rowing club for BUBC graduates — competitive when it wants to
+                be, social the rest of the time, and a way back to the boats long after the last
+                student race.
+              </span>
+            </p>
+
+            <p>
+              Most years Meles puts an eight (or two) on the start line at Henley Masters, races at
+              the Head of the River Race, and turns out at home regattas. The squad organises itself
+              around individual training schedules — most members live across the south of England
+              rather than in Bath itself — so commitment levels are flexible by design.
+            </p>
+
+            <p>
+              Beyond racing, Meles is the social heart of BUBC alumni life. The annual dinner,
+              boathouse visits, Henley hospitality, and the rolling list of weddings, christenings,
+              and reunions all run through it.
+            </p>
+          </div>
+        )
+      }
+    </Container>
+  </Section>
+
+  <Section tone="bone" spacing="md" id="join">
+    <Container>
+      <div class="grid lg:grid-cols-3 gap-10 lg:gap-16 items-start">
+        <div class="lg:col-span-2">
+          <Eyebrow>Join Meles</Eyebrow>
+          <h2 class="mt-3 font-display text-3xl sm:text-4xl">How to get back on the river.</h2>
+          <p class="mt-4 text-[--color-mute] leading-relaxed">
+            If you rowed for Bath at any point — first year novice through to the eight at Henley —
+            you can join Meles. Subs are modest and cover insurance, British Rowing membership, and
+            a share of regatta entry costs.
+          </p>
+          <ol class="mt-8 space-y-6">
+            <li class="flex gap-4">
+              <span
+                class="flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full bg-[--color-navy] text-[--color-paper] font-display text-sm"
+              >
+                1
+              </span>
+              <div>
+                <h3 class="font-display text-lg">Email the alumni captain.</h3>
+                <p class="mt-1 text-sm text-[--color-mute]">
+                  <a
+                    class="underline decoration-[--color-gold] underline-offset-4"
+                    href="mailto:alumni@bubc.co.uk?subject=Joining%20Meles"
+                  >
+                    alumni@bubc.co.uk
+                  </a>{' '}
+                  — give us your name, years at BUBC, and what you're hoping to row.
+                </p>
+              </div>
+            </li>
+            <li class="flex gap-4">
+              <span
+                class="flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full bg-[--color-navy] text-[--color-paper] font-display text-sm"
+              >
+                2
+              </span>
+              <div>
+                <h3 class="font-display text-lg">Pay the membership sub.</h3>
+                <p class="mt-1 text-sm text-[--color-mute]">
+                  Annual subscription via bank transfer, includes British Rowing membership through
+                  the club.
+                </p>
+              </div>
+            </li>
+            <li class="flex gap-4">
+              <span
+                class="flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full bg-[--color-navy] text-[--color-paper] font-display text-sm"
+              >
+                3
+              </span>
+              <div>
+                <h3 class="font-display text-lg">Show up to a race.</h3>
+                <p class="mt-1 text-sm text-[--color-mute]">
+                  Most rowing happens around races and camps — joining a crew is the fastest way in.
+                  Henley Masters and the Head of the River Race are the two anchor events.
+                </p>
+              </div>
+            </li>
+          </ol>
+        </div>
+        <aside class="bg-[--color-paper] p-6 sm:p-7 border border-[--color-ink]/10">
+          <h3 class="font-display text-lg">Contact</h3>
+          <dl class="mt-4 space-y-3 text-sm">
+            <div>
+              <dt class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">Email</dt>
+              <dd class="mt-1">
+                <a
+                  class="underline decoration-[--color-gold] underline-offset-4"
+                  href="mailto:alumni@bubc.co.uk"
+                >
+                  alumni@bubc.co.uk
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">
+                Henley Masters
+              </dt>
+              <dd class="mt-1 text-[--color-mute]">June / July annually</dd>
+            </div>
+            <div>
+              <dt class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">Annual dinner</dt>
+              <dd class="mt-1 text-[--color-mute]">November, in Bath</dd>
+            </div>
+          </dl>
+          <div class="mt-6 flex flex-col gap-3">
+            <Button href="/alumni/events/" variant="solid">View events</Button>
+            <Button
+              href="mailto:alumni@bubc.co.uk?subject=Joining%20Meles"
+              variant="ghost"
+              external
+            >
+              Email to join
+            </Button>
+          </div>
+        </aside>
+      </div>
+    </Container>
+  </Section>
+</PageLayout>
