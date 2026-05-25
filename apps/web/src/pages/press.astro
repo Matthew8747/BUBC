@@ -1,0 +1,185 @@
+---
+/**
+ * Press & media kit.
+ *
+ * Static-mostly page. Surfaces boilerplate copy, club facts, the right
+ * contact for race-week press, and download links for the brand assets in
+ * `public/press/`. Asset files live in the repo (not Sanity) because they're
+ * tied to the brand system and rarely change.
+ */
+import PageLayout from '../layouts/PageLayout.astro';
+import PageHero from '../components/layout/PageHero.astro';
+import Container from '../components/ui/Container.astro';
+import Section from '../components/ui/Section.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import JsonLd from '../components/seo/JsonLd.astro';
+import { SITE } from '../lib/seo';
+import { ogImage } from '../lib/og/url';
+
+const breadcrumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'Press', item: `${SITE.url}/press/` },
+  ],
+};
+
+const facts: { label: string; value: string }[] = [
+  { label: 'Founded', value: '1965' },
+  { label: 'Members', value: '~120 per season' },
+  { label: 'Squads', value: 'Senior men, senior women, novice, trial' },
+  { label: 'Home water', value: 'River Avon, Saltford' },
+  { label: 'Olympians produced', value: 'See /about/olympians/' },
+  { label: 'Affiliation', value: 'British Rowing · University of Bath SU' },
+];
+
+const contacts: { role: string; email: string; for: string }[] = [
+  {
+    role: 'Press & comms',
+    email: 'press@bubc.co.uk',
+    for: 'Race-week interviews, photography permissions, club statements.',
+  },
+  {
+    role: 'Captains',
+    email: 'captain.m@bubc.co.uk',
+    for: 'Senior men squad enquiries — results, line-ups, training.',
+  },
+  {
+    role: 'Captains',
+    email: 'captain.w@bubc.co.uk',
+    for: "Senior women's squad enquiries.",
+  },
+  {
+    role: 'Alumni & heritage',
+    email: 'alumni@bubc.co.uk',
+    for: 'Historic records, Henley honours, archive imagery.',
+  },
+];
+
+const boilerplate = `The University of Bath Boat Club (BUBC) is the student-run rowing club of the University of Bath. Founded in 1965, the club competes across the BUCS calendar, Henley Royal Regatta, Henley Women's Regatta, and the major tideway heads, and has produced Olympic, World, and Boat Race athletes. BUBC operates a senior men's squad, senior women's squad, and novice intake each season, based at the club boathouse on the River Avon at Saltford.`;
+---
+
+<PageLayout
+  seo={{
+    title: 'Press & media kit',
+    description:
+      'Press contacts, club boilerplate, key facts, and brand-asset downloads for the University of Bath Boat Club.',
+    image: ogImage({ kind: 'page', slug: 'press' }),
+  }}
+>
+  <JsonLd data={breadcrumbs} slot="head" />
+
+  <PageHero
+    eyebrow="Press"
+    headline="Press & media kit."
+    lead="The information journalists, brand teams, and partners need to write about BUBC accurately, and the contacts to do so quickly."
+  />
+
+  <Section spacing="lg">
+    <Container>
+      <p class="text-sm text-[--color-mute] mb-8">
+        <a href="/" class="hover:text-[--color-navy]">Home</a>
+        <span class="mx-2 opacity-50">/</span>
+        <span class="text-[--color-ink]">Press</span>
+      </p>
+
+      <div class="grid lg:grid-cols-3 gap-12 lg:gap-16">
+        <div class="lg:col-span-2 space-y-12">
+          <section aria-labelledby="boilerplate-heading">
+            <Eyebrow>Club description</Eyebrow>
+            <h2 id="boilerplate-heading" class="mt-3 font-display text-2xl">Boilerplate copy</h2>
+            <p class="mt-4 text-[--color-ink] leading-relaxed">{boilerplate}</p>
+            <p class="mt-4 text-xs text-[--color-mute]">
+              Use verbatim or paraphrase. Avoid “BUBC” on first reference — write
+              <em>University of Bath Boat Club</em> first, then use the acronym afterwards.
+            </p>
+          </section>
+
+          <section aria-labelledby="facts-heading">
+            <Eyebrow>Quick facts</Eyebrow>
+            <h2 id="facts-heading" class="mt-3 font-display text-2xl">At a glance</h2>
+            <dl
+              class="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-4 border-t border-[--color-line] pt-6"
+            >
+              {
+                facts.map((f) => (
+                  <div class="border-b border-[--color-line] pb-3">
+                    <dt class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">
+                      {f.label}
+                    </dt>
+                    <dd class="mt-1 text-base">{f.value}</dd>
+                  </div>
+                ))
+              }
+            </dl>
+          </section>
+
+          <section aria-labelledby="assets-heading">
+            <Eyebrow>Brand assets</Eyebrow>
+            <h2 id="assets-heading" class="mt-3 font-display text-2xl">Logos & photography</h2>
+            <p class="mt-4 text-sm text-[--color-mute]">
+              Hi-res logo + photography pack available on request — we'd rather hand it over for a
+              specific publication so we can flag credit and embargo terms.
+            </p>
+            <ul class="mt-6 space-y-3 text-sm">
+              <li class="flex items-baseline gap-3">
+                <span aria-hidden="true" class="text-[--color-gold]">→</span>
+                <span>
+                  Logos: navy, paper, mono — email
+                  <a
+                    class="underline decoration-[--color-gold] underline-offset-2"
+                    href="mailto:press@bubc.co.uk">press@bubc.co.uk</a
+                  >
+                  for the SVG + PNG pack.
+                </span>
+              </li>
+              <li class="flex items-baseline gap-3">
+                <span aria-hidden="true" class="text-[--color-gold]">→</span>
+                <span>
+                  Race photography: contact alumni@bubc.co.uk for archive shots — please credit the
+                  photographer named in EXIF data on any image we share.
+                </span>
+              </li>
+              <li class="flex items-baseline gap-3">
+                <span aria-hidden="true" class="text-[--color-gold]">→</span>
+                <span>
+                  Crew lists & start times: confirmed via the
+                  <a class="underline decoration-[--color-gold] underline-offset-2" href="/news/"
+                    >news index</a
+                  >
+                  before each regatta.
+                </span>
+              </li>
+            </ul>
+          </section>
+        </div>
+
+        <aside class="lg:sticky lg:top-24 lg:self-start space-y-6">
+          <div class="border-l-2 border-[--color-gold] pl-5">
+            <Eyebrow>Contacts</Eyebrow>
+            <h2 class="mt-3 font-display text-xl">Who to email</h2>
+          </div>
+          <ul class="space-y-4">
+            {
+              contacts.map((c) => (
+                <li class="border-b border-[--color-line] pb-4 last:border-b-0">
+                  <p class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">{c.role}</p>
+                  <p class="mt-1">
+                    <a
+                      class="underline decoration-[--color-gold] underline-offset-2"
+                      href={`mailto:${c.email}`}
+                    >
+                      {c.email}
+                    </a>
+                  </p>
+                  <p class="mt-1 text-sm text-[--color-mute]">{c.for}</p>
+                </li>
+              ))
+            }
+          </ul>
+        </aside>
+      </div>
+    </Container>
+  </Section>
+</PageLayout>

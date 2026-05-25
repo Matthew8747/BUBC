@@ -1,35 +1,37 @@
 # BUBC Site — Build Progress & Handoff Notes
 
-> Last updated: 2026-05-24 (session 5 — Phase 5). Pick up from **"Where we left off"** below.
+> Last updated: 2026-05-25 (session 6 — Phase 6 hardening + results/press/chairs/blazers). Pick up from **"Where we left off"** below.
 >
-> Related docs: [plan.md](plan.md) (build phases, single source of truth) · [FEATURES.md](FEATURES.md) (idea backlog with status flags + open decisions) · [DEPLOYMENT.md](DEPLOYMENT.md) (deploy + Sanity webhook setup).
+> Related docs: [plan.md](plan.md) (build phases, single source of truth) · [FEATURES.md](FEATURES.md) (idea backlog with status flags + open decisions) · [DEPLOYMENT.md](DEPLOYMENT.md) (deploy + Sanity webhook setup) · [SECURITY.md](SECURITY.md) (threat model, headers, secrets handling).
 
 ---
 
 ## Snapshot
 
-| Layer                                          | State                                                                                                                                                                                                                |
-| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Monorepo (pnpm)                                | ✅                                                                                                                                                                                                                   |
-| Astro frontend (`apps/web`)                    | ✅ design system + chrome · Sanity wired · all P0 pages · Phase 4 (news/RSS/search/honours/Olympians/live banner) · **Phase 5: fleet, sponsor, campaigns, alumni section, newsletter, OG generation, 301 redirects** |
-| Sanity Studio (`apps/studio`)                  | ✅ v5, project `j7zcx618` · `olympian` extended with `category` enum + intl/Boat Race appearance arrays                                                                                                              |
-| Tooling (ESLint, Prettier, Husky, lint-staged) | ✅                                                                                                                                                                                                                   |
-| CI workflow (GitHub Actions)                   | ✅ lint + typecheck + unit + build + e2e + **Lighthouse CI** + **Pa11y CI** (advisory)                                                                                                                               |
-| Testing (Vitest + Playwright)                  | ✅ **31 Playwright specs** + **17 unit tests** (seo, reading time, pagination, OG URL helper)                                                                                                                        |
-| SEO / discovery                                | ✅ Sitemap, robots.txt, structured data (Org/WebSite global; NewsArticle/Person/SportsTeam/Event/BreadcrumbList per template), `/news/rss.xml`, **18 × 301 redirects from legacy WordPress URLs**                    |
-| Static search                                  | ✅ Pagefind                                                                                                                                                                                                          |
-| OG image generation                            | ✅ **satori + resvg, build-time, branded card per page + per content item, ~30 static cards + dynamic for news/squads/olympians/alumni/boats/campaigns**                                                             |
-| Newsletter                                     | ✅ **Buttondown signup in footer + post pages, graceful "not configured" state**                                                                                                                                     |
-| Error tracking                                 | ✅ **Sentry browser, dynamic import, no-op when DSN unset, bot UA filter, error-only**                                                                                                                               |
-| Vercel                                         | ✅ live at <https://bubc-web.vercel.app/>                                                                                                                                                                            |
-| Cloudflare DNS / email                         | ⏸ deferred to launch (Phase 6)                                                                                                                                                                                       |
-| Cloudflare Web Analytics                       | ⏸ ready to wire (beacon code in BaseLayout, gated on env var)                                                                                                                                                        |
-| Formspree                                      | ⏸ account ready; form ID needs adding to Vercel env                                                                                                                                                                  |
-| Sanity Studio deploy                           | ❌ not deployed (manual `pnpm --filter @bubc/studio deploy`)                                                                                                                                                         |
-| Sanity → Vercel webhook                        | 📋 setup documented in [DEPLOYMENT.md](DEPLOYMENT.md); needs editor or developer to wire it (15 min, requires Vercel + Sanity dashboard access)                                                                      |
-| Custom domain on prod                          | ❌ Phase 6 cutover                                                                                                                                                                                                   |
-| Photos                                         | ⏸ being gathered; placeholder system covers the gap                                                                                                                                                                  |
-| Build / typecheck / lint / format / unit / e2e | ✅ all green                                                                                                                                                                                                         |
+| Layer                                          | State                                                                                                                                                                                                                           |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Monorepo (pnpm)                                | ✅                                                                                                                                                                                                                              |
+| Astro frontend (`apps/web`)                    | ✅ design system + chrome · Sanity wired · all P0 pages · Phase 4 (news/RSS/search/honours/Olympians/live banner) · **Phase 5: fleet, sponsor, campaigns, alumni section, newsletter, OG generation, 301 redirects**            |
+| Sanity Studio (`apps/studio`)                  | ✅ v5, project `j7zcx618` · `olympian` extended with `category` enum + intl/Boat Race appearance arrays                                                                                                                         |
+| Tooling (ESLint, Prettier, Husky, lint-staged) | ✅                                                                                                                                                                                                                              |
+| CI workflow (GitHub Actions)                   | ✅ lint + typecheck + unit + build + e2e + **Lighthouse CI** + **Pa11y CI** (advisory)                                                                                                                                          |
+| Testing (Vitest + Playwright)                  | ✅ **31 Playwright specs** + **17 unit tests** (seo, reading time, pagination, OG URL helper)                                                                                                                                   |
+| SEO / discovery                                | ✅ Sitemap, robots.txt, structured data (Org/WebSite global; NewsArticle/Person/SportsTeam/Event/BreadcrumbList per template), `/news/rss.xml`, **18 × 301 redirects from legacy WordPress URLs**                               |
+| Static search                                  | ✅ Pagefind                                                                                                                                                                                                                     |
+| OG image generation                            | ✅ **satori + resvg, build-time, branded card per page + per content item, ~30 static cards + dynamic for news/squads/olympians/alumni/boats/campaigns**                                                                        |
+| Newsletter                                     | ✅ **Buttondown signup in footer + post pages, graceful "not configured" state**                                                                                                                                                |
+| Error tracking                                 | ✅ **Sentry browser, dynamic import, no-op when DSN unset, bot UA filter, error-only**                                                                                                                                          |
+| Vercel                                         | ✅ live at <https://bubc-web.vercel.app/>                                                                                                                                                                                       |
+| Cloudflare DNS / email                         | ⏸ deferred to launch (Phase 6)                                                                                                                                                                                                  |
+| Cloudflare Web Analytics                       | ⏸ ready to wire (beacon code in BaseLayout, gated on env var)                                                                                                                                                                   |
+| Formspree                                      | ⏸ account ready; form ID needs adding to Vercel env                                                                                                                                                                             |
+| Sanity Studio deploy                           | ❌ not deployed (manual `pnpm --filter @bubc/studio deploy`)                                                                                                                                                                    |
+| Sanity → Vercel webhook                        | 📋 setup documented in [DEPLOYMENT.md](DEPLOYMENT.md); needs editor or developer to wire it (15 min, requires Vercel + Sanity dashboard access)                                                                                 |
+| Custom domain on prod                          | ❌ Phase 6 cutover                                                                                                                                                                                                              |
+| Photos                                         | ⏸ being gathered; placeholder system covers the gap                                                                                                                                                                             |
+| Build / typecheck / lint / format / unit / e2e | ✅ all green                                                                                                                                                                                                                    |
+| Security hardening (Phase 6)                   | ✅ **CSP + HSTS + COOP/CORP headers** (vercel.json) · **Zod validation** (forms + live banner) · **URL sanitiser** rewritten with control-char + protocol-relative defences · **Sport University of the Year** footer treatment |
+| P1/P2 pages (Phase 6)                          | ✅ **/results/** (filterable archive) · **/press/** (media kit) · **/about/chairs/** (heritage list) · **/about/blazers/** (awards criteria)                                                                                    |
 
 ---
 
@@ -437,9 +439,92 @@ Changes to existing files:
 
 ---
 
+## Session 6 — Phase 6 security hardening + remaining P1/P2 pages ✅
+
+Big lift: a security audit pass with concrete fixes; full launch-completeness page set (Results, Press, Chairs, Blazers); the "Sport University of the Year" footer treatment; documentation refresh including a new top-level SECURITY.md.
+
+### Security hardening
+
+- **`apps/web/src/lib/html.ts` rewritten**. `sanitizeUrl` now:
+  - allow-lists `http:` / `https:` / `mailto:` / `tel:` + relative URLs only
+  - rejects `javascript:`, `data:`, `vbscript:`, `file:`, `blob:`, intent:, and other unknown protocols → `#`
+  - rejects protocol-relative `//evil.com` (would have inherited the page protocol)
+  - strips C0 control chars + DEL before scheme comparison so `java\tscript:` etc. can't smuggle past the check
+  - case-insensitive scheme match (`JAVASCRIPT:` is the same as `javascript:`).
+- New `youtubeId` + `vimeoId` helpers. Parse with `new URL()` instead of substring matching, so a hostile URL like `https://evil.com/?fake=youtube.com/watch?v=ID` can no longer reach an iframe `src`.
+- **`LiveRaceBanner.astro`** now routes `liveResultsUrl` through `sanitizeUrl` before rendering. A compromised editor account or pasted-in `javascript:` URL cannot reach the DOM.
+- **`PortableText.astro`** embed serializer rewritten to use the new strict ID helpers.
+- New `apps/web/src/lib/validation.ts` — Zod schemas for the trial form, newsletter signup, and the live race banner. `validateLiveRaceBanner()` runs at build time inside `PageLayout.astro`; if the shape or URL fails validation, the banner silently doesn't render.
+- **Trial form** now layers: native `reportValidity()` → minimum-fill-time (2s) → Zod `parseTrialForm` → Formspree POST. Bots that fill instantly are dropped client-side.
+- **Newsletter signup** same layering, 1.5s minimum + Zod email format + honeypot.
+- New **`vercel.json`** with hardened security response headers:
+  - `Content-Security-Policy` — strict allow-list (self + Sanity CDN + Cloudflare beacon + Sentry + Formspree + Buttondown + YouTube/Vimeo + OpenStreetMap)
+  - `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload`
+  - `X-Content-Type-Options`, `X-Frame-Options: DENY`, `Referrer-Policy: strict-origin-when-cross-origin`
+  - `Permissions-Policy` denying camera/mic/geolocation/payment/USB
+  - `Cross-Origin-Opener-Policy: same-origin` + `Cross-Origin-Resource-Policy: same-origin` (override to `cross-origin` for `/og/*.png` + fonts so embedding works)
+  - Long-cache headers on `/og/*.png` and `/fonts/*`.
+
+### New pages
+
+- **`/results/`** — race results archive (P1). Filterable by year + regatta (client-side pills). Server-rendered tables for no-JS fallback. Stat strip (totals, regattas raced, most recent / earliest year). Empty state with mailto. Breadcrumb JSON-LD. OG card. New query `regattaResultsQuery`. New types `RegattaResult`. New helper `lib/results.ts` with `groupByYear` + `uniqueRegattas` + `regattaKey` (unit tested).
+- **`/press/`** — media kit (P2). Boilerplate, quick facts dl, brand assets pointer, contact aside (press / captains / alumni). Static-mostly content. Breadcrumb JSON-LD. OG card.
+- **`/about/chairs/`** — past chairs (P2). Pulls Sanity `chair` documents, groups by decade. Empty state matches Henley honours pattern. New query `chairsQuery`. New type `ChairRecord`. Photo via existing `Picture.astro`.
+- **`/about/blazers/`** — heritage / awards criteria (P2). Static editorial content fallback when no `page` doc with slug `blazers` exists; uses Sanity body when present. Four blazer tiers with trim spec + criteria. Order-via-treasurer callout. Breadcrumb JSON-LD.
+
+### Sport University of the Year treatment
+
+- New `SportUniBadge.astro` — editorial heritage band at the top of the footer (above the sponsor strip). Eyebrow "Recognised by" + display headline "Sport University of the Year" + attribution to _The Times & Sunday Times Good University Guide_ + year. Gold hairline + vertical divider, matches the established design system. Configurable year via props for the next time the award lands.
+- Wired into `Footer.astro` so it appears on every page.
+
+### Tests
+
+- **New unit suites**: `html.test.ts` (24 assertions covering escape + sanitiser edge cases — javascript: smuggling, protocol-relative, control chars, all schemes), `validation.test.ts` (Zod schemas — trial form, newsletter, live banner), `results.test.ts` (year grouping + regatta key/dedupe).
+- **New Playwright specs** for the new pages and the Sport University treatment + a `Vercel-only` skipped security-headers check on every page response.
+- All 4 new unit test files + 5 new smoke specs.
+
+### Documentation
+
+- New top-level **`docs/SECURITY.md`** — threat model + trust boundaries diagram + secrets handling + headers explanation + dependency cadence + responsible-disclosure email.
+- `docs/PROGRESS.md` (this file) gains the session 6 entry.
+- `docs/FEATURES.md` updated with the new IDs (Results = R1 ✅, Press = C8 ✅, Chairs = P6 ✅, Blazers = R4 ✅, Sport-Uni footer = new ID).
+- `docs/DEPLOYMENT.md` gets a "Security headers" subsection pointing at `vercel.json` + `SECURITY.md`.
+
+### Files added this session
+
+```
+docs/SECURITY.md
+vercel.json
+apps/web/
+├── src/
+│   ├── components/layout/SportUniBadge.astro
+│   ├── lib/{results.ts, validation.ts}
+│   └── pages/
+│       ├── about/{chairs.astro, blazers.astro}
+│       ├── press.astro
+│       └── results/index.astro
+└── tests/unit/{html.test.ts, validation.test.ts, results.test.ts}
+```
+
+Changes to existing files:
+
+- `apps/web/src/lib/html.ts` — full rewrite (escape + URL allow-list + strict YouTube/Vimeo ID extraction).
+- `apps/web/src/components/content/PortableText.astro` — embed serializer uses the new strict helpers.
+- `apps/web/src/components/layout/LiveRaceBanner.astro` — sanitises `liveResultsUrl` before render.
+- `apps/web/src/components/layout/Footer.astro` — Sport University badge mounted at the top; Results + Chairs + Blazers links added; Press in the legal strip.
+- `apps/web/src/components/layout/NewsletterSignup.astro` — min-fill-time + Zod parse.
+- `apps/web/src/pages/squads/trial.astro` — min-fill-time + Zod parse before Formspree POST.
+- `apps/web/src/layouts/PageLayout.astro` — validates the live race banner with Zod before rendering.
+- `apps/web/src/lib/queries.ts` + `lib/types.ts` — new `regattaResultsQuery` + `chairsQuery`; new `RegattaResult` + `ChairRecord` types.
+- `apps/web/src/pages/og/[slug].png.ts` + `apps/web/src/lib/og/url.ts` — new static OG cards for results / press / chairs / blazers.
+- `apps/web/.pa11yci.json` + `.lighthouserc.json` — new URLs in the CI sweep.
+- `apps/web/package.json` — `zod` added as a runtime dep.
+
+---
+
 ## Where we left off — Phase 6 launch path
 
-Phase 5 is complete. Remaining work is launch logistics + the final two open backlog decisions.
+Phase 5 + Phase 6 security/content are complete. Remaining work is purely launch logistics + the final two open backlog decisions.
 
 ### Immediate next steps
 

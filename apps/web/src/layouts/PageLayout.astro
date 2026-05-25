@@ -13,6 +13,7 @@ import SearchDialog from '../components/search/SearchDialog.astro';
 import LiveRaceBanner from '../components/layout/LiveRaceBanner.astro';
 import { safeFetch } from '../lib/sanity';
 import { settingsQuery } from '../lib/queries';
+import { validateLiveRaceBanner } from '../lib/validation';
 import type { SeoInput } from '../lib/seo';
 import type { Settings } from '../lib/types';
 
@@ -24,7 +25,10 @@ interface Props {
 const { seo, bodyClass } = Astro.props;
 
 const settings = await safeFetch<Settings>(settingsQuery);
-const banner = settings?.liveRaceBanner;
+// Validate the editor-controlled banner payload before we render it. If
+// shape or URL protocol is off, we silently skip rendering rather than
+// risking a broken or hostile banner.
+const banner = validateLiveRaceBanner(settings?.liveRaceBanner);
 ---
 
 <BaseLayout seo={seo} bodyClass={bodyClass}>

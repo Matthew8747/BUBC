@@ -12,7 +12,9 @@
         "http://localhost/about/olympians/index.html",
         "http://localhost/support/donate/index.html",
         "http://localhost/support/campaigns/index.html",
-        "http://localhost/boathouse/fleet/index.html"
+        "http://localhost/boathouse/fleet/index.html",
+        "http://localhost/results/index.html",
+        "http://localhost/press/index.html"
       ],
       "numberOfRuns": 1,
       "settings": {

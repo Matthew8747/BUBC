@@ -12,7 +12,7 @@
 > - **❓ Needs decision** — user input required before scoping
 > - **🚫 Out of scope** — explicitly not doing (with reason)
 >
-> Last updated: 2026-05-24 (session 5 — Phase 5 landed).
+> Last updated: 2026-05-25 (session 6 — Phase 6 hardening + results/press/chairs/blazers landed).
 
 ---
 
@@ -27,7 +27,7 @@
 | C5  | Trial / Recruit form             | ✅ Built (T21)         | Live at `/squads/trial/`. Needs Formspree ID set (M2 in PROGRESS).                                                                                                              |
 | C6  | Welfare & Safeguarding page      | 📋 Planned (T26)       | Named officer, contacts, reporting routes. Phase 3.                                                                                                                             |
 | C7  | Inclusion & accessibility policy | ❓ Needs decision      | Para-rowing pathway, gender inclusion, financial support routes. Could be a section of welfare page or its own page.                                                            |
-| C8  | Press / media kit                | 📋 Planned (P1)        | Hi-res logos, brand colours, photo library, boilerplate. Probably static assets + a single page.                                                                                |
+| C8  | Press / media kit                | ✅ Built (session 6)   | `/press/` — boilerplate, club facts dl, contact aside (press / captains / alumni / welfare), brand-assets pointer. Hi-res assets handed over per request.                       |
 | C9  | Annual review / yearbook PDF     | ❓ Needs decision      | 20–30pp PDF once a year. Alumni keep these, drives donations. Out of scope for build; needs editorial process.                                                                  |
 | C10 | Cookie / privacy / GDPR notice   | 🟡 Under consideration | Legally required if we collect form data. Form submissions → Formspree. Need a privacy policy page (short) linked in footer.                                                    |
 
@@ -40,7 +40,7 @@
 | P3  | Committee page             | 📋 Planned (T25)       | `committeeMember` schema exists with `academicYear` field.                                                                                                                                                               |
 | P4  | Crew lists with photos     | 🟡 Under consideration | **Decision (2026-05-23):** separate `crew` document — `crew { squad, season, name, athletes[seat→athlete], cox, coach, photo, achievements }`. Supports archive/yearbook use. Schema to be added after Phase 3 P0 pages. |
 | P5  | Olympians / Internationals | ✅ Built (T31)         | `/about/olympians/` index + `/about/olympians/[slug]/` detail page with JSON-LD `Person`. Schema rename to `alumniProfile` still deferred until P1 alumni section.                                                       |
-| P6  | Chairs of BUBC             | 📋 Planned (P2)        | `chair` schema exists. Historical list.                                                                                                                                                                                  |
+| P6  | Chairs of BUBC             | ✅ Built (session 6)   | `/about/chairs/` — pulls `chair` documents, groups by decade. Empty state mirrors Henley honours wording. Breadcrumb JSON-LD.                                                                                            |
 | P7  | Athlete profiles           | 📋 Planned (latent)    | `athlete` schema exists — referenced by news / results but no public index page yet. Decide if athletes get profiles.                                                                                                    |
 
 ## 3. Boats & boathouse
@@ -54,13 +54,13 @@
 
 ## 4. Results & history
 
-| ID  | Feature                  | Status           | Notes                                                                                                                                                                                 |
-| --- | ------------------------ | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| R1  | Race results archive     | 📋 Planned (P1)  | `regattaResult` schema exists. Filterable by year/regatta. Plan §7 P4.                                                                                                                |
-| R2  | Henley Honours page      | ✅ Built (T30)   | `/about/henley-honours/` chronological table by year with client-side regatta filter and totals strip.                                                                                |
-| R3  | History page + timeline  | 📋 Planned (T24) | Existing copy good; needs timeline component.                                                                                                                                         |
-| R4  | Blazers page             | 📋 Planned (P2)  | Historical / decorative.                                                                                                                                                              |
-| R5  | Live race tracker / feed | ✅ Built (R5)    | Banner driven by `settings.liveRaceBanner` in Sanity (active toggle + event name + URL + tone). Renders above the header, dismissable per session. Decision: banner-only, no iframes. |
+| ID  | Feature                  | Status               | Notes                                                                                                                                                                                                      |
+| --- | ------------------------ | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R1  | Race results archive     | ✅ Built (session 6) | `/results/` — pulls `regattaResult` docs, groups by year, client-side filter pills (year + regatta), totals strip, empty state. Server-rendered tables for no-JS fallback. Unit tests on grouping helpers. |
+| R2  | Henley Honours page      | ✅ Built (T30)       | `/about/henley-honours/` chronological table by year with client-side regatta filter and totals strip.                                                                                                     |
+| R3  | History page + timeline  | 📋 Planned (T24)     | Existing copy good; needs timeline component.                                                                                                                                                              |
+| R4  | Blazers page             | ✅ Built (session 6) | `/about/blazers/` — heritage editorial copy + four blazer-tier criteria (full / half / captain / long service) + treasurer order-callout. Sanity `page` doc override when present.                         |
+| R5  | Live race tracker / feed | ✅ Built (R5)        | Banner driven by `settings.liveRaceBanner` in Sanity (active toggle + event name + URL + tone). Renders above the header, dismissable per session. Decision: banner-only, no iframes.                      |
 
 ## 5. Alumni & community
 
@@ -100,6 +100,9 @@
 
 | ID  | Feature                            | Status               | Notes                                                                                                                      |
 | --- | ---------------------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| I13 | Security response headers          | ✅ Built (session 6) | `vercel.json` — strict CSP, HSTS 2y preload, X-Frame DENY, Permissions-Policy lockdown, COOP/CORP. See `docs/SECURITY.md`. |
+| I14 | Form validation (Zod)              | ✅ Built (session 6) | `lib/validation.ts` schemas wired into trial form + newsletter + live race banner. Bot defences: honeypot + min-fill-time. |
+| I15 | XSS hardening (URL + HTML)         | ✅ Built (session 6) | `lib/html.ts` rewritten — strict URL allow-list, control-char strip, protocol-relative reject, strict YouTube/Vimeo ID.    |
 | I1  | Sitemap                            | ✅ Built             | `@astrojs/sitemap` wired, `/sitemap-index.xml` generated, priorities boosted for home + hubs.                              |
 | I2  | RSS feed                           | ✅ Built (T28)       | `/news/rss.xml` via `@astrojs/rss` with custom XSL stylesheet for browser preview.                                         |
 | I3  | Pagefind search                    | ✅ Built (T29)       | Indexed at build, `/` keyboard shortcut + Cmd/Ctrl-K + header buttons, accessible dialog.                                  |
@@ -164,6 +167,10 @@ These are standard club-website features the plan already commits to. I'll build
 - ✅ T31 Olympians index + detail
 - ✅ 404 page
 - ✅ Privacy policy page (form data handling — required for GDPR)
+- ✅ Race results archive (R1) — `/results/`
+- ✅ Press kit (C8), Chairs (P6), Blazers (R4) — Phase 6 P2 pages
+- ✅ Security hardening pass — I13, I14, I15 + `docs/SECURITY.md`
+- ✅ Sport University of the Year footer treatment
 - 🚫 T32 Fleet visualiser SVG — skipped per decision (B4). Standard grid built instead.
 - ✅ T33 Campaign listing + detail pages
 - ✅ T34 OG image generation with satori
@@ -174,8 +181,6 @@ These are standard club-website features the plan already commits to. I'll build
 - ✅ Lighthouse CI — I6 (advisory)
 - ✅ Pa11y CI — I7 (advisory)
 - ✅ 18 × 301 redirects — I10
-- 📋 Race results archive (P1) — `/results/`
-- 📋 Press kit (P2), Chairs (P2), Blazers (P2)
 - 📋 Sanity Presentation live preview — I9
 
 ---

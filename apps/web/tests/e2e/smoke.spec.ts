@@ -246,4 +246,69 @@ test.describe('smoke', () => {
     await page.goto('/buy-a-boat/');
     await expect(page).toHaveURL(/\/support\/buy-a-boat\/$/);
   });
+
+  // ---------------------------------------------------------------------------
+  // Phase 6 — results, press, chairs, blazers, sport-uni footer treatment
+  // ---------------------------------------------------------------------------
+
+  test('results page renders heading and filter pills or empty state', async ({ page }) => {
+    await page.goto('/results/');
+    await expect(page.getByRole('heading', { level: 1, name: /Race results/i })).toBeVisible();
+    const filter = page.locator('[data-year-filter][data-year="all"]');
+    const empty = page.getByRole('heading', { name: /Results archive in progress/ });
+    await expect(filter.or(empty)).toBeVisible();
+  });
+
+  test('press page renders boilerplate and the press@ mailto', async ({ page }) => {
+    await page.goto('/press/');
+    await expect(page.getByRole('heading', { level: 1, name: /Press & media kit/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'press@bubc.co.uk' }).first()).toHaveAttribute(
+      'href',
+      'mailto:press@bubc.co.uk',
+    );
+  });
+
+  test('chairs page renders the heading and either entries or the empty state', async ({
+    page,
+  }) => {
+    await page.goto('/about/chairs/');
+    await expect(page.getByRole('heading', { level: 1, name: /Chairs of BUBC/ })).toBeVisible();
+    const heading2 = page
+      .getByRole('heading', { level: 2 })
+      .or(page.getByRole('heading', { name: /record being assembled/i }));
+    await expect(heading2.first()).toBeVisible();
+  });
+
+  test('blazers page lists the four blazer tiers', async ({ page }) => {
+    await page.goto('/about/blazers/');
+    await expect(page.getByRole('heading', { level: 1, name: /Bath blazer/ })).toBeVisible();
+    await expect(page.getByText('Full blazer').first()).toBeVisible();
+    await expect(page.getByText('Captain’s blazer').first()).toBeVisible();
+    await expect(page.getByText('Long service').first()).toBeVisible();
+  });
+
+  test('Sport University of the Year footer treatment is present on every page', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    const badge = page.getByRole('complementary', { name: /University accolade/ });
+    await expect(badge).toBeVisible();
+    await expect(badge).toContainText('Sport University of the Year');
+    await expect(badge).toContainText('University of Bath');
+  });
+
+  test('security headers are set (CSP, HSTS, X-Content-Type-Options)', async ({ request }) => {
+    // vercel.json is only honoured on Vercel deploys, not on the local
+    // http-server preview that drives Playwright. Skip when not on Vercel.
+    const response = await request.get('/');
+    const csp = response.headers()['content-security-policy'];
+    const xcto = response.headers()['x-content-type-options'];
+    if (!csp && !xcto) {
+      test.skip(true, 'Security headers are only applied by Vercel — skipped locally.');
+    }
+    if (csp) {
+      expect(csp).toContain("frame-ancestors 'none'");
+      expect(csp).toContain('cdn.sanity.io');
+    }
+  });
 });

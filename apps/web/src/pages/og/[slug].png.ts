@@ -146,6 +146,26 @@ const STATIC_CARDS: Record<string, OgCard> = {
     title: 'What we’re raising for.',
     subtitle: 'Live progress, transparent goals. Boats, training camps, alumni initiatives.',
   },
+  results: {
+    eyebrow: 'Results',
+    title: 'Race results.',
+    subtitle: 'Every regatta the club has entered, filterable by year and event.',
+  },
+  press: {
+    eyebrow: 'Press',
+    title: 'Press & media kit.',
+    subtitle: 'Logos, boilerplate, photography, and the right contact for race-week press.',
+  },
+  chairs: {
+    eyebrow: 'About',
+    title: 'Chairs of BUBC.',
+    subtitle: 'Every committee chair since 1965 — the line of student officers who built the club.',
+  },
+  blazers: {
+    eyebrow: 'About',
+    title: 'The Bath blazer.',
+    subtitle: 'How a Bath blazer is earned, what the trim means, and who can wear one.',
+  },
 };
 
 export const getStaticPaths = (async () => {

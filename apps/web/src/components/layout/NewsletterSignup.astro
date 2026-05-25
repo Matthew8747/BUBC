@@ -163,9 +163,16 @@ const isDark = tone === 'dark';
 </section>
 
 <script>
+  import { newsletterSchema } from '../../lib/validation';
+
   // Buttondown's embed accepts plain form POSTs, but we intercept and submit
   // via fetch so the page never navigates away — and we can show an inline
   // success message regardless of how the editor wired the embed.
+  // Layered anti-abuse: honeypot field + minimum form-on-screen time + Zod
+  // schema validation before we hit the network.
+  const MIN_FILL_TIME_MS = 1500;
+  const mountedAt = performance.now();
+
   document.querySelectorAll<HTMLFormElement>('form[data-newsletter-form]').forEach((form) => {
     const root = form.closest<HTMLElement>('[data-newsletter]');
     const status = root?.querySelector<HTMLElement>('[data-newsletter-status]');
@@ -180,8 +187,20 @@ const isDark = tone === 'dark';
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const data = new FormData(form);
+
       const honeypot = data.get('htmlemail');
       if (honeypot) return; // bot — silently drop
+
+      if (performance.now() - mountedAt < MIN_FILL_TIME_MS) return;
+
+      const parsed = newsletterSchema.safeParse({
+        email: data.get('email') ?? '',
+        htmlemail: data.get('htmlemail') ?? '',
+      });
+      if (!parsed.success) {
+        setStatus(parsed.error.issues[0]?.message ?? 'Please check your email address.', 'error');
+        return;
+      }
 
       try {
         const res = await fetch(form.action, {

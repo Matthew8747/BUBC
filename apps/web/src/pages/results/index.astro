@@ -1,0 +1,318 @@
+---
+/**
+ * Race results archive (P1).
+ *
+ * Pulls `regattaResult` documents from Sanity, groups them by year, and renders
+ * a chronological table. Client-side filter pills narrow by year and by
+ * regatta — the underlying server-rendered tables stay accessible without JS.
+ *
+ * Empty state matches the rest of the site: honest "archive being digitised"
+ * card with an alumni@bubc.co.uk mailto so contributors can help fill it.
+ */
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/layout/PageHero.astro';
+import Container from '../../components/ui/Container.astro';
+import Section from '../../components/ui/Section.astro';
+import Tag from '../../components/ui/Tag.astro';
+import JsonLd from '../../components/seo/JsonLd.astro';
+import { safeFetch } from '../../lib/sanity';
+import { regattaResultsQuery } from '../../lib/queries';
+import { groupByYear, uniqueRegattas, regattaKey } from '../../lib/results';
+import { sanitizeUrl } from '../../lib/html';
+import { SITE } from '../../lib/seo';
+import { ogImage } from '../../lib/og/url';
+import type { RegattaResult } from '../../lib/types';
+
+const results = (await safeFetch<RegattaResult[]>(regattaResultsQuery)) ?? [];
+const byYear = groupByYear(results);
+const years = byYear.map((g) => g.year);
+const regattas = uniqueRegattas(results);
+
+const breadcrumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'Race results', item: `${SITE.url}/results/` },
+  ],
+};
+---
+
+<PageLayout
+  seo={{
+    title: 'Race results',
+    description:
+      'BUBC race results — every regatta the club has entered, year by year. Filter by year or regatta.',
+    image: ogImage({ kind: 'page', slug: 'results' }),
+  }}
+>
+  <JsonLd data={breadcrumbs} slot="head" />
+
+  <PageHero
+    eyebrow="Results"
+    headline="Race results"
+    lead="Where Bath has lined up, and where we finished. A growing archive of every regatta the club has entered."
+  />
+
+  <Section spacing="lg">
+    <Container>
+      <p class="text-sm text-[--color-mute] mb-8">
+        <a href="/" class="hover:text-[--color-navy]">Home</a>
+        <span class="mx-2 opacity-50">/</span>
+        <span class="text-[--color-ink]">Race results</span>
+      </p>
+
+      {
+        results.length > 0 ? (
+          <>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-px bg-[--color-line] border border-[--color-line] mb-12">
+              <div class="bg-[--color-paper] p-5">
+                <div class="text-3xl font-display tabular-nums">{results.length}</div>
+                <div class="text-xs uppercase tracking-[0.12em] text-[--color-mute] mt-1">
+                  Total entries
+                </div>
+              </div>
+              <div class="bg-[--color-paper] p-5">
+                <div class="text-3xl font-display tabular-nums">{regattas.length}</div>
+                <div class="text-xs uppercase tracking-[0.12em] text-[--color-mute] mt-1">
+                  Regattas raced
+                </div>
+              </div>
+              <div class="bg-[--color-paper] p-5">
+                <div class="text-3xl font-display tabular-nums">{years[0] ?? '—'}</div>
+                <div class="text-xs uppercase tracking-[0.12em] text-[--color-mute] mt-1">
+                  Most recent
+                </div>
+              </div>
+              <div class="bg-[--color-paper] p-5">
+                <div class="text-3xl font-display tabular-nums">
+                  {years[years.length - 1] ?? '—'}
+                </div>
+                <div class="text-xs uppercase tracking-[0.12em] text-[--color-mute] mt-1">
+                  Earliest on record
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-4 mb-10" aria-label="Filter race results">
+              <div
+                class="flex flex-wrap items-center gap-2"
+                role="group"
+                aria-label="Filter by year"
+              >
+                <span class="text-xs uppercase tracking-[0.14em] text-[--color-mute] mr-2">
+                  Year
+                </span>
+                <button
+                  type="button"
+                  data-year-filter
+                  data-year="all"
+                  aria-pressed="true"
+                  class="results-pill is-active inline-flex h-8 items-center rounded-full px-3 text-xs font-medium uppercase tracking-[0.12em]"
+                >
+                  All
+                </button>
+                {years.map((y) => (
+                  <button
+                    type="button"
+                    data-year-filter
+                    data-year={String(y)}
+                    aria-pressed="false"
+                    class="results-pill inline-flex h-8 items-center rounded-full px-3 text-xs font-medium uppercase tracking-[0.12em] tabular-nums"
+                  >
+                    {y}
+                  </button>
+                ))}
+              </div>
+              <div
+                class="flex flex-wrap items-center gap-2"
+                role="group"
+                aria-label="Filter by regatta"
+              >
+                <span class="text-xs uppercase tracking-[0.14em] text-[--color-mute] mr-2">
+                  Regatta
+                </span>
+                <button
+                  type="button"
+                  data-regatta-filter
+                  data-regatta="all"
+                  aria-pressed="true"
+                  class="results-pill is-active inline-flex h-8 items-center rounded-full px-3 text-xs font-medium uppercase tracking-[0.12em]"
+                >
+                  All
+                </button>
+                {regattas.map((r) => (
+                  <button
+                    type="button"
+                    data-regatta-filter
+                    data-regatta={regattaKey(r)}
+                    aria-pressed="false"
+                    class="results-pill inline-flex h-8 items-center rounded-full px-3 text-xs font-medium uppercase tracking-[0.12em]"
+                  >
+                    {r}
+                  </button>
+                ))}
+              </div>
+              <p
+                id="results-status"
+                class="text-xs text-[--color-mute] mt-3"
+                role="status"
+                aria-live="polite"
+              />
+            </div>
+
+            <div class="space-y-16" data-results-list>
+              {byYear.map(({ year, results }) => (
+                <section
+                  data-year-block={year}
+                  aria-labelledby={`results-year-${year}`}
+                  class="results-year"
+                >
+                  <h2
+                    id={`results-year-${year}`}
+                    class="font-display text-3xl border-b border-[--color-line] pb-2 mb-6 tabular-nums"
+                  >
+                    {year}
+                  </h2>
+                  <ul class="divide-y divide-[--color-line] border-y border-[--color-line]">
+                    {results.map((r) => (
+                      <li
+                        class="results-entry grid sm:grid-cols-[1fr_auto] gap-x-8 gap-y-2 py-5"
+                        data-regatta-key={regattaKey(r.regatta)}
+                        data-year={year}
+                      >
+                        <div>
+                          <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                            <h3 class="font-display text-lg text-balance">{r.event}</h3>
+                            <Tag tone="navy">{r.regatta}</Tag>
+                          </div>
+                          {r.crewName && (
+                            <p class="text-sm text-[--color-mute] mt-1">{r.crewName}</p>
+                          )}
+                          {r.athletes && r.athletes.length > 0 && (
+                            <ol class="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-[--color-mute]">
+                              {r.athletes.map((a) => (
+                                <li>{a.name}</li>
+                              ))}
+                              {r.cox && <li>Cox: {r.cox.name}</li>}
+                              {r.coach && <li>Coach: {r.coach.name}</li>}
+                            </ol>
+                          )}
+                        </div>
+                        <div class="sm:text-right sm:min-w-[180px]">
+                          {r.finish && <p class="font-display text-xl text-balance">{r.finish}</p>}
+                          {r.time && (
+                            <p class="text-xs text-[--color-mute] tabular-nums mt-1">{r.time}</p>
+                          )}
+                          {r.video && sanitizeUrl(r.video) !== '#' && (
+                            <a
+                              href={sanitizeUrl(r.video)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              class="text-xs underline decoration-[--color-gold] underline-offset-2 mt-1 inline-block"
+                            >
+                              Watch
+                            </a>
+                          )}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div class="rounded border border-dashed border-[--color-line] bg-[--color-bone]/60 p-10 text-center max-w-2xl mx-auto">
+            <h2 class="font-display text-2xl">Results archive in progress</h2>
+            <p class="mt-3 text-sm text-[--color-mute]">
+              We're working through the club archives season by season. If you have a record we
+              don't, email{' '}
+              <a class="underline" href="mailto:alumni@bubc.co.uk">
+                alumni@bubc.co.uk
+              </a>{' '}
+              with photos, programmes, or race notes.
+            </p>
+          </div>
+        )
+      }
+    </Container>
+  </Section>
+</PageLayout>
+
+<style>
+  .results-pill {
+    border: 1px solid var(--color-line);
+    color: var(--color-ink);
+    transition:
+      background-color 200ms ease,
+      color 200ms ease,
+      border-color 200ms ease;
+  }
+  .results-pill:hover {
+    border-color: var(--color-navy);
+  }
+  .results-pill.is-active {
+    background: var(--color-navy);
+    color: var(--color-paper);
+    border-color: var(--color-navy);
+  }
+</style>
+
+<script>
+  const yearButtons = document.querySelectorAll<HTMLButtonElement>('[data-year-filter]');
+  const regattaButtons = document.querySelectorAll<HTMLButtonElement>('[data-regatta-filter]');
+  const entries = document.querySelectorAll<HTMLElement>('.results-entry');
+  const yearBlocks = document.querySelectorAll<HTMLElement>('.results-year');
+  const status = document.getElementById('results-status');
+
+  let yearFilter = 'all';
+  let regattaFilter = 'all';
+
+  function activate(group: ArrayLike<HTMLButtonElement>, attr: string, value: string): void {
+    Array.from(group).forEach((btn) => {
+      const on = btn.dataset[attr] === value;
+      btn.classList.toggle('is-active', on);
+      btn.setAttribute('aria-pressed', String(on));
+    });
+  }
+
+  function apply() {
+    let visible = 0;
+    entries.forEach((entry) => {
+      const yearOk = yearFilter === 'all' || entry.dataset.year === yearFilter;
+      const regattaOk = regattaFilter === 'all' || entry.dataset.regattaKey === regattaFilter;
+      const show = yearOk && regattaOk;
+      entry.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    yearBlocks.forEach((block) => {
+      const yearOk = yearFilter === 'all' || block.dataset.yearBlock === yearFilter;
+      const childVisible = block.querySelectorAll<HTMLElement>(
+        '.results-entry:not([style*="display: none"])',
+      ).length;
+      block.style.display = yearOk && childVisible > 0 ? '' : 'none';
+    });
+    if (status) {
+      status.textContent =
+        visible === entries.length
+          ? `${visible} ${visible === 1 ? 'entry' : 'entries'}`
+          : `${visible} of ${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}`;
+    }
+  }
+
+  yearButtons.forEach((btn) =>
+    btn.addEventListener('click', () => {
+      yearFilter = btn.dataset.year ?? 'all';
+      activate(yearButtons, 'year', yearFilter);
+      apply();
+    }),
+  );
+  regattaButtons.forEach((btn) =>
+    btn.addEventListener('click', () => {
+      regattaFilter = btn.dataset.regatta ?? 'all';
+      activate(regattaButtons, 'regatta', regattaFilter);
+      apply();
+    }),
+  );
+</script>

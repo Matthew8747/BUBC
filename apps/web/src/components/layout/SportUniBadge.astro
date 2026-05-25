@@ -1,0 +1,50 @@
+---
+/**
+ * SportUniBadge — "Sport University of the Year" accolade for the footer.
+ *
+ * Editorial heritage treatment: small gold hairline, eyebrow label, display
+ * headline, restrained attribution. Sits above the partners strip in the
+ * footer so it reads as institutional context, not promotion. Two-column
+ * layout on desktop with a vertical hairline divider — collapses to stacked
+ * on mobile.
+ *
+ * Update the `years` and `awardedBy` props when a new accolade lands, or
+ * promote this to a Sanity-driven block if accolades become editorial.
+ */
+import Container from '../ui/Container.astro';
+
+interface Props {
+  /** Most recent year(s) the award was given. Comma-separate multiples. */
+  years?: string;
+  awardedBy?: string;
+}
+
+const { years = '2024', awardedBy = 'The Times & Sunday Times Good University Guide' } =
+  Astro.props;
+---
+
+<aside
+  class="bg-[--color-navy] text-[--color-paper] border-t border-[--color-paper]/10"
+  aria-label="University accolade"
+>
+  <Container class="py-10 sm:py-12">
+    <div class="grid sm:grid-cols-[auto_1fr] items-center gap-x-10 gap-y-6">
+      <div class="flex items-center gap-4">
+        <span class="block h-px w-12 bg-[--color-gold]" aria-hidden="true"></span>
+        <p class="text-xs uppercase tracking-[0.2em] text-[--color-gold]">Recognised by</p>
+      </div>
+      <div class="sm:border-l sm:border-[--color-paper]/15 sm:pl-10">
+        <p class="font-display text-2xl sm:text-3xl leading-tight text-[--color-paper]">
+          Sport University of the Year
+        </p>
+        <p class="mt-2 text-sm text-[--color-paper]/70 leading-relaxed">
+          <span class="text-[--color-paper]">University of Bath</span>
+          <span aria-hidden="true" class="mx-2 text-[--color-paper]/30">·</span>
+          <span>{awardedBy}</span>
+          <span aria-hidden="true" class="mx-2 text-[--color-paper]/30">·</span>
+          <span class="font-mono tabular-nums tracking-wide">{years}</span>
+        </p>
+      </div>
+    </div>
+  </Container>
+</aside>

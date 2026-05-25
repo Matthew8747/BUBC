@@ -216,9 +216,17 @@ const isConfigured = Boolean(formId);
 </PageLayout>
 
 <script>
+  import { parseTrialForm } from '../../lib/validation';
+
   const form = document.getElementById('trial-form') as HTMLFormElement | null;
   const status = document.getElementById('trial-form-status');
   const success = document.getElementById('trial-success');
+
+  // Form must be on screen for at least this long before we accept a submit.
+  // Real humans take seconds to fill the form; most bots submit instantly.
+  // This is a cheap anti-abuse layer that pairs with the honeypot field.
+  const MIN_FILL_TIME_MS = 2000;
+  const formMountedAt = performance.now();
 
   if (form && status && success) {
     const isFormspree = form.dataset.formspree === 'true';
@@ -228,7 +236,24 @@ const isConfigured = Boolean(formId);
       status.textContent = '';
       status.classList.remove('text-[--color-blade]');
 
+      // Native browser validation first — gives accessible per-field errors.
       if (!form.reportValidity()) return;
+
+      // Anti-bot: too-fast submission.
+      if (performance.now() - formMountedAt < MIN_FILL_TIME_MS) {
+        status.textContent = 'Please double-check your answers before sending.';
+        status.classList.add('text-[--color-blade]');
+        return;
+      }
+
+      // Zod parse — strict schema validation, normalised + length-checked.
+      const data = new FormData(form);
+      const parsed = parseTrialForm(data);
+      if (!parsed.ok) {
+        status.textContent = parsed.errors[0] ?? 'Some fields need checking.';
+        status.classList.add('text-[--color-blade]');
+        return;
+      }
 
       if (!isFormspree) {
         status.textContent = 'Form is not yet configured — see the notice above.';
@@ -241,8 +266,6 @@ const isConfigured = Boolean(formId);
         submitBtn.disabled = true;
         submitBtn.textContent = 'Sending…';
       }
-
-      const data = new FormData(form);
 
       try {
         const response = await fetch(form.action, {
