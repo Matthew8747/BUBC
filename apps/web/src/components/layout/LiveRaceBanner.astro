@@ -12,6 +12,7 @@
  * the editor changes the event.
  */
 import type { LiveRaceBanner } from '../../lib/types';
+import { sanitizeUrl } from '../../lib/html';
 
 interface Props {
   banner: LiveRaceBanner;
@@ -20,6 +21,11 @@ interface Props {
 const { banner } = Astro.props;
 const tone = banner.tone ?? 'navy';
 const eventKey = (banner.eventName ?? '').trim();
+// The live results URL is editor-controlled. Sanitise here so a compromised
+// editor account or pasted-in `javascript:` URL can never reach the DOM
+// (sanitizeUrl falls back to `#` for any non-allow-listed protocol).
+const safeResultsUrl = banner.liveResultsUrl ? sanitizeUrl(banner.liveResultsUrl) : null;
+const hasResultsLink = safeResultsUrl && safeResultsUrl !== '#';
 
 const toneClass: Record<NonNullable<LiveRaceBanner['tone']>, string> = {
   navy: 'bg-[--color-navy] text-[--color-paper]',
@@ -43,9 +49,9 @@ const toneClass: Record<NonNullable<LiveRaceBanner['tone']>, string> = {
     <span class="font-medium tracking-wide uppercase text-xs">{banner.eventName ?? 'Live'}</span>
     {banner.message && <span class="opacity-90">{banner.message}</span>}
     {
-      banner.liveResultsUrl && (
+      hasResultsLink && (
         <a
-          href={banner.liveResultsUrl}
+          href={safeResultsUrl}
           target="_blank"
           rel="noopener noreferrer"
           class="ml-auto inline-flex items-center gap-1 underline underline-offset-2 hover:opacity-80 font-medium"

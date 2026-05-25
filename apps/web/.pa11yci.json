@@ -32,6 +32,10 @@
     "http://localhost:4322/support/buy-a-boat/",
     "http://localhost:4322/support/sponsor/",
     "http://localhost:4322/support/campaigns/",
+    "http://localhost:4322/results/",
+    "http://localhost:4322/press/",
+    "http://localhost:4322/about/chairs/",
+    "http://localhost:4322/about/blazers/",
     "http://localhost:4322/styleguide/",
     "http://localhost:4322/404/"
   ]

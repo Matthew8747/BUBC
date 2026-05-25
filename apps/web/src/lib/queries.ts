@@ -323,6 +323,31 @@ export const upcomingEventsQuery = /* groq */ `
 `;
 
 // ---------------------------------------------------------------------------
+// Regatta results archive
+// ---------------------------------------------------------------------------
+
+export const regattaResultsQuery = /* groq */ `
+  *[_type == "regattaResult"] | order(year desc, regatta asc, event asc) {
+    _id, regatta, year, event, crewName, finish, time, video,
+    "athletes": athletes[]->{ name, "slug": slug.current },
+    "cox": cox->{ name, "slug": slug.current },
+    "coach": coach->{ name, "slug": slug.current }
+  }
+`;
+
+// ---------------------------------------------------------------------------
+// Past chairs
+// ---------------------------------------------------------------------------
+
+export const chairsQuery = /* groq */ `
+  *[_type == "chair"] | order(yearFrom desc) {
+    _id, name, "slug": slug.current, yearFrom, yearTo,
+    photo { ${imageBlockFields} },
+    bio
+  }
+`;
+
+// ---------------------------------------------------------------------------
 // Henley Honours
 // ---------------------------------------------------------------------------
 

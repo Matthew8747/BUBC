@@ -137,6 +137,21 @@ Deferred until launch day. Process:
 
 ---
 
+## Security headers
+
+Configured in [`vercel.json`](../vercel.json) at the repo root. Vercel applies these headers to every response. Read [`docs/SECURITY.md`](SECURITY.md) for the full threat model + rationale.
+
+Highlights:
+
+- **Content-Security-Policy** — `default-src 'self'`, with a tight allow-list for Sanity CDN, Cloudflare Insights, Sentry ingest, Formspree, Buttondown, YouTube/Vimeo iframes, and OpenStreetMap.
+- **Strict-Transport-Security** — 2-year max-age, `includeSubDomains`, `preload`.
+- **X-Frame-Options** `DENY`, **X-Content-Type-Options** `nosniff`, **Referrer-Policy** `strict-origin-when-cross-origin`, **Permissions-Policy** denying camera/mic/geolocation/payment.
+- **COOP/CORP** `same-origin` site-wide, with `cross-origin` overrides for `/og/*.png` and `/fonts/*` so OG cards remain embeddable.
+
+If you add a new external dependency (a script, a CMS, an image host), **update the CSP first**, push to a preview deploy, verify no CSP-violation console errors, then merge to main. Otherwise resources will be silently blocked in production.
+
+The `Playwright` security-headers smoke spec **skips when run locally** — `vercel.json` is honoured only by Vercel, not the local `http-server` preview.
+
 ## Rollback procedure
 
 Every deploy is immutable on Vercel. Worst case (a regression goes live, the editor can't fix it themselves):
@@ -209,4 +224,4 @@ The whole build is self-contained — no network calls during deploy except the 
 
 ---
 
-_Last updated 2026-05-24 — Phase 5 (session 5: newsletter, OG generation, Sentry, Lighthouse CI, Pa11y CI, 301 redirects)._
+_Last updated 2026-05-25 — Phase 6 (session 6: security headers, CSP, Zod validation, /results/ + /press/ + /about/chairs/ + /about/blazers/, Sport University of the Year footer treatment)._

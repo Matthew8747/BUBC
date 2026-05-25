@@ -124,6 +124,38 @@ export interface PostRef {
 }
 
 // ---------------------------------------------------------------------------
+// Regatta results
+// ---------------------------------------------------------------------------
+
+export interface RegattaResult {
+  _id: string;
+  regatta: string;
+  year: number;
+  event: string;
+  crewName?: string;
+  finish?: string;
+  time?: string;
+  video?: string;
+  athletes?: { name: string; slug?: string }[];
+  cox?: { name: string; slug?: string };
+  coach?: { name: string; slug?: string };
+}
+
+// ---------------------------------------------------------------------------
+// Past chairs
+// ---------------------------------------------------------------------------
+
+export interface ChairRecord {
+  _id: string;
+  name: string;
+  slug?: string;
+  yearFrom: number;
+  yearTo?: number;
+  photo?: SanityImage;
+  bio?: unknown;
+}
+
+// ---------------------------------------------------------------------------
 // Henley Honours
 // ---------------------------------------------------------------------------
 

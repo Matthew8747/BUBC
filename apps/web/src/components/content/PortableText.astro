@@ -7,7 +7,7 @@
  */
 import { toHTML, type PortableTextComponents } from '@portabletext/to-html';
 import { urlFor } from '../../lib/sanity';
-import { escapeHtml, sanitizeUrl } from '../../lib/html';
+import { escapeHtml, sanitizeUrl, youtubeId, vimeoId } from '../../lib/html';
 import type { SanityImage } from '../../lib/types';
 
 interface Props {
@@ -47,16 +47,21 @@ const components: PortableTextComponents = {
     embed: ({ value }) => {
       const url = (value as { url?: string }).url;
       if (!url) return '';
-      const youtube = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
-      if (youtube) {
-        return `<div class="my-8 aspect-video"><iframe src="https://www.youtube-nocookie.com/embed/${youtube[1]}" title="Embedded video" loading="lazy" allow="picture-in-picture" allowfullscreen class="h-full w-full"></iframe></div>`;
+      // Strict-parse the URL with `new URL()` before extracting an ID — this
+      // means a hostile string like `https://evil.com?fake=youtube.com/watch?v=x`
+      // can never reach the iframe src attribute (see lib/html.ts).
+      const yt = youtubeId(url);
+      if (yt) {
+        return `<div class="my-8 aspect-video"><iframe src="https://www.youtube-nocookie.com/embed/${yt}" title="Embedded video" loading="lazy" allow="picture-in-picture" allowfullscreen class="h-full w-full"></iframe></div>`;
       }
-      const vimeo = url.match(/(?:vimeo\.com\/)([\d]+)/);
-      if (vimeo) {
-        return `<div class="my-8 aspect-video"><iframe src="https://player.vimeo.com/video/${vimeo[1]}" title="Embedded video" loading="lazy" allow="picture-in-picture" allowfullscreen class="h-full w-full"></iframe></div>`;
+      const vm = vimeoId(url);
+      if (vm) {
+        return `<div class="my-8 aspect-video"><iframe src="https://player.vimeo.com/video/${vm}" title="Embedded video" loading="lazy" allow="picture-in-picture" allowfullscreen class="h-full w-full"></iframe></div>`;
       }
-      const sanitized = escapeHtml(url);
-      return `<p><a href="${sanitizeUrl(url)}">${sanitized}</a></p>`;
+      // Fallback: render as a plain link, sanitised both for href and text.
+      const safeHref = sanitizeUrl(url);
+      const safeText = escapeHtml(url);
+      return `<p><a href="${safeHref}" rel="noopener noreferrer">${safeText}</a></p>`;
     },
   },
 };

@@ -31,6 +31,10 @@ const KNOWN = new Set([
   'buy-a-boat',
   'sponsor',
   'campaigns',
+  'results',
+  'press',
+  'chairs',
+  'blazers',
 ]);
 
 export type OgKind =
