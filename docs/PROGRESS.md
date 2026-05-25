@@ -1,6 +1,6 @@
 # BUBC Site — Build Progress & Handoff Notes
 
-> Last updated: 2026-05-25 (session 6 — Phase 6 hardening + results/press/chairs/blazers). Pick up from **"Where we left off"** below.
+> Last updated: 2026-05-25 (session 7 — committee handover documentation). Pick up from **"Where we left off"** below.
 >
 > Related docs: [plan.md](plan.md) (build phases, single source of truth) · [FEATURES.md](FEATURES.md) (idea backlog with status flags + open decisions) · [DEPLOYMENT.md](DEPLOYMENT.md) (deploy + Sanity webhook setup) · [SECURITY.md](SECURITY.md) (threat model, headers, secrets handling).
 
@@ -522,6 +522,45 @@ Changes to existing files:
 
 ---
 
+## Session 7 — Committee handover documentation ✅
+
+Documentation-only session. Two new docs land alongside the existing technical handover doc set, completing the launch-path docs work flagged at the bottom of session 6.
+
+### `docs/HANDOVER.md`
+
+The orientation doc the incoming committee should read first. Audience-agnostic: tells a new President, Treasurer, or Comms Officer what the site is, which longer doc to open for their role, where credentials live, who owns what (with a templated table for the committee to fill in), the annual turnover checklist, emergency procedures, the lost-access recovery routes, and a rolling list of past maintainers.
+
+Deliberately one page-ish — committee members aren't going to read a 20-page brief. Cross-links to [DEPLOYMENT.md](DEPLOYMENT.md), [SECURITY.md](SECURITY.md), [PROGRESS.md](PROGRESS.md), [FEATURES.md](FEATURES.md), and [CONTENT-EDITING.md](CONTENT-EDITING.md) so readers can drill down without re-reading everything.
+
+### `docs/CONTENT-EDITING.md`
+
+The non-developer editorial walkthrough. Audience = Comms Officer / Captains using Sanity Studio.
+
+Sections cover: how the publish → rebuild flow works, logging in, the Studio anatomy (draft / published / edited status), publishing a news post (step-by-step), photo upload + alt text + hotspot, the live race banner (regatta-day workflow), site settings, committee members (with academic-year rollover behaviour explained), coaches, campaigns, sponsors, regatta results, the home page, what editors should not touch, common gotchas, and how to get help. Loom screencast placeholders are explicit where they belong — record during the first editor-training session per [plan.md §9 / Phase 6](plan.md).
+
+Field names, validation rules, group tabs, and singleton behaviour were cross-checked against the actual schema files in `apps/studio/schemaTypes/` so the instructions match what editors will see.
+
+### Cross-doc tweaks
+
+- `docs/DEPLOYMENT.md` — opening blurb updated to point at the new docs instead of saying "CONTENT-EDITING.md not yet written".
+- `docs/PROGRESS.md` (this file) — Phase 6 launch checklist updated to reflect the handover docs landing; session 7 entry added.
+
+### Files added this session
+
+```
+docs/HANDOVER.md
+docs/CONTENT-EDITING.md
+```
+
+Changes to existing files:
+
+- `docs/DEPLOYMENT.md` — opening paragraph.
+- `docs/PROGRESS.md` — top header date + "Where we left off" launch bullet + this session entry.
+
+No code changes; no tests affected; no build implications.
+
+---
+
 ## Where we left off — Phase 6 launch path
 
 Phase 5 + Phase 6 security/content are complete. Remaining work is purely launch logistics + the final two open backlog decisions.
@@ -552,7 +591,7 @@ Phase 5 + Phase 6 security/content are complete. Remaining work is purely launch
 - Tighten Lighthouse CI + Pa11y CI from advisory → required
 - Cancel old WordPress host
 - Train two committee members on Sanity (record Loom)
-- Write `HANDOVER.md` (committee-facing) and `CONTENT-EDITING.md`
+- ✅ Committee handover documentation — `docs/HANDOVER.md` (orientation) + `docs/CONTENT-EDITING.md` (editor walkthrough) landed session 7. Loom screencasts still TODO (record during editor training).
 
 ### Backlog decisions still open
 
