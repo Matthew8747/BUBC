@@ -61,6 +61,16 @@ export default [
     },
   },
 
+  // Node-side build / seed scripts (Node-only, no DOM).
+  {
+    files: ['**/scripts/**/*.{js,mjs,cjs}'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: { ...globals.node, ...globals.es2022 },
+    },
+  },
+
   // Prettier — must be last to disable conflicting rules
   prettier,
 ];

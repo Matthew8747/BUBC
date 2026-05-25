@@ -108,4 +108,19 @@ export const structure: StructureResolver = (S) =>
         .title('Pages')
         .schemaType('page')
         .child(S.documentTypeList('page').title('Pages')),
+
+      S.divider(),
+
+      // Media library -----------------------------------------------------------
+      S.listItem()
+        .title('Image library')
+        .schemaType('imageLibrary')
+        .child(
+          S.documentTypeList('imageLibrary')
+            .title('Image library')
+            .defaultOrdering([
+              {field: 'category', direction: 'asc'},
+              {field: 'title', direction: 'asc'},
+            ]),
+        ),
     ])
