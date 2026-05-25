@@ -1,6 +1,6 @@
 # Deployment
 
-> The technical handover for whoever is doing dev work on the site after the current maintainer. If you're a non-developer committee member looking to edit content, you want **CONTENT-EDITING.md** instead (not yet written — coming Phase 6).
+> The technical handover for whoever is doing dev work on the site after the current maintainer. If you're a non-developer committee member looking to edit content, read [CONTENT-EDITING.md](CONTENT-EDITING.md) instead. For an audience-agnostic orientation across the whole stack, read [HANDOVER.md](HANDOVER.md) first.
 
 ## TL;DR
 
