@@ -15,12 +15,14 @@
     "start": "sanity start",
     "manage": "sanity manage",
     "typecheck": "tsc --noEmit",
-    "typegen": "sanity typegen generate"
+    "typegen": "sanity typegen generate",
+    "seed:images": "node scripts/import-images.mjs"
   },
   "keywords": [
     "sanity"
   ],
   "dependencies": {
+    "@sanity/client": "^7.22.0",
     "@sanity/vision": "^5.26.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",

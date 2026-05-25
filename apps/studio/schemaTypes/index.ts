@@ -27,6 +27,7 @@ import {category} from './documents/category'
 import {event} from './documents/event'
 import {regattaResult} from './documents/regattaResult'
 import {henleyHonour} from './documents/henleyHonour'
+import {imageLibrary} from './documents/imageLibrary'
 
 export const SINGLETON_TYPES = new Set(['settings', 'homePage'])
 
@@ -60,4 +61,5 @@ export const schemaTypes = [
   event,
   regattaResult,
   henleyHonour,
+  imageLibrary,
 ]

@@ -2,14 +2,19 @@
 /**
  * Header — site-wide top navigation.
  *
- * Behaviour:
- *   - Sticky; shrinks + adds backdrop-blur on scroll (toggled via IntersectionObserver).
- *   - Active-page indicator: gold underline on the matching primary link.
- *   - Mobile: hamburger opens full-screen overlay with the same nav + CTA.
- *   - Keyboard: Escape closes the overlay; focus traps to the open panel; scroll lock applied.
+ * Layout:
+ *   - md+ (≥768px) — full primary nav, gold underline on active/hover, search icon, gold Trial CTA.
+ *   - <md          — burger that opens a full-screen navy overlay with staggered slide-in.
  *
- * Content is hard-coded for now. Once T16 wires Sanity into the web app, this
- * will be driven by `settings.primaryNav` etc.
+ * Behaviour:
+ *   - Sticky; gains paper-tinted backdrop + hairline shadow on scroll (data-state="scrolled").
+ *   - Mobile overlay is opaque by design: `background-color: var(--color-navy)` is set both as
+ *     a Tailwind class and as an inline style so it cannot bleed through if a utility fails to
+ *     compile.
+ *   - Open/close driven by `data-open` on the overlay rather than `hidden`/`flex` swaps, so a
+ *     real CSS transition (opacity + transform + visibility) plays in both directions.
+ *   - Keyboard: Escape closes, focus returns to the toggle.
+ *   - Respects `prefers-reduced-motion`.
  */
 import Container from '../ui/Container.astro';
 import Button from '../ui/Button.astro';
@@ -37,32 +42,34 @@ const isActive = (href: string) =>
 
 <header
   id="site-header"
-  class="sticky top-0 z-40 transition-[background,box-shadow,padding] duration-200 ease-out"
+  class="sticky top-0 z-40 transition-[background,box-shadow] duration-300 ease-out"
   data-state="top"
 >
-  <Container class="flex h-20 items-center justify-between">
+  <Container class="flex h-20 items-center justify-between gap-4 md:gap-6">
     <a
       href="/"
-      class="font-display text-xl tracking-tight text-[--color-ink] flex items-baseline gap-1.5"
+      class="font-display text-xl tracking-tight text-[--color-ink] flex items-baseline gap-1.5 shrink-0"
       aria-label="BUBC home"
     >
       <span class="font-medium">BUBC</span>
-      <span class="hidden sm:inline text-sm text-[--color-mute] tracking-normal font-body">
+      <span class="hidden xl:inline text-sm text-[--color-mute] tracking-normal font-body">
         · University of Bath
       </span>
     </a>
 
-    {/* Desktop nav */}
-    <nav aria-label="Primary" class="hidden lg:flex items-center gap-8">
+    {
+      /* Desktop primary nav — appears from md (768px) so split-screen and scaled laptops keep it.
+        Explicit media query in <style> guarantees this regardless of Tailwind class order. */
+    }
+    <nav aria-label="Primary" class="nav-primary items-center gap-5 lg:gap-8 flex-1 justify-end">
       {
         primaryNav.map((item) => (
           <a
             href={item.href}
             class:list={[
-              'relative text-sm font-medium tracking-wide text-[--color-ink] py-2 transition-colors',
+              'nav-link relative text-sm font-medium tracking-wide text-[--color-ink] py-2 transition-colors duration-200',
               'hover:text-[--color-navy]',
-              isActive(item.href) &&
-                'after:absolute after:left-0 after:right-0 after:-bottom-px after:h-[2px] after:bg-[--color-gold]',
+              isActive(item.href) && 'is-active',
             ]}
             aria-current={isActive(item.href) ? 'page' : undefined}
           >
@@ -72,13 +79,13 @@ const isActive = (href: string) =>
       }
     </nav>
 
-    {/* Utility + CTA */}
-    <div class="hidden lg:flex items-center gap-4">
+    {/* Utility + CTA (desktop) */}
+    <div class="nav-utility items-center gap-3 lg:gap-4 shrink-0">
       <button
         type="button"
         data-search-open
         aria-label="Search (press /)"
-        class="inline-flex h-9 w-9 items-center justify-center rounded-full text-[--color-mute] hover:text-[--color-navy] hover:bg-[--color-bone] transition-colors"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-full text-[--color-mute] hover:text-[--color-navy] hover:bg-[--color-bone] transition-colors duration-200"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path
@@ -93,7 +100,7 @@ const isActive = (href: string) =>
         utilityNav.map((item) => (
           <a
             href={item.href}
-            class="text-sm text-[--color-mute] hover:text-[--color-navy] transition-colors"
+            class="hidden lg:inline text-sm text-[--color-mute] hover:text-[--color-navy] transition-colors duration-200"
           >
             {item.label}
           </a>
@@ -107,7 +114,7 @@ const isActive = (href: string) =>
       type="button"
       data-search-open
       aria-label="Search"
-      class="lg:hidden inline-flex h-11 w-11 items-center justify-center -mr-2 ml-auto"
+      class="nav-mobile-only inline-flex h-11 w-11 items-center justify-center text-[--color-ink] ml-auto"
     >
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path
@@ -122,36 +129,37 @@ const isActive = (href: string) =>
     {/* Mobile burger */}
     <button
       id="nav-toggle"
-      class="lg:hidden inline-flex h-11 w-11 items-center justify-center -mr-2"
+      class="nav-mobile-only burger-btn relative inline-flex h-11 w-11 items-center justify-center -mr-2 text-[--color-ink]"
       aria-expanded="false"
       aria-controls="mobile-nav"
       aria-label="Open menu"
     >
       <span class="sr-only">Toggle menu</span>
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
-        <path
-          d="M3 6h16M3 11h16M3 16h16"
-          stroke="currentColor"
-          stroke-width="1.5"
-          stroke-linecap="round"></path>
-      </svg>
+      <span class="burger-line burger-line-1" aria-hidden="true"></span>
+      <span class="burger-line burger-line-2" aria-hidden="true"></span>
+      <span class="burger-line burger-line-3" aria-hidden="true"></span>
     </button>
   </Container>
 </header>
 
-{/* Mobile overlay */}
+{/* Mobile overlay — opaque navy, slides in from the top */}
 <div
   id="mobile-nav"
-  class="fixed inset-0 z-50 hidden flex-col bg-[--color-navy] text-[--color-paper]"
+  data-open="false"
+  class="mobile-overlay fixed inset-0 z-50 flex-col text-[--color-paper]"
+  style="background-color: var(--color-navy);"
   role="dialog"
   aria-modal="true"
   aria-label="Site navigation"
 >
-  <div class="flex h-20 items-center justify-between px-4 sm:px-6">
+  {/* Solid background behind everything — guarantees opacity even if Tailwind misses */}
+  <div class="absolute inset-0 -z-10 bg-[#0e2a47]" aria-hidden="true"></div>
+
+  <div class="flex h-20 items-center justify-between px-4 sm:px-6 shrink-0">
     <span class="font-display text-xl">BUBC</span>
     <button
       id="nav-close"
-      class="inline-flex h-11 w-11 items-center justify-center -mr-2"
+      class="inline-flex h-11 w-11 items-center justify-center -mr-2 text-[--color-paper]"
       aria-label="Close menu"
     >
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
@@ -163,32 +171,193 @@ const isActive = (href: string) =>
       </svg>
     </button>
   </div>
-  <nav aria-label="Primary mobile" class="flex flex-col gap-1 px-4 sm:px-6 mt-8 flex-1">
+
+  <nav
+    aria-label="Primary mobile"
+    class="flex flex-col gap-0 px-4 sm:px-6 mt-2 flex-1 overflow-y-auto"
+  >
     {
-      primaryNav.map((item) => (
+      primaryNav.map((item, i) => (
         <a
           href={item.href}
+          style={`--i:${i}`}
           class:list={[
-            'block py-4 font-display text-3xl border-b border-[--color-paper]/15',
-            isActive(item.href) && 'text-[--color-gold]',
+            'mobile-nav-item block py-4 font-display text-3xl border-b border-[--color-paper]/15 transition-colors duration-200',
+            isActive(item.href) ? 'text-[--color-gold]' : 'hover:text-[--color-gold]',
           ]}
         >
           {item.label}
         </a>
       ))
     }
+    {
+      utilityNav.map((item, i) => (
+        <a
+          href={item.href}
+          style={`--i:${primaryNav.length + i}`}
+          class="mobile-nav-item block py-4 font-display text-2xl text-[--color-paper]/80 border-b border-[--color-paper]/15 hover:text-[--color-paper] transition-colors duration-200"
+        >
+          {item.label}
+        </a>
+      ))
+    }
   </nav>
-  <div class="px-4 sm:px-6 pb-10 pt-6 flex flex-col gap-3">
+
+  <div class="px-4 sm:px-6 pb-10 pt-6 flex flex-col gap-3 shrink-0">
     <Button href="/squads/trial/" variant="gold">Trial with us</Button>
-    <Button
-      href="/contact/"
-      variant="ghost"
-      class="!border-[--color-paper] !text-[--color-paper] hover:!bg-[--color-paper] hover:!text-[--color-navy]"
-    >
-      Contact
-    </Button>
   </div>
 </div>
+
+<style>
+  /* ============================================================================
+   * Responsive layout — explicit media queries so the desktop nav can't be
+   * hidden by a Tailwind utility ordering issue or a stale CSS cache.
+   *
+   *   <md  (mobile)  — hide primary nav + utility, show burger + mobile search
+   *   md+  (desktop) — show primary nav + utility, hide burger + mobile search,
+   *                    and hide the full-screen overlay entirely
+   * ========================================================================= */
+  .nav-primary,
+  .nav-utility {
+    display: none;
+  }
+  .nav-mobile-only {
+    display: inline-flex;
+  }
+  @media (min-width: 768px) {
+    .nav-primary {
+      display: flex;
+    }
+    .nav-utility {
+      display: flex;
+    }
+    .nav-mobile-only {
+      display: none !important;
+    }
+    .mobile-overlay {
+      display: none !important;
+    }
+  }
+
+  /* ============================================================================
+   * Desktop nav — active + hover underline
+   * ========================================================================= */
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background-color: var(--color-gold);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .nav-link:hover::after,
+  .nav-link.is-active::after {
+    transform: scaleX(1);
+  }
+  .nav-link.is-active {
+    color: var(--color-navy);
+  }
+
+  /* ============================================================================
+   * Mobile overlay — opaque navy, slide-in + fade
+   * Uses visibility hidden so it disappears from a11y/Playwright when closed.
+   * `display: flex` applies below md; the media query above turns it off at md+.
+   * ========================================================================= */
+  .mobile-overlay {
+    display: flex;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-12px);
+    transition:
+      opacity 280ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+      visibility 0s linear 320ms;
+  }
+  .mobile-overlay[data-open='true'] {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    transition:
+      opacity 240ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+      visibility 0s linear;
+  }
+
+  .mobile-nav-item {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity 360ms ease-out,
+      transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: 0ms;
+  }
+  .mobile-overlay[data-open='true'] .mobile-nav-item {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: calc(60ms + var(--i, 0) * 45ms);
+  }
+
+  /* ============================================================================
+   * Burger lines — three bars that morph into an X when aria-expanded="true"
+   * ========================================================================= */
+  .burger-line {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 22px;
+    height: 1.5px;
+    background-color: currentColor;
+    transform-origin: center;
+    transition:
+      transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 200ms ease-out;
+  }
+  .burger-line-1 {
+    transform: translate(-50%, calc(-50% - 6px));
+  }
+  .burger-line-2 {
+    transform: translate(-50%, -50%);
+  }
+  .burger-line-3 {
+    transform: translate(-50%, calc(-50% + 6px));
+  }
+  .burger-btn[aria-expanded='true'] .burger-line-1 {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+  .burger-btn[aria-expanded='true'] .burger-line-2 {
+    transform: translate(-50%, -50%) scaleX(0);
+    opacity: 0;
+  }
+  .burger-btn[aria-expanded='true'] .burger-line-3 {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  /* ============================================================================
+   * Scrolled-state header tint — applied via data-state attribute
+   * ========================================================================= */
+  #site-header[data-state='scrolled'] {
+    background-color: color-mix(in srgb, var(--color-paper) 88%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 1px 0 var(--color-line);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-overlay,
+    .mobile-nav-item,
+    .burger-line,
+    .nav-link::after,
+    #site-header {
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
 
 <script>
   const header = document.getElementById('site-header');
@@ -200,9 +369,6 @@ const isActive = (href: string) =>
     const onScroll = () => {
       const scrolled = window.scrollY > 8;
       header.dataset.state = scrolled ? 'scrolled' : 'top';
-      header.classList.toggle('bg-[--color-paper]/85', scrolled);
-      header.classList.toggle('backdrop-blur', scrolled);
-      header.classList.toggle('shadow-[0_1px_0_var(--color-line)]', scrolled);
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -210,18 +376,19 @@ const isActive = (href: string) =>
 
   function openMenu() {
     if (!overlay || !toggle) return;
-    overlay.classList.remove('hidden');
-    overlay.classList.add('flex');
+    overlay.dataset.open = 'true';
     toggle.setAttribute('aria-expanded', 'true');
     document.documentElement.style.overflow = 'hidden';
-    const firstLink = overlay.querySelector<HTMLAnchorElement>('a');
-    firstLink?.focus();
+    // Defer focus to next frame so the transition has started — keeps focus ring crisp.
+    requestAnimationFrame(() => {
+      const firstLink = overlay.querySelector<HTMLAnchorElement>('nav a');
+      firstLink?.focus();
+    });
   }
 
   function closeMenu() {
     if (!overlay || !toggle) return;
-    overlay.classList.add('hidden');
-    overlay.classList.remove('flex');
+    overlay.dataset.open = 'false';
     toggle.setAttribute('aria-expanded', 'false');
     document.documentElement.style.overflow = '';
     toggle.focus();
@@ -230,7 +397,8 @@ const isActive = (href: string) =>
   toggle?.addEventListener('click', openMenu);
   closeBtn?.addEventListener('click', closeMenu);
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && overlay && !overlay.classList.contains('hidden')) closeMenu();
+    if (e.key === 'Escape' && overlay?.dataset.open === 'true') closeMenu();
   });
+  // Close after clicking a link so the next page doesn't load behind an open panel.
   overlay?.querySelectorAll('a').forEach((a) => a.addEventListener('click', closeMenu));
 </script>
