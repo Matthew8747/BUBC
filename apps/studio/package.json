@@ -28,6 +28,10 @@
     "seed:sponsors": "node scripts/seed-sponsors.mjs",
     "seed:fleet": "node scripts/seed-fleet.mjs",
     "seed:alumni": "node scripts/seed-alumni.mjs",
+    "seed:henley-honours": "node scripts/seed-henley-honours.mjs",
+    "seed:pages": "node scripts/seed-pages.mjs",
+    "seed:chairs": "node scripts/seed-chairs.mjs",
+    "seed:boats-needed": "node scripts/seed-boats-needed.mjs",
     "seed:all": "node scripts/seed-all.mjs"
   },
   "keywords": [
