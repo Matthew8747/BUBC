@@ -19,7 +19,8 @@ const defaults: StatType[] = [
   { value: '200', suffix: '+', label: 'Members' },
 ];
 
-const { stats = defaults } = Astro.props;
+// `??` instead of destructuring default — Sanity returns `null` for empty arrays.
+const stats = Astro.props.stats ?? defaults;
 ---
 
 <Section tone="ink" spacing="md">

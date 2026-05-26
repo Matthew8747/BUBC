@@ -41,7 +41,8 @@ const placeholders: NewsCardData[] = [
   },
 ];
 
-const { posts = placeholders } = Astro.props;
+// `??` instead of destructuring default — Sanity returns `null` for empty arrays.
+const posts = Astro.props.posts ?? placeholders;
 const items = posts.length > 0 ? posts : placeholders;
 
 function fmt(date: string) {

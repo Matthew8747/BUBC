@@ -47,11 +47,11 @@ const defaultSquads: SquadCardData[] = [
   },
 ];
 
-const {
-  intro = 'Whether you rowed at school or have never sat in a boat, there is a route in.',
-  squads = defaultSquads,
-} = Astro.props;
-
+// Sanity returns `null` (not `undefined`) for empty array fields, so destructuring
+// defaults don't fire — read the prop and `??`-fallback to the defaults.
+const { intro = 'Whether you rowed at school or have never sat in a boat, there is a route in.' } =
+  Astro.props;
+const squads = Astro.props.squads ?? defaultSquads;
 const items = squads.length > 0 ? squads : defaultSquads;
 ---
 
