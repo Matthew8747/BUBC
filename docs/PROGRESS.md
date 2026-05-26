@@ -1,8 +1,65 @@
 # BUBC Site — Build Progress & Handoff Notes
 
-> Last updated: 2026-05-25 (session 8 — header overhaul + image library schema + bulk-import script). Pick up from **"Where we left off"** below.
+> Last updated: 2026-05-26 (session 9 — editorial content drop: CONTENT-BOOK.md, /squads/pda/ page, boathouse page expanded with new boathouse + STV land training). Pick up from **"Where we left off"** below.
 >
-> Related docs: [plan.md](plan.md) (build phases, single source of truth) · [FEATURES.md](FEATURES.md) (idea backlog with status flags + open decisions) · [DEPLOYMENT.md](DEPLOYMENT.md) (deploy + Sanity webhook setup) · [SECURITY.md](SECURITY.md) (threat model, headers, secrets handling).
+> Related docs: [plan.md](plan.md) (build phases, single source of truth) · [FEATURES.md](FEATURES.md) (idea backlog with status flags + open decisions) · [DEPLOYMENT.md](DEPLOYMENT.md) (deploy + Sanity webhook setup) · [SECURITY.md](SECURITY.md) (threat model, headers, secrets handling) · [CONTENT-BOOK.md](CONTENT-BOOK.md) (production-ready editorial copy for every page, keyed to Sanity schemas).
+
+---
+
+## Session 9 — Editorial content drop + seed scripts ✅
+
+Production-ready editorial content for every major page, plus two new seed scripts that populate the committee and coaches in one command. Goal: a near-launch-ready site from a fresh `pnpm install`, with one Sanity write-token paste and three commands.
+
+### Files added — content
+
+- `docs/CONTENT-BOOK.md` — master content document. 18 sections covering Settings, Home, every Squad page, the new PDA programme, Coaching (all three coaches), Committee 2025/26 (every named officer from website TODO.txt + provisional bios), Boathouse expansions (new build + STV + the reach), Fleet (naming-story templates), About + History + Meles + Blazers + Chairs, Alumni (4 spotlight drafts + reusable template), Sponsors (tier copy + partner blurb templates + sponsorship-pack PDF outline), Donate + Buy a Boat + Campaigns (incl. draft New Boathouse campaign doc), Welfare, Press, Contact, News (editorial cadence + 6 draft posts), Newsletter direction, plus a glossary, micro-copy library, error states and per-page OG strings.
+- `docs/POPULATE.md` — practical step-by-step for the developer: how Sanity fits, get a write token, bulk-upload images, run the committee + coaches seeds, fill in the rest from the Studio. Lists per-page "which fields to fill" pointers that map onto CONTENT-BOOK.md.
+- `apps/web/src/pages/squads/pda.astro` — Performance Development Academy page. Static editorial — hero, why-PDA, programme detail, fit/not-fit, outcomes, CTA. Wired with `SportsTeam` + `BreadcrumbList` JSON-LD and dynamic OG image. Answers the recurring "what happens after my novice year?" question that the squad index had no good place to answer.
+
+### Files added — seed scripts
+
+- `apps/studio/scripts/seed-committee.mjs` — creates all 19 committee members for 2025/26 with photos attached. Roster from `website TODO.txt`; photos from `assets/images/committee/`; bios from CONTENT-BOOK.md § 6. Stable IDs (`committee-<slug>-2025-26`) so re-runs are idempotent. Flags: `--dry-run`, `--replace`.
+- `apps/studio/scripts/seed-coaches.mjs` — creates three coach documents (Charlie Newbold, Marcus Munafò, Simon Brown). Charlie + Marcus get best-guess photo mappings from `assets/images/coaches/`; Simon has no portrait on file. Same flag set as committee.
+- `apps/studio/package.json` — new scripts: `seed:committee`, `seed:coaches`.
+
+### How to run
+
+Three-step path to a near-populated site:
+
+```powershell
+$env:SANITY_API_WRITE_TOKEN = "sk..."      # one-time per shell
+pnpm --filter @bubc/studio seed:images     # all photos → asset library + imageLibrary docs
+pnpm --filter @bubc/studio seed:committee  # 19 committee docs with photos + bios
+pnpm --filter @bubc/studio seed:coaches    # 3 coach docs
+```
+
+Full walkthrough in `docs/POPULATE.md`.
+
+### Files updated
+
+- `apps/web/src/pages/boathouse/index.astro` — added three editorial sections between the existing hero/facilities and fleet teaser:
+  - **The reach** — narrow editorial section on the 8 km Bath-to-Saltford water.
+  - **New boathouse** — full navy band with capital project copy, "why it matters" definition list (more fleet on site / coaching room / alumni & family area), CTAs to `/support/campaigns/` and `/news/`.
+  - **Land training at the STV** — three-up grid covering the high-performance gym, indoor rowing room, and testing/recovery.
+- `apps/web/src/pages/squads/index.astro` — appended a static "Performance Development pathway" section under the squad grid that always renders regardless of Sanity state. Two CTAs (PDA page, trial form) + side aside answering the recurring novice-to-senior question verbatim.
+
+### Why a content book and not raw seed JSON
+
+The content book is the source-of-truth document — designed to be lifted straight into Sanity Studio. Once an editor (most likely Matt Pearson with the comms officer) has signed off on names, bios and provisional facts, the same content drops into the studio without re-keying. A JSON seed would have shipped uncalibrated names into the production dataset before they were confirmed by their owners — the book lets us stage that.
+
+### Gates
+
+- `pnpm --filter @bubc/web typecheck` — clean (0 errors, 0 warnings, 1 unrelated hint).
+- Lighthouse / Pa11y CI — unchanged (no breaking edits to existing routes; the new PDA page follows the same PageHero/Section/Container patterns as the rest of the site).
+
+### Follow-ups for the next session
+
+- Walk the content book with the relevant committee officers (chair, captains, welfare, alumni officer) and resolve every `[provisional]` mark before publishing live.
+- Add the PDA page to the global sitemap priority list if/when it stabilises.
+- Decide whether PDA becomes a Sanity `squad` doc (so it appears in the dynamic squads grid) or stays editorial-static. The static page can coexist with a future Sanity squad if the editorial copy stays distinctive.
+- Image-library import: once `SANITY_API_WRITE_TOKEN` is set, run the seed:images script — the content book references specific files under `assets/images/` and the boathouse/STV/medals categories are ready to land.
+
+---
 
 ---
 

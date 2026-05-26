@@ -42,8 +42,30 @@ const seo = {
   <PageHero
     eyebrow="Boathouse"
     headline="On the water at Saltford."
-    lead="Bath rows out of a boathouse on the River Avon, a few miles downstream of the city. From here we cover the stretch all the way to Saltford lock — long, fair, and quietly one of the best rowing reaches in the south-west."
+    lead="BUBC rows out of a boathouse on the River Avon, between Bath and Saltford lock. From here the squad covers a long, fair, sheltered stretch of water — quietly one of the best university reaches in the south-west."
   />
+
+  {/* The reach */}
+  <Section spacing="md">
+    <Container width="narrow">
+      <Eyebrow>The reach</Eyebrow>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl">Eight kilometres of fair water.</h2>
+      <div class="mt-6 space-y-5 text-lg leading-relaxed">
+        <p>
+          The Bath-to-Saltford reach gives the squad close to eight kilometres of training water
+          without a single tight bend or commercial obstacle. Long enough for a full BUCS Head
+          simulation, sheltered enough to row through most of the winter, shared sensibly with the
+          other Bath-based clubs and the navigation.
+        </p>
+        <p class="text-[--color-mute]">
+          Outings cover everything from technical work in fours and pairs to full eights race pace.
+          The squad runs upstream-and-back loops at race pace and longer downstream pieces in the
+          off-season — the kind of structured rowing that produces oars who arrive at Henley already
+          racing rather than still warming up.
+        </p>
+      </div>
+    </Container>
+  </Section>
 
   <Section spacing="md">
     <Container>
@@ -133,6 +155,110 @@ const seo = {
           </p>
         </aside>
       </div>
+    </Container>
+  </Section>
+
+  {/* New boathouse — capital project */}
+  <Section tone="navy" spacing="md">
+    <Container>
+      <div class="grid lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-16 items-start text-[--color-paper]">
+        <div>
+          <Eyebrow tone="paper">Capital project</Eyebrow>
+          <h2 class="mt-4 font-display text-3xl sm:text-4xl">A new boathouse, in build now.</h2>
+          <div class="mt-6 space-y-5 leading-relaxed text-[--color-paper]/90">
+            <p>
+              For the first time since the 1990s, BUBC is building a new boathouse. The capital
+              project — backed by the University and the alumni community — replaces the existing
+              facility with a purpose-built club home: bigger boat bays, a dedicated coaching room,
+              a proper alumni and parents' area for race days, and the ergometer and weights
+              provision a top-six BUCS programme needs on site.
+            </p>
+            <p>
+              The new boathouse is not a vanity project. It is an answer to a real constraint — the
+              current fleet is bigger than the building that houses it, and the next decade of BUBC
+              rowing depends on getting that right.
+            </p>
+            <p>
+              Construction is underway. Donations to the build are routed through the Boat Club
+              Capital Campaign.
+            </p>
+          </div>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <Button href="/support/campaigns/" variant="gold">Support the build</Button>
+            <Button
+              href="/news/"
+              variant="ghost"
+              class="!border-[--color-paper] !text-[--color-paper] hover:!bg-[--color-paper] hover:!text-[--color-ink]"
+            >
+              Latest updates
+            </Button>
+          </div>
+        </div>
+        <aside class="bg-[--color-paper]/5 border border-[--color-paper]/20 p-6 sm:p-8">
+          <Eyebrow tone="paper">Why it matters</Eyebrow>
+          <dl class="mt-5 space-y-5 text-[--color-paper]/90">
+            <div>
+              <dt class="font-display text-lg text-[--color-paper]">More fleet, on site.</dt>
+              <dd class="mt-1 text-sm leading-relaxed">
+                Storage for the senior eights, the development fleet, and a sculling rotation that
+                doesn't depend on shuffling boats between clubs.
+              </dd>
+            </div>
+            <div>
+              <dt class="font-display text-lg text-[--color-paper]">Coaching room.</dt>
+              <dd class="mt-1 text-sm leading-relaxed">
+                Dedicated space for video review, crew meetings and selection conversations away
+                from the bay.
+              </dd>
+            </div>
+            <div>
+              <dt class="font-display text-lg text-[--color-paper]">Alumni &amp; family area.</dt>
+              <dd class="mt-1 text-sm leading-relaxed">
+                A proper home base on race weekends — instead of the current arrangement, which is
+                "the lawn, plus an umbrella, in November."
+              </dd>
+            </div>
+          </dl>
+        </aside>
+      </div>
+    </Container>
+  </Section>
+
+  {/* Land training at the STV */}
+  <Section spacing="md">
+    <Container>
+      <div class="max-w-2xl">
+        <Eyebrow>Strength &amp; conditioning</Eyebrow>
+        <h2 class="mt-4 font-display text-3xl sm:text-4xl">Land training at the STV.</h2>
+        <p class="mt-4 text-[--color-mute] leading-relaxed">
+          On campus, the Sports Training Village (STV) gives BUBC athletes access to one of the best
+          university training facilities in the country. Land sessions run out of two STV spaces —
+          the high-performance gym, and a dedicated indoor rowing room.
+        </p>
+      </div>
+      <ul class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-8">
+        <li>
+          <h3 class="font-display text-lg">High-performance gym</h3>
+          <p class="mt-2 text-sm text-[--color-mute] leading-relaxed">
+            Olympic lifting platforms and bumper-plate range. Shared with Team Bath performance
+            squads and supported by qualified S&amp;C staff who write squad-specific programmes.
+          </p>
+        </li>
+        <li>
+          <h3 class="font-display text-lg">Indoor rowing room</h3>
+          <p class="mt-2 text-sm text-[--color-mute] leading-relaxed">
+            Concept2 RowErg and dynamic ergometer stable. Where the senior squad does its row
+            pieces, technical work and the long aerobic sessions that don't belong on the river.
+          </p>
+        </li>
+        <li>
+          <h3 class="font-display text-lg">Testing &amp; recovery</h3>
+          <p class="mt-2 text-sm text-[--color-mute] leading-relaxed">
+            Strength testing protocols aligned to the British Rowing performance framework.
+            Physiotherapy, soft-tissue and recovery services on the same campus.
+          </p>
+        </li>
+      </ul>
     </Container>
   </Section>
 
