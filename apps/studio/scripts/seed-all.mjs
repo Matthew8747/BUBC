@@ -42,6 +42,10 @@ const STEPS = [
   {name: 'fleet', file: 'seed-fleet.mjs', label: 'Fleet (Sampson + Greens)'},
   {name: 'alumni', file: 'seed-alumni.mjs', label: '4 alumni profiles'},
   {name: 'news', file: 'seed-news.mjs', label: '6 draft news posts'},
+  {name: 'henley-honours', file: 'seed-henley-honours.mjs', label: 'Henley honours (5 entries)'},
+  {name: 'pages', file: 'seed-pages.mjs', label: 'Page docs (history, welfare, meles, blazers)'},
+  {name: 'chairs', file: 'seed-chairs.mjs', label: '5 past chairs (skeleton)'},
+  {name: 'boats-needed', file: 'seed-boats-needed.mjs', label: '5 boats needed (Buy-a-Boat)'},
   {name: 'homepage', file: 'seed-homepage.mjs', label: 'Home page (singleton)'},
 ]
 
