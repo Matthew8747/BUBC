@@ -8,31 +8,68 @@
 
 ---
 
-## TL;DR — the 30-minute path to a populated site
+## TL;DR — one command to populate everything
 
 ```powershell
 # 1. Get a Sanity API write token from
 #    https://www.sanity.io/manage/personal/project/j7zcx618/api
 #    Role: Editor. Copy the `sk...` string.
 
-# 2. In your terminal, set it for the current PowerShell session:
+# 2. Set it in your current PowerShell session:
 $env:SANITY_API_WRITE_TOKEN = "skXXXXXXXXXX..."
 
-# 3. Upload every photo from assets/images/ to Sanity (≈3 minutes for 200 photos):
-pnpm --filter @bubc/studio seed:images
+# 3. Run everything in dependency order (≈5 minutes total):
+pnpm --filter @bubc/studio seed:all
 
-# 4. Create the 19 committee documents with photos + bios attached:
-pnpm --filter @bubc/studio seed:committee
-
-# 5. Create the three coach documents:
-pnpm --filter @bubc/studio seed:coaches
-
-# 6. Open Studio to review and tweak:
+# 4. Open Studio to review and edit:
 pnpm --filter @bubc/studio dev
 # → http://localhost:3333
 ```
 
-That is everything for the people pages. Squads, news, sponsors and campaigns are still manual in the Studio — instructions [below](#manual-content-in-the-studio).
+`seed:all` runs these in order, with `--dry-run` and `--replace` flags forwarded to each child step:
+
+| Step                   | Creates                                                   | Notes                                                                                                 |
+| ---------------------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `seed:images`          | ~200 photos in Sanity asset library + `imageLibrary` docs | tagged by folder name                                                                                 |
+| `seed:settings`        | Site settings singleton                                   | nav, footer, contact, boathouse coords, social                                                        |
+| `seed:committee`       | 19 committee members for 2025/26                          | photos + roles + emails + provisional bios                                                            |
+| `seed:coaches`         | 3 coaches (Charlie, Marcus, Simon)                        | best-guess photo mappings                                                                             |
+| `seed:news-categories` | 6 categories                                              | race-reports, athlete-spotlights, alumni-stories, club-news, recruitment, sponsor-announcements       |
+| `seed:sponsors`        | 4 sponsors (Embecosm, Mazars, SU Bath, Rival Kit)         | provisional descriptions                                                                              |
+| `seed:squads`          | 3 squads (senior men/women, novice)                       | refs committee captains + coaches, training schedules, achievements                                   |
+| `seed:campaigns`       | New Boathouse Capital Campaign                            | provisional amounts                                                                                   |
+| `seed:fleet`           | Sampson, Susan Green, Kenneth Green                       | provisional make / year / donor                                                                       |
+| `seed:alumni`          | 4 alumni profiles                                         | drafts — confirm with each alum before publish                                                        |
+| `seed:news`            | 6 draft news posts                                        | BUCS report, Jeanne spotlight, recruitment, Becky alumni, Christmas dinner, May 2026 boathouse update |
+| `seed:homepage`        | Home page singleton                                       | refs squads + sponsors, hero, stats, CTAs                                                             |
+
+Every step is idempotent — re-running skips existing docs. Pass `--replace` to overwrite.
+
+Every step also supports `--dry-run` (no token required) to preview what would happen.
+
+### Running individual seeds
+
+```powershell
+# Same flags as seed:all, but for a single entity:
+pnpm --filter @bubc/studio seed:committee
+pnpm --filter @bubc/studio seed:squads -- --replace
+pnpm --filter @bubc/studio seed:news -- --dry-run
+# …etc
+```
+
+### What you should still do in Studio after seeding
+
+The seeds get you ~80% of the way there. The remaining work is editorial polish that needs human judgement:
+
+- **Confirm bios.** Walk every committee bio + alumni profile with the named person before sharing the URL widely. The script bios are drafted in the voice we want, but they're not signed off.
+- **Coach photo mapping.** Charlie + Marcus got auto-assigned photos by best guess from the `assets/images/coaches/` filenames. Open each coach in Studio and verify the portrait is actually them.
+- **Squad photo galleries.** The seed leaves `photos` empty — pick a handful of action shots from the asset library for each squad.
+- **Campaign numbers.** `goalAmount`, `raisedAmount` and `donorCount` are PROVISIONAL placeholders. Update with real totals from Hubbub.
+- **Fleet metadata.** Boat make, year acquired, donor name are all PROVISIONAL — confirm with the kit officer (Clemmie).
+- **Sponsor descriptions.** Real text but PROVISIONAL — confirm with each partner before publish.
+- **Image hotspots.** The bulk import doesn't set a hotspot. For each headshot, open and drag the hotspot dot onto the face so crops look right at every aspect ratio.
+
+The pattern: seed creates the structure; you edit the truth in.
 
 ---
 

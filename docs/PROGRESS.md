@@ -1,8 +1,57 @@
 # BUBC Site — Build Progress & Handoff Notes
 
-> Last updated: 2026-05-26 (session 9 — editorial content drop: CONTENT-BOOK.md, /squads/pda/ page, boathouse page expanded with new boathouse + STV land training). Pick up from **"Where we left off"** below.
+> Last updated: 2026-05-26 (session 10 — full seed pipeline: settings, homepage, news categories, squads, campaigns, sponsors, fleet, alumni, news posts, plus a `seed:all` orchestrator).
 >
-> Related docs: [plan.md](plan.md) (build phases, single source of truth) · [FEATURES.md](FEATURES.md) (idea backlog with status flags + open decisions) · [DEPLOYMENT.md](DEPLOYMENT.md) (deploy + Sanity webhook setup) · [SECURITY.md](SECURITY.md) (threat model, headers, secrets handling) · [CONTENT-BOOK.md](CONTENT-BOOK.md) (production-ready editorial copy for every page, keyed to Sanity schemas).
+> Related docs: [plan.md](plan.md) (build phases, single source of truth) · [FEATURES.md](FEATURES.md) (idea backlog with status flags + open decisions) · [DEPLOYMENT.md](DEPLOYMENT.md) (deploy + Sanity webhook setup) · [SECURITY.md](SECURITY.md) (threat model, headers, secrets handling) · [CONTENT-BOOK.md](CONTENT-BOOK.md) (production-ready editorial copy for every page, keyed to Sanity schemas) · [POPULATE.md](POPULATE.md) (how to seed Sanity in one command).
+
+---
+
+## Session 10 — Full Sanity seed pipeline ✅
+
+Extended the seed scripts to cover every content type that has a Sanity schema, plus a one-command orchestrator. From a fresh Sanity dataset, three commands now populate the bulk of the site:
+
+```powershell
+$env:SANITY_API_WRITE_TOKEN = "sk..."
+pnpm --filter @bubc/studio seed:all          # 12 steps, ~5 min
+pnpm --filter @bubc/studio dev               # review at localhost:3333
+```
+
+### New files
+
+- `apps/studio/scripts/lib/_helpers.mjs` — shared utilities (Sanity client, `slugify`, PortableText `para`/`bullets`, asset-library `findImage`/`requireImage`, idempotency `docExists`, header/summary printers). Used by every seed.
+- `apps/studio/scripts/seed-settings.mjs` — Site settings singleton (siteTitle, contactEmail, address, boathouseLocation, primary + utility nav, primary CTA, 4 footer columns, footerNote, live-race-banner skeleton, social links).
+- `apps/studio/scripts/seed-homepage.mjs` — Home page singleton (hero with `findImage`-resolved photo, hero CTAs, stat strip, pathway intro + squad refs, sponsor strip heading, closing CTAs).
+- `apps/studio/scripts/seed-news-categories.mjs` — 6 categories (race-reports, athlete-spotlights, alumni-stories, club-news, recruitment, sponsor-announcements). Prereq for `seed:news`.
+- `apps/studio/scripts/seed-squads.mjs` — 3 squads (senior men, senior women, novice). Resolves captain refs against `committee-<slug>-2025-26` docs, coach refs against `coach-<slug>` docs, hero images from the asset library. Full training schedules, expectedStandards PortableText, achievements arrays.
+- `apps/studio/scripts/seed-campaigns.mjs` — New Boathouse Capital Campaign (£500k goal, provisional amounts).
+- `apps/studio/scripts/seed-sponsors.mjs` — 4 sponsors (Embecosm gold, Mazars gold, SU Bath headline, Rival Kit silver). Logos resolved from `assets/images/sponsors/` via the asset library.
+- `apps/studio/scripts/seed-fleet.mjs` — 3 boats (Sampson, Susan Green, Kenneth Green) with provisional metadata.
+- `apps/studio/scripts/seed-alumni.mjs` — 4 alumni profiles (Becky Wilde, Cedol Dafyd, Ben Furley, Angus Pollock). Drafts — confirm with each before publishing.
+- `apps/studio/scripts/seed-news.mjs` — 6 draft news posts (BUCS Regatta 2025 race report, Jeanne athlete spotlight, recruitment trial week, Becky alumni story, Christmas dinner 2025, May 2026 boathouse build update). Each references a category from `seed:news-categories` and a hero image from the asset library.
+- `apps/studio/scripts/seed-all.mjs` — orchestrator. Spawns each script in dependency order, forwards `--dry-run` and `--replace`. Continues on failure with a summary at the end.
+
+### Updates
+
+- `apps/studio/package.json` — 9 new `seed:*` scripts and a `seed:all` aggregator.
+- `docs/POPULATE.md` — rewritten TL;DR to highlight the one-command flow; new step-by-step table; per-step notes on what still needs human judgement after seeding.
+
+### Idempotency + safety
+
+- Every doc uses a stable deterministic `_id` (e.g. `news-recruitment-trial-week-opens-monday`, `sponsor-embecosm`, `campaign-new-boathouse`, `squad-senior-men`).
+- Default behaviour skips existing docs. `--replace` flag overwrites.
+- `--dry-run` works on every script without needing a token.
+- `seed:all` does NOT short-circuit on a child failure — it continues to remaining steps and prints a failure summary at the end.
+
+### Gates
+
+- `pnpm --filter @bubc/studio seed:all -- --dry-run` — all 12 steps complete successfully.
+- Each individual seed script verified with `--dry-run` (correct roster, correct IDs, correct dependency references).
+
+### What still needs human judgement after running
+
+Listed in POPULATE.md. Headlines: confirm bios with each named person; verify coach photo mappings; pick photo galleries for each squad; refresh campaign numbers from Hubbub; confirm sponsor descriptions with each partner; set image hotspots on headshots.
+
+---
 
 ---
 
