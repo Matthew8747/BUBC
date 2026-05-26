@@ -1,0 +1,241 @@
+---
+/**
+ * Performance Development Academy (PDA) — the squad between novice and seniors.
+ *
+ * Static page (no Sanity) — copy lives in this file so the programme has a
+ * landing page even before a dedicated squad doc exists. Add to the squads
+ * index when there's a captain to credit.
+ *
+ * Linked from: /squads/, /squads/novice/ (graduation flow), /coaching/.
+ */
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHero from '../../components/layout/PageHero.astro';
+import Section from '../../components/ui/Section.astro';
+import Container from '../../components/ui/Container.astro';
+import Eyebrow from '../../components/ui/Eyebrow.astro';
+import Button from '../../components/ui/Button.astro';
+import JsonLd from '../../components/seo/JsonLd.astro';
+import { SITE } from '../../lib/seo';
+import { ogImage } from '../../lib/og/url';
+
+const seo = {
+  title: 'Performance Development (PDA)',
+  description:
+    'The BUBC Performance Development Academy — the coached pathway between novice and senior selection. Technical, deliberate, built for the long arc.',
+  image: ogImage({ kind: 'page', slug: 'pda' }),
+};
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'Squads', item: `${SITE.url}/squads/` },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: 'Performance Development',
+      item: `${SITE.url}/squads/pda/`,
+    },
+  ],
+};
+
+const squadJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsTeam',
+  name: 'BUBC Performance Development Academy',
+  sport: 'Rowing',
+  url: `${SITE.url}/squads/pda/`,
+  parentOrganization: {
+    '@type': 'SportsOrganization',
+    name: SITE.name,
+    url: SITE.url,
+  },
+};
+---
+
+<PageLayout seo={seo}>
+  <JsonLd data={breadcrumbJsonLd} slot="head" />
+  <JsonLd data={squadJsonLd} slot="head" />
+
+  <PageHero
+    eyebrow="Performance Development · PDA"
+    headline="The squad between novice and seniors."
+    lead="A coached pathway for athletes in their second year of training — technical, deliberate, and built around the long version of the sport: not one good season, but a four-year arc."
+    ctas={[
+      {
+        label: 'Trial with us',
+        variant: 'gold',
+        link: { label: 'Trial', url: '/squads/trial/' },
+      },
+      {
+        label: 'See the senior squads',
+        variant: 'ghost',
+        link: { label: 'Squads', url: '/squads/' },
+      },
+    ]}
+  />
+
+  {/* Why PDA exists */}
+  <Section spacing="md">
+    <Container width="narrow">
+      <Eyebrow>Why PDA exists</Eyebrow>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl">The honest gap, year two.</h2>
+      <div class="mt-6 space-y-5 text-lg leading-relaxed">
+        <p>
+          The honest gap at most UK university rowing clubs is the year after novice. Athletes
+          finish a novice year on a high, get held back by the size of a single senior crew, and
+          drift.
+        </p>
+        <p>
+          The Performance Development Academy is BUBC's answer: a coached pathway with its own
+          identity, its own standards, and its own race calendar. PDA athletes train alongside the
+          senior squads but to a programme calibrated to where they are — not where seniors finished
+          last year.
+        </p>
+        <p>The point is not to be a second team. The point is to develop a senior-ready athlete.</p>
+      </div>
+    </Container>
+  </Section>
+
+  {/* Programme detail */}
+  <Section tone="bone" spacing="md">
+    <Container>
+      <div class="max-w-2xl">
+        <Eyebrow>The programme</Eyebrow>
+        <h2 class="mt-4 font-display text-3xl sm:text-4xl">What it actually looks like.</h2>
+      </div>
+      <ul class="mt-10 grid md:grid-cols-2 gap-x-12 gap-y-10">
+        <li>
+          <h3 class="font-display text-xl">Sweep and sculling.</h3>
+          <p class="mt-3 text-[--color-mute] leading-relaxed">
+            Equal weight to both — because the senior squad needs sweep specialists with sculling
+            hands and sculling specialists with sweep timing.
+          </p>
+        </li>
+        <li>
+          <h3 class="font-display text-xl">Technical priority.</h3>
+          <p class="mt-3 text-[--color-mute] leading-relaxed">
+            Most PDA sessions run at rate caps, with video review. Speed comes from rhythm and
+            length — we'd rather a long rower than a hard one.
+          </p>
+        </li>
+        <li>
+          <h3 class="font-display text-xl">Strength &amp; conditioning.</h3>
+          <p class="mt-3 text-[--color-mute] leading-relaxed">
+            Lift programme written by the STV coaches, periodised against the racing calendar. Squat
+            and bench tested, not just 2k tested.
+          </p>
+        </li>
+        <li>
+          <h3 class="font-display text-xl">Racing.</h3>
+          <p class="mt-3 text-[--color-mute] leading-relaxed">
+            Inter-club events, Avon Schools' Head, BUCS Head, BUCS Regatta — wherever the squad
+            lines up best, not where the seniors have left a gap.
+          </p>
+        </li>
+        <li>
+          <h3 class="font-display text-xl">Coaching.</h3>
+          <p class="mt-3 text-[--color-mute] leading-relaxed">
+            Lead coach plus a dedicated PDA assistant, with rotation through the senior coaches each
+            term so the standard stays calibrated.
+          </p>
+        </li>
+        <li>
+          <h3 class="font-display text-xl">A four-year arc.</h3>
+          <p class="mt-3 text-[--color-mute] leading-relaxed">
+            PDA is designed to feed senior selection. The plan is your second-year programme and the
+            foundation for years three and four — not a one-year detour.
+          </p>
+        </li>
+      </ul>
+    </Container>
+  </Section>
+
+  {/* Who PDA is for */}
+  <Section spacing="md">
+    <Container width="narrow">
+      <Eyebrow>Fit</Eyebrow>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl">Is this you?</h2>
+      <div class="mt-8 grid sm:grid-cols-2 gap-8">
+        <div class="border-l-2 border-[--color-avon] pl-5">
+          <h3 class="font-display text-lg">You're a fit if</h3>
+          <ul class="mt-4 space-y-3 text-[--color-ink]">
+            <li class="flex gap-3">
+              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-[--color-gold] flex-shrink-0"></span>
+              <span>You completed a novice year at BUBC or elsewhere and want to improve.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-[--color-gold] flex-shrink-0"></span>
+              <span>Your 2k is moving in the right direction but isn't yet at senior standard.</span
+              >
+            </li>
+            <li class="flex gap-3">
+              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-[--color-gold] flex-shrink-0"></span>
+              <span>You've two or three more years at Bath and want to use them properly.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-[--color-gold] flex-shrink-0"></span>
+              <span>You can commit to eight sessions a week in term.</span>
+            </li>
+          </ul>
+        </div>
+        <div class="border-l-2 border-[--color-blade]/60 pl-5">
+          <h3 class="font-display text-lg">You're not a fit if</h3>
+          <p class="mt-4 text-[--color-mute] leading-relaxed">
+            You're looking for an easier version of the senior programme. PDA is not "senior squad
+            lite". It's a parallel programme with its own demands — and an honest set of
+            expectations is better for everyone.
+          </p>
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  {/* Outcomes */}
+  <Section tone="bone" spacing="md">
+    <Container width="narrow">
+      <Eyebrow>Outcomes</Eyebrow>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl">What it leads to.</h2>
+      <p class="mt-6 text-lg leading-relaxed">
+        PDA isn't measured by one race. The honest measure is who's lining up for senior selection a
+        year later — and the answer, year on year, is most of them.
+      </p>
+      <p class="mt-5 text-[--color-mute] leading-relaxed">
+        Several of the current senior squad athletes spent their second year in PDA. Two recent GB
+        U23 trialists came through this programme. The pathway works because it's coached as a
+        pathway, not as a holding pattern.
+      </p>
+    </Container>
+  </Section>
+
+  {/* CTA */}
+  <Section tone="navy" spacing="md">
+    <Container>
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+        <div class="max-w-xl">
+          <Eyebrow tone="paper">Next steps</Eyebrow>
+          <h2 class="mt-4 font-display text-3xl sm:text-4xl text-[--color-paper]">
+            Trial with us, then talk to the captains.
+          </h2>
+          <p class="mt-4 text-[--color-paper]/80">
+            PDA selection happens after senior selection at the start of each season. Trial dates
+            and the standing offer to talk early apply to PDA candidates as they do to seniors.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <Button href="/squads/trial/" variant="gold" size="lg">Trial with us</Button>
+          <Button
+            href="mailto:captain.m@bubc.co.uk"
+            variant="ghost"
+            size="lg"
+            external
+            class="!border-[--color-paper] !text-[--color-paper] hover:!bg-[--color-paper] hover:!text-[--color-ink]"
+          >
+            Email the captains
+          </Button>
+        </div>
+      </div>
+    </Container>
+  </Section>
+</PageLayout>

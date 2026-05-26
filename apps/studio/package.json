@@ -16,7 +16,9 @@
     "manage": "sanity manage",
     "typecheck": "tsc --noEmit",
     "typegen": "sanity typegen generate",
-    "seed:images": "node scripts/import-images.mjs"
+    "seed:images": "node scripts/import-images.mjs",
+    "seed:committee": "node scripts/seed-committee.mjs",
+    "seed:coaches": "node scripts/seed-coaches.mjs"
   },
   "keywords": [
     "sanity"
