@@ -157,6 +157,12 @@ jobs:
         run: |
           pnpm exec http-server dist -p 4322 -s -c-1 &
           sleep 3
+      # pa11y-ci pulls puppeteer-core, which does NOT auto-download a browser.
+      # ubuntu-latest GitHub runners ship Google Chrome pre-installed at
+      # /usr/bin/google-chrome — point puppeteer at it via env, avoiding a
+      # ~50 MB download and matching whatever Chrome version the runner ships.
       - name: Run pa11y-ci
         working-directory: apps/web
+        env:
+          PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
         run: pnpm test:a11y

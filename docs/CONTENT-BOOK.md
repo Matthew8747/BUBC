@@ -227,49 +227,84 @@ Three-column navy band.
 
 ---
 
-## 4. Squads — Performance Development (PDA)
+## 4. Squads — GB Performance Development Academy (PDA), South West
 
-> New page recommended at `/squads/pda/` (Astro file scaffolded separately in `apps/web/src/pages/squads/pda.astro`). Until a dedicated Sanity squad doc exists, the page can render from this static copy. Adds a clear pathway between novice and senior selection — answers the recurring question "what comes after novice?".
+> Page at `/squads/pda/` (Astro file: `apps/web/src/pages/squads/pda.astro`). **Important: the PDA is a British Rowing programme — not a BUBC squad.** It is the South West node of the GB Rowing Team's Olympic Pathway, hosted in Bath since 2003 by the University of Bath and Minerva Bath RC, with a satellite at Hartpury University. BUBC is a partner club: we share water, facilities and the boathouse community, but we don't run PDA selection.
+>
+> Sources for every factual claim below:
+>
+> - [British Rowing — GB Performance Development Academies](https://www.britishrowing.org/gb-rowing-team/olympic-pathway/performance-development-academies/)
+> - [Team Bath — Rowing](https://www.teambath.com/sport/rowing/)
 
 ### Hero
 
-- **Eyebrow:** `Performance Development · PDA`
-- **Headline:** `The squad between novice and seniors.`
-- **Lead:** `The PDA programme is where a rower in their second year of training finds out what they're capable of. It is technical, deliberate, and built around the long version of the sport: not one good season, but a four-year arc.`
+- **Eyebrow:** `GB Performance Development Academy · South West`
+- **Headline:** `The Olympic pathway, in Bath.`
+- **Lead:** `The South West academy of British Rowing's GB Performance Development Academy programme has been hosted in Bath since 2003. It is the first rung of the GB Rowing Team's Olympic Pathway — a talent-identification and development route designed to turn tall, athletic juniors into senior international rowers.`
+- **CTAs:** `Apply via British Rowing` (external) · `British Rowing — PDA programme` (external)
 
-### Why PDA exists (body copy)
+### What the PDA is (body)
 
-The honest gap at most UK university rowing clubs is the year after novice. Athletes finish their novice year on a high, get held back by the size of a single senior crew, and drift. The Performance Development Academy is BUBC's answer: a coached pathway with its own identity, its own standards, and its own races.
+- The GB Performance Development Academies — **formerly known as World Class Start** — are run by **British Rowing** as the entry point to the GB Rowing Team's Olympic Pathway.
+- There are **six academies** across the UK. The **South West academy is hosted in Bath by the University of Bath and Minerva Bath RC**, with a satellite at **Hartpury University and College** in Gloucester.
+- Set up in **2003**. Has produced multiple Olympic medallists.
+- BUBC is a **partner club** to the PDA — same water on the Avon, same boathouse community, same Sports Training Village on campus. Several BUBC alumni have come through the PDA. The PDA itself is a **separate programme** with its own selection, its own coaching, and its own pathway. Applications go directly to British Rowing.
 
-PDA athletes train alongside the senior squads but to a programme calibrated to where they are — not where seniors finished last year. The point is not to be a second team. The point is to develop a senior-ready athlete.
+### Bath PDA alumni (lead with the names)
 
-### What the programme looks like
+- **Helen Glover** — joined Bath in 2007 as a newcomer to the sport. Olympic gold at London 2012 with Heather Stanning (the first-ever Olympic gold for British women's rowing), a second gold at Rio 2016.
+- **Heather Stanning** — joined Bath in 2005. 2007 World U23 Champion in the women's pair. Double Olympic champion W2- with Glover at London 2012 and Rio 2016.
+- **Becky Wilde** — started her rowing career at the University of Bath and represented Team GB at the Paris 2024 Olympics.
 
-- **Sweep and sculling.** Equal weight to both, because the senior squad needs sweep specialists with sculling hands and sculling specialists with sweep timing.
-- **Technical priority.** Most PDA sessions are at rate caps with video review. Speed comes from rhythm and length; we'd rather a long rower than a hard one.
-- **Strength and conditioning.** Lift programme written by the STV coaches, periodised against the racing calendar. Squat and bench tested, not just 2k tested.
-- **Racing.** Inter-club events, Avon Schools' Head, BUCS Head, BUCS Regatta — wherever the squad lines up best, not where the seniors have left a gap.
-- **Coaching.** Lead coach plus a dedicated PDA assistant, with rotation through the senior coaches each term.
+> Plus a long list of athletes at World Championships, World Cups, U23 and Junior Worlds across two decades. The British Rowing PDA news feed is the canonical source for current academy results.
 
-### Who PDA is for
+### Coaching (separate from BUBC)
 
-You are a good fit if:
+- **Tom Selby** — currently the GB Performance Development Coach for the South West academy. (Sourced from British Rowing public coverage; confirm before quoting in print.)
+- **Paul Stannard** — historical: led the programme for many years, coached Helen Glover and Heather Stanning through their early development at Bath.
+- The PDA coaching team is structurally **separate from BUBC's coaching staff** (Charlie Newbold, Marcus Munafò, Simon Brown). The two programmes share facilities and water, not staff.
 
-- You completed a novice year at BUBC or elsewhere and want to improve.
-- Your 2k is moving in the right direction but isn't yet at senior standard.
-- You've got two or three more years at Bath and want to use them properly.
-- You can commit to eight sessions a week in term.
+### Facilities
 
-You are not a good fit if you are looking for an easier version of the senior programme. PDA is not "senior squad lite". It is a parallel programme with its own demands.
+Bath PDA athletes train out of the same physical infrastructure BUBC uses — but with **dedicated access** to the high-performance facilities the University built for Team Bath's elite programmes:
 
-### Outcomes
+- **High-performance gym** — Olympic lifting platforms, full bumper-plate range, qualified S&C support.
+- **Physiology lab** — blood-lactate, VO₂, step testing.
+- **Physio and sports medicine** — on the same campus.
+- **Video analysis suite** — for technical review of erg and on-water sessions.
+- **The reach** — eight kilometres of fair, sheltered water on the River Avon between Bath and Saltford, shared with BUBC and Minerva Bath RC.
+- **Hartpury satellite** — for athletes who can't train in Bath day-to-day.
+- **National Development Camps** — all PDA athletes attend six camps a year, bringing together the full cohort from the six UK academies.
 
-PDA isn't measured by one race. The honest measure is who's lining up for senior selection a year later — and the answer, year on year, is most of them. Several current senior squad athletes spent their second year in PDA. Two recent GB U23 trialists came through this programme.
+### Selection criteria (verbatim from British Rowing)
 
-### Section CTAs
+| Criterion  | Value                               |
+| ---------- | ----------------------------------- |
+| Age        | 14 – 22                             |
+| Height     | 188 cm+ (men), 176 cm+ (women)      |
+| Experience | None required                       |
+| Testing    | Talent test follows the application |
 
-- `Trial with us` → `/squads/trial/`
-- `Email the captain` → `mailto:captain.m@bubc.co.uk`
+> Training load scales with age and development stage. A 14-year-old new entrant might do four sessions a week around school. Senior athletes target around twelve sessions a week.
+
+### "Should I apply to BUBC, to the PDA, or both?" (the distinction)
+
+|                 | **BUBC**                                     | **PDA**                                          |
+| --------------- | -------------------------------------------- | ------------------------------------------------ |
+| Run by          | University of Bath Boat Club (student-run)   | British Rowing                                   |
+| Open to         | All Bath students                            | Anyone aged 14–22 meeting height criteria        |
+| Aim             | Domestic racing — BUCS, Henley, head circuit | GB selection, Olympic pathway                    |
+| Route in        | BUBC trial                                   | British Rowing application + talent test         |
+| Where you train | BUBC boathouse + STV                         | BUBC boathouse + STV (with dedicated PDA blocks) |
+
+The two are **not exclusive**. A Bath student who fits PDA criteria can apply to both.
+
+### Outbound links to include on the page
+
+- British Rowing canonical PDA page — `https://www.britishrowing.org/gb-rowing-team/olympic-pathway/performance-development-academies/`
+- Team Bath rowing page — `https://www.teambath.com/sport/rowing/`
+- BUBC internal: `/coaching/` (to clarify the BUBC vs PDA coach distinction)
+- BUBC internal: `/squads/trial/` (for those choosing the BUBC route)
 
 ---
 
@@ -297,7 +332,7 @@ PDA isn't measured by one race. The honest measure is who's lining up for senior
 - **bio (PortableText):**
   - Charlie started rowing at The Oratory School and rowed through Leander and Oxford Brookes — two of the most demanding programmes in UK rowing. He came back to coach at his old school while still racing, and then moved into senior coaching after his own competitive career.
   - In 2009 he took a Yale Lightweight 4+ to the final of the Prince Albert Challenge Cup at Henley. He has since coached at Pembroke College Cambridge, Monkton Combe School and Bristol University, and worked alongside several national governing bodies on athlete development.
-  - At BUBC he leads the senior programme, the PDA pathway and the overall direction of coaching. He prefers long rows to short erg pieces and is, on the record, in favour of rate caps.
+  - At BUBC he leads the senior squads and the overall direction of coaching. He prefers long rows to short erg pieces and is, on the record, in favour of rate caps.
 
 ### Coach 2 — Marcus Munafò (Assistant Coach)
 

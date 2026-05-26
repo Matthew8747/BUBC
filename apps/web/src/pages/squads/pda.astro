@@ -1,12 +1,24 @@
 ---
 /**
- * Performance Development Academy (PDA) — the squad between novice and seniors.
+ * GB Performance Development Academy (PDA) — South West.
+ *
+ * Important: the PDA is a *British Rowing* programme, not a BUBC squad. It
+ * is the South West node of the GB Rowing Team's Olympic Pathway, hosted in
+ * Bath by the University of Bath and Minerva Bath RC (with a satellite at
+ * Hartpury University). BUBC is a partner club — many BUBC athletes have
+ * been part of the PDA, and the two programmes share facilities, water, and
+ * a coaching ecosystem at the Sports Training Village.
+ *
+ * Selection is talent-ID driven (age, height, performance testing), not by
+ * BUBC trial. Applications go through British Rowing.
+ *
+ * Sources:
+ *   https://www.britishrowing.org/gb-rowing-team/olympic-pathway/performance-development-academies/
+ *   https://www.teambath.com/sport/rowing/
  *
  * Static page (no Sanity) — copy lives in this file so the programme has a
- * landing page even before a dedicated squad doc exists. Add to the squads
- * index when there's a captain to credit.
- *
- * Linked from: /squads/, /squads/novice/ (graduation flow), /coaching/.
+ * clear, accurate landing page on bubc.co.uk that links out to the
+ * canonical British Rowing application route.
  */
 import PageLayout from '../../layouts/PageLayout.astro';
 import PageHero from '../../components/layout/PageHero.astro';
@@ -18,10 +30,14 @@ import JsonLd from '../../components/seo/JsonLd.astro';
 import { SITE } from '../../lib/seo';
 import { ogImage } from '../../lib/og/url';
 
+const PDA_BR_URL =
+  'https://www.britishrowing.org/gb-rowing-team/olympic-pathway/performance-development-academies/';
+const TEAM_BATH_ROWING_URL = 'https://www.teambath.com/sport/rowing/';
+
 const seo = {
-  title: 'Performance Development (PDA)',
+  title: 'GB Performance Development Academy — South West',
   description:
-    'The BUBC Performance Development Academy — the coached pathway between novice and senior selection. Technical, deliberate, built for the long arc.',
+    "The South West academy of British Rowing's GB Performance Development Academy programme — hosted in Bath since 2003. Olympic-pathway training for athletes aged 14–22. Alumni include Helen Glover and Heather Stanning.",
   image: ogImage({ kind: 'page', slug: 'pda' }),
 };
 
@@ -34,177 +50,295 @@ const breadcrumbJsonLd = {
     {
       '@type': 'ListItem',
       position: 3,
-      name: 'Performance Development',
+      name: 'Performance Development Academy',
       item: `${SITE.url}/squads/pda/`,
     },
   ],
-};
-
-const squadJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'SportsTeam',
-  name: 'BUBC Performance Development Academy',
-  sport: 'Rowing',
-  url: `${SITE.url}/squads/pda/`,
-  parentOrganization: {
-    '@type': 'SportsOrganization',
-    name: SITE.name,
-    url: SITE.url,
-  },
 };
 ---
 
 <PageLayout seo={seo}>
   <JsonLd data={breadcrumbJsonLd} slot="head" />
-  <JsonLd data={squadJsonLd} slot="head" />
 
   <PageHero
-    eyebrow="Performance Development · PDA"
-    headline="The squad between novice and seniors."
-    lead="A coached pathway for athletes in their second year of training — technical, deliberate, and built around the long version of the sport: not one good season, but a four-year arc."
+    eyebrow="GB Performance Development Academy · South West"
+    headline="The Olympic pathway, in Bath."
+    lead="The South West academy of British Rowing's GB Performance Development Academy programme has been hosted in Bath since 2003. It is the first rung of the GB Rowing Team's Olympic Pathway — a talent-identification and development route designed to turn tall, athletic juniors into senior international rowers."
     ctas={[
       {
-        label: 'Trial with us',
+        label: 'Apply via British Rowing',
         variant: 'gold',
-        link: { label: 'Trial', url: '/squads/trial/' },
+        link: { label: 'Apply', url: PDA_BR_URL, external: true },
       },
       {
-        label: 'See the senior squads',
+        label: 'British Rowing — PDA programme',
         variant: 'ghost',
-        link: { label: 'Squads', url: '/squads/' },
+        link: { label: 'British Rowing', url: PDA_BR_URL, external: true },
       },
     ]}
   />
 
-  {/* Why PDA exists */}
+  {/* What it is */}
   <Section spacing="md">
     <Container width="narrow">
-      <Eyebrow>Why PDA exists</Eyebrow>
-      <h2 class="mt-4 font-display text-3xl sm:text-4xl">The honest gap, year two.</h2>
+      <Eyebrow>The programme</Eyebrow>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl">
+        A British Rowing programme, hosted at Bath.
+      </h2>
       <div class="mt-6 space-y-5 text-lg leading-relaxed">
         <p>
-          The honest gap at most UK university rowing clubs is the year after novice. Athletes
-          finish a novice year on a high, get held back by the size of a single senior crew, and
-          drift.
+          The GB Performance Development Academies — formerly known as World Class Start — are run
+          by British Rowing as the entry point to the GB Rowing Team's Olympic Pathway. There are
+          six academies across the UK. Bath is one of them.
         </p>
         <p>
-          The Performance Development Academy is BUBC's answer: a coached pathway with its own
-          identity, its own standards, and its own race calendar. PDA athletes train alongside the
-          senior squads but to a programme calibrated to where they are — not where seniors finished
-          last year.
+          The South West academy is hosted by the
+          <a
+            href={TEAM_BATH_ROWING_URL}
+            class="underline decoration-[--color-gold] underline-offset-4 hover:text-[--color-gold]"
+            target="_blank"
+            rel="noopener noreferrer">University of Bath</a
+          > and Minerva Bath RC, with a satellite academy at Hartpury University and College in Gloucester.
+          It has been here since 2003 and has produced some of the most decorated rowers Great Britain
+          has put on the water.
         </p>
-        <p>The point is not to be a second team. The point is to develop a senior-ready athlete.</p>
+        <p class="text-[--color-mute]">
+          BUBC is a partner club: we share the water on the Avon, the boathouse environment, and the
+          Sports Training Village on campus. Several BUBC alumni have come through the PDA. The PDA
+          itself, however, is a separate programme with its own selection, its own coaching team,
+          and its own pathway — applications go directly to British Rowing.
+        </p>
       </div>
     </Container>
   </Section>
 
-  {/* Programme detail */}
+  {/* Olympic alumni */}
+  <Section tone="navy" spacing="md">
+    <Container>
+      <div class="max-w-3xl text-[--color-paper]">
+        <Eyebrow tone="paper">Alumni of the Bath PDA</Eyebrow>
+        <h2 class="mt-4 font-display text-3xl sm:text-4xl">From talent test to Olympic gold.</h2>
+        <p class="mt-5 text-[--color-paper]/85 leading-relaxed">
+          The South West academy's record is the reason the programme exists in the form it does. A
+          short list of the athletes who started here:
+        </p>
+      </div>
+      <dl class="mt-10 grid md:grid-cols-3 gap-x-10 gap-y-8 text-[--color-paper]">
+        <div>
+          <dt class="font-display text-2xl">Helen Glover</dt>
+          <dd class="mt-2 text-sm text-[--color-paper]/85 leading-relaxed">
+            Joined the Bath programme in 2007 as a newcomer to rowing. Olympic gold at London 2012
+            with Heather Stanning — the first-ever Olympic gold medal for British women's rowing —
+            and a second gold at Rio 2016.
+          </dd>
+        </div>
+        <div>
+          <dt class="font-display text-2xl">Heather Stanning</dt>
+          <dd class="mt-2 text-sm text-[--color-paper]/85 leading-relaxed">
+            Joined the Bath programme in 2005. Selected for the 2007 World U23 Championships and won
+            the women's pair. Double Olympic champion in the W2- with Glover at London 2012 and Rio
+            2016.
+          </dd>
+        </div>
+        <div>
+          <dt class="font-display text-2xl">Becky Wilde</dt>
+          <dd class="mt-2 text-sm text-[--color-paper]/85 leading-relaxed">
+            Started her rowing career at the University of Bath and represented Team GB at the Paris
+            2024 Olympics — one of the most recent Bath PDA alumni to reach the senior team.
+          </dd>
+        </div>
+      </dl>
+      <p class="mt-10 text-sm text-[--color-paper]/70">
+        Plus a long list of athletes at World Championships, World Cups, U23 and Junior World
+        Championships across two decades. Full programme history at
+        <a
+          href={PDA_BR_URL}
+          class="underline decoration-[--color-paper]/60 underline-offset-4 hover:text-[--color-paper]"
+          target="_blank"
+          rel="noopener noreferrer">britishrowing.org</a
+        >.
+      </p>
+    </Container>
+  </Section>
+
+  {/* Coaching */}
+  <Section spacing="md">
+    <Container width="narrow">
+      <Eyebrow>Coaching</Eyebrow>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl">A separate coaching team.</h2>
+      <div class="mt-6 space-y-5 text-lg leading-relaxed">
+        <p>
+          Each PDA is run by a GB Performance Development Coach employed by British Rowing,
+          supported by a satellite coach for athletes outside the host city. The South West academy
+          is currently led by <strong>Tom Selby</strong>.
+        </p>
+        <p class="text-[--color-mute]">
+          The PDA coaching team is structurally separate from BUBC's coaching staff (Charlie
+          Newbold, Marcus Munafò, Simon Brown — see
+          <a
+            href="/coaching/"
+            class="underline decoration-[--color-gold] underline-offset-4 hover:text-[--color-gold]"
+            >the BUBC coaching page</a
+          >). The two programmes share facilities and water, not staff.
+        </p>
+        <p class="text-[--color-mute]">
+          Historical note: the programme was led for many years by Paul Stannard, who coached both
+          Helen Glover and Heather Stanning through their early development at Bath.
+        </p>
+      </div>
+    </Container>
+  </Section>
+
+  {/* Facilities */}
   <Section tone="bone" spacing="md">
     <Container>
       <div class="max-w-2xl">
-        <Eyebrow>The programme</Eyebrow>
-        <h2 class="mt-4 font-display text-3xl sm:text-4xl">What it actually looks like.</h2>
+        <Eyebrow>Facilities</Eyebrow>
+        <h2 class="mt-4 font-display text-3xl sm:text-4xl">Sports Training Village + the Avon.</h2>
+        <p class="mt-4 text-[--color-mute] leading-relaxed">
+          Bath PDA athletes train out of the same physical infrastructure BUBC uses — but with
+          dedicated access to the high-performance facilities the University built for Team Bath's
+          elite programmes.
+        </p>
       </div>
-      <ul class="mt-10 grid md:grid-cols-2 gap-x-12 gap-y-10">
+      <ul class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-8">
         <li>
-          <h3 class="font-display text-xl">Sweep and sculling.</h3>
-          <p class="mt-3 text-[--color-mute] leading-relaxed">
-            Equal weight to both — because the senior squad needs sweep specialists with sculling
-            hands and sculling specialists with sweep timing.
+          <h3 class="font-display text-lg">High-performance gym</h3>
+          <p class="mt-2 text-sm text-[--color-mute] leading-relaxed">
+            Olympic lifting platforms, full bumper-plate range, and qualified S&amp;C support — the
+            same gym Olympic and Commonwealth athletes use across other sports at Team Bath.
           </p>
         </li>
         <li>
-          <h3 class="font-display text-xl">Technical priority.</h3>
-          <p class="mt-3 text-[--color-mute] leading-relaxed">
-            Most PDA sessions run at rate caps, with video review. Speed comes from rhythm and
-            length — we'd rather a long rower than a hard one.
+          <h3 class="font-display text-lg">Physiology &amp; medical</h3>
+          <p class="mt-2 text-sm text-[--color-mute] leading-relaxed">
+            Physiology lab for blood-lactate, VO₂ and step testing. Physiotherapy and sports
+            medicine on the same campus.
           </p>
         </li>
         <li>
-          <h3 class="font-display text-xl">Strength &amp; conditioning.</h3>
-          <p class="mt-3 text-[--color-mute] leading-relaxed">
-            Lift programme written by the STV coaches, periodised against the racing calendar. Squat
-            and bench tested, not just 2k tested.
+          <h3 class="font-display text-lg">Video analysis</h3>
+          <p class="mt-2 text-sm text-[--color-mute] leading-relaxed">
+            Dedicated video analysis suite — used routinely for technical review of erg and on-water
+            sessions.
           </p>
         </li>
         <li>
-          <h3 class="font-display text-xl">Racing.</h3>
-          <p class="mt-3 text-[--color-mute] leading-relaxed">
-            Inter-club events, Avon Schools' Head, BUCS Head, BUCS Regatta — wherever the squad
-            lines up best, not where the seniors have left a gap.
+          <h3 class="font-display text-lg">The reach</h3>
+          <p class="mt-2 text-sm text-[--color-mute] leading-relaxed">
+            Rowing on the River Avon between Bath and Saltford — a short trip from the STV. Eight
+            kilometres of fair, sheltered water shared with BUBC and Minerva Bath RC.
           </p>
         </li>
         <li>
-          <h3 class="font-display text-xl">Coaching.</h3>
-          <p class="mt-3 text-[--color-mute] leading-relaxed">
-            Lead coach plus a dedicated PDA assistant, with rotation through the senior coaches each
-            term so the standard stays calibrated.
+          <h3 class="font-display text-lg">Satellite — Hartpury</h3>
+          <p class="mt-2 text-sm text-[--color-mute] leading-relaxed">
+            For athletes who can't train in Bath day-to-day, the South West academy operates a
+            satellite at Hartpury University and College in Gloucester.
           </p>
         </li>
         <li>
-          <h3 class="font-display text-xl">A four-year arc.</h3>
-          <p class="mt-3 text-[--color-mute] leading-relaxed">
-            PDA is designed to feed senior selection. The plan is your second-year programme and the
-            foundation for years three and four — not a one-year detour.
+          <h3 class="font-display text-lg">National Development Camps</h3>
+          <p class="mt-2 text-sm text-[--color-mute] leading-relaxed">
+            All academy athletes attend six National Development Camps a year — bringing together
+            the full PDA cohort from the six UK academies.
           </p>
         </li>
       </ul>
     </Container>
   </Section>
 
-  {/* Who PDA is for */}
+  {/* Eligibility */}
   <Section spacing="md">
     <Container width="narrow">
-      <Eyebrow>Fit</Eyebrow>
-      <h2 class="mt-4 font-display text-3xl sm:text-4xl">Is this you?</h2>
-      <div class="mt-8 grid sm:grid-cols-2 gap-8">
-        <div class="border-l-2 border-[--color-avon] pl-5">
-          <h3 class="font-display text-lg">You're a fit if</h3>
-          <ul class="mt-4 space-y-3 text-[--color-ink]">
-            <li class="flex gap-3">
-              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-[--color-gold] flex-shrink-0"></span>
-              <span>You completed a novice year at BUBC or elsewhere and want to improve.</span>
-            </li>
-            <li class="flex gap-3">
-              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-[--color-gold] flex-shrink-0"></span>
-              <span>Your 2k is moving in the right direction but isn't yet at senior standard.</span
-              >
-            </li>
-            <li class="flex gap-3">
-              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-[--color-gold] flex-shrink-0"></span>
-              <span>You've two or three more years at Bath and want to use them properly.</span>
-            </li>
-            <li class="flex gap-3">
-              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-[--color-gold] flex-shrink-0"></span>
-              <span>You can commit to eight sessions a week in term.</span>
-            </li>
-          </ul>
+      <Eyebrow>Selection</Eyebrow>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl">Who the programme is looking for.</h2>
+      <p class="mt-6 text-lg leading-relaxed">
+        The PDA is a talent-identification programme — it actively recruits tall, athletic
+        individuals with no rowing experience, as well as developing athletes already in the sport.
+        The eligibility criteria published by British Rowing are:
+      </p>
+      <dl class="mt-8 grid sm:grid-cols-2 gap-x-10 gap-y-6">
+        <div class="border-l-2 border-[--color-gold] pl-5">
+          <dt class="font-display text-lg">Age</dt>
+          <dd class="mt-2 text-[--color-mute] leading-relaxed">14 to 22 years old.</dd>
         </div>
-        <div class="border-l-2 border-[--color-blade]/60 pl-5">
-          <h3 class="font-display text-lg">You're not a fit if</h3>
-          <p class="mt-4 text-[--color-mute] leading-relaxed">
-            You're looking for an easier version of the senior programme. PDA is not "senior squad
-            lite". It's a parallel programme with its own demands — and an honest set of
-            expectations is better for everyone.
-          </p>
+        <div class="border-l-2 border-[--color-gold] pl-5">
+          <dt class="font-display text-lg">Height</dt>
+          <dd class="mt-2 text-[--color-mute] leading-relaxed">
+            Over 188 cm (men) / 176 cm (women). Tall rowers have longer levers, which translates
+            directly into boat speed.
+          </dd>
         </div>
-      </div>
+        <div class="border-l-2 border-[--color-gold] pl-5">
+          <dt class="font-display text-lg">Experience</dt>
+          <dd class="mt-2 text-[--color-mute] leading-relaxed">
+            None required. The PDA was set up to bring new athletes into the sport from the talent
+            ID side.
+          </dd>
+        </div>
+        <div class="border-l-2 border-[--color-gold] pl-5">
+          <dt class="font-display text-lg">Testing</dt>
+          <dd class="mt-2 text-[--color-mute] leading-relaxed">
+            A talent test follows the application — ergometer, physical and basic athletic
+            assessment.
+          </dd>
+        </div>
+      </dl>
+      <p class="mt-8 text-[--color-mute] leading-relaxed">
+        Training load scales with age and development stage. A 14-year-old new entrant might do four
+        sessions a week around school; senior athletes target around twelve sessions a week.
+      </p>
     </Container>
   </Section>
 
-  {/* Outcomes */}
+  {/* PDA vs BUBC */}
   <Section tone="bone" spacing="md">
-    <Container width="narrow">
-      <Eyebrow>Outcomes</Eyebrow>
-      <h2 class="mt-4 font-display text-3xl sm:text-4xl">What it leads to.</h2>
-      <p class="mt-6 text-lg leading-relaxed">
-        PDA isn't measured by one race. The honest measure is who's lining up for senior selection a
-        year later — and the answer, year on year, is most of them.
-      </p>
-      <p class="mt-5 text-[--color-mute] leading-relaxed">
-        Several of the current senior squad athletes spent their second year in PDA. Two recent GB
-        U23 trialists came through this programme. The pathway works because it's coached as a
-        pathway, not as a holding pattern.
+    <Container>
+      <div class="max-w-2xl">
+        <Eyebrow>Relationship to BUBC</Eyebrow>
+        <h2 class="mt-4 font-display text-3xl sm:text-4xl">
+          Two programmes, one boathouse community.
+        </h2>
+        <p class="mt-4 text-[--color-mute] leading-relaxed">
+          Prospective rowers often arrive at Bath unsure whether they should be applying to the BUBC
+          trial, the PDA, or both. The honest distinction:
+        </p>
+      </div>
+      <div class="mt-10 grid md:grid-cols-2 gap-10 lg:gap-16">
+        <article class="bg-[--color-paper] p-6 sm:p-8">
+          <Eyebrow>BUBC</Eyebrow>
+          <h3 class="mt-3 font-display text-2xl">University of Bath Boat Club.</h3>
+          <p class="mt-4 text-sm leading-relaxed">
+            The Bath students' rowing club. Open to all Bath students of any height. Senior
+            selection, Performance Development, and a Novice Programme that teaches you to row from
+            scratch in your first term. Domestic racing — BUCS, Henley, the head circuit. The route
+            in is the BUBC trial.
+          </p>
+          <div class="mt-5 flex flex-wrap gap-3">
+            <Button href="/squads/" variant="solid">BUBC squads</Button>
+            <Button href="/squads/trial/" variant="ghost">BUBC trial</Button>
+          </div>
+        </article>
+        <article class="bg-[--color-paper] p-6 sm:p-8">
+          <Eyebrow>PDA</Eyebrow>
+          <h3 class="mt-3 font-display text-2xl">GB Performance Development Academy.</h3>
+          <p class="mt-4 text-sm leading-relaxed">
+            British Rowing's Olympic Pathway entry point. Age 14–22, with height thresholds. Open to
+            anyone living within reach of Bath (or Hartpury) — university enrolment is not required.
+            The aim is GB selection and ultimately Olympic competition. The route in is a British
+            Rowing application + talent test.
+          </p>
+          <div class="mt-5 flex flex-wrap gap-3">
+            <Button href={PDA_BR_URL} variant="solid" external>Apply via British Rowing</Button>
+            <Button href={TEAM_BATH_ROWING_URL} variant="ghost" external>Team Bath rowing</Button>
+          </div>
+        </article>
+      </div>
+      <p class="mt-10 text-sm text-[--color-mute] leading-relaxed max-w-2xl">
+        The two are not exclusive. A Bath student who fits the PDA criteria can apply to both, and
+        the two programmes coexist within the same boathouse community — sharing water, sharing
+        facilities at the STV, and pulling for each other on race weekends.
       </p>
     </Container>
   </Section>
@@ -216,23 +350,25 @@ const squadJsonLd = {
         <div class="max-w-xl">
           <Eyebrow tone="paper">Next steps</Eyebrow>
           <h2 class="mt-4 font-display text-3xl sm:text-4xl text-[--color-paper]">
-            Trial with us, then talk to the captains.
+            Applications go through British Rowing.
           </h2>
           <p class="mt-4 text-[--color-paper]/80">
-            PDA selection happens after senior selection at the start of each season. Trial dates
-            and the standing offer to talk early apply to PDA candidates as they do to seniors.
+            BUBC doesn't run PDA selection — we can answer questions about the Bath environment, but
+            the application route is British Rowing direct.
           </p>
         </div>
         <div class="flex flex-wrap gap-3">
-          <Button href="/squads/trial/" variant="gold" size="lg">Trial with us</Button>
+          <Button href={PDA_BR_URL} variant="gold" size="lg" external>
+            Apply on britishrowing.org
+          </Button>
           <Button
-            href="mailto:captain.m@bubc.co.uk"
+            href="mailto:info@bubc.co.uk"
             variant="ghost"
             size="lg"
             external
             class="!border-[--color-paper] !text-[--color-paper] hover:!bg-[--color-paper] hover:!text-[--color-ink]"
           >
-            Email the captains
+            Ask BUBC a question
           </Button>
         </div>
       </div>
