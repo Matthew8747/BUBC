@@ -88,7 +88,7 @@ const COACHES = [
         'In 2009 he took a Yale Lightweight 4+ to the final of the Prince Albert Challenge Cup at Henley. He has since coached at Pembroke College Cambridge, Monkton Combe School and Bristol University, and worked alongside several national governing bodies on athlete development.',
       ),
       para(
-        'At BUBC he leads the senior programme, the PDA pathway and the overall direction of coaching. He prefers long rows to short erg pieces and is, on the record, in favour of rate caps.',
+        'At BUBC he leads the senior squads and the overall direction of coaching. He prefers long rows to short erg pieces and is, on the record, in favour of rate caps.',
       ),
     ],
   },
