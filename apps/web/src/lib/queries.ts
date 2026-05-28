@@ -315,16 +315,6 @@ export const buyABoatQuery = /* groq */ `
 `;
 
 // ---------------------------------------------------------------------------
-// Upcoming events (used by structured-data injection)
-// ---------------------------------------------------------------------------
-
-export const upcomingEventsQuery = /* groq */ `
-  *[_type == "event" && date >= now()] | order(date asc)[0..9] {
-    _id, title, "slug": slug.current, type, date, endDate, location, registerUrl
-  }
-`;
-
-// ---------------------------------------------------------------------------
 // Regatta results archive
 // ---------------------------------------------------------------------------
 

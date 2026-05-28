@@ -15,34 +15,17 @@
     "start": "sanity start",
     "manage": "sanity manage",
     "typecheck": "tsc --noEmit",
-    "typegen": "sanity typegen generate",
-    "seed:images": "node scripts/import-images.mjs",
-    "seed:committee": "node scripts/seed-committee.mjs",
-    "seed:coaches": "node scripts/seed-coaches.mjs",
-    "seed:settings": "node scripts/seed-settings.mjs",
-    "seed:homepage": "node scripts/seed-homepage.mjs",
-    "seed:news-categories": "node scripts/seed-news-categories.mjs",
-    "seed:news": "node scripts/seed-news.mjs",
-    "seed:squads": "node scripts/seed-squads.mjs",
-    "seed:campaigns": "node scripts/seed-campaigns.mjs",
-    "seed:sponsors": "node scripts/seed-sponsors.mjs",
-    "seed:fleet": "node scripts/seed-fleet.mjs",
-    "seed:alumni": "node scripts/seed-alumni.mjs",
-    "seed:henley-honours": "node scripts/seed-henley-honours.mjs",
-    "seed:pages": "node scripts/seed-pages.mjs",
-    "seed:chairs": "node scripts/seed-chairs.mjs",
-    "seed:boats-needed": "node scripts/seed-boats-needed.mjs",
-    "seed:all": "node scripts/seed-all.mjs"
+    "typegen": "sanity typegen generate"
   },
   "keywords": [
     "sanity"
   ],
   "dependencies": {
     "@sanity/client": "^7.22.0",
-    "@sanity/vision": "^5.26.0",
+    "@sanity/vision": "^5.28.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "sanity": "^5.26.0",
+    "sanity": "^5.28.0",
     "styled-components": "^6.1.18"
   },
   "devDependencies": {

@@ -1,16 +1,16 @@
 # Where to edit what — the BUBC editing cheatsheet
 
-> "Did the seed populate this? Where do I change it?" — one page, every editable surface on the site, with the answer.
+> "Where do I change this?" — one page, every editable surface on the site, with the answer.
 >
-> Companion docs: [POPULATE.md](POPULATE.md) (how to seed) · [CONTENT-EDITING.md](CONTENT-EDITING.md) (Studio editor walkthrough) · [CONTENT-BOOK.md](CONTENT-BOOK.md) (the canonical copy).
+> Companion docs: [CONTENT-EDITING.md](CONTENT-EDITING.md) — the Studio editor walkthrough.
 
 ## Three buckets
 
-| Bucket                   | Where you edit                                        | Effort                               |
-| ------------------------ | ----------------------------------------------------- | ------------------------------------ |
-| 🟢 **Sanity (Studio)**   | `localhost:3333` — fill in fields, hit Publish        | Easy, no developer needed            |
-| 🟡 **Sanity OR code**    | Either: Sanity if seeded, otherwise the `.astro` file | Easy if seeded, otherwise dev change |
-| 🔴 **Code (Astro file)** | `.astro` file in the repo, then commit + push         | Requires editing source code         |
+| Bucket                   | Where you edit                                      | Effort                               |
+| ------------------------ | --------------------------------------------------- | ------------------------------------ |
+| 🟢 **Sanity (Studio)**   | `localhost:3333` — fill in fields, hit Publish      | Easy, no developer needed            |
+| 🟡 **Sanity OR code**    | Sanity if a doc exists, otherwise the `.astro` file | Easy in Sanity, otherwise dev change |
+| 🔴 **Code (Astro file)** | `.astro` file in the repo, then commit + push       | Requires editing source code         |
 
 ---
 
@@ -26,7 +26,7 @@ The Picture component on the live site does a strict check: `image.asset._ref` o
 
 1. Open the doc in Studio.
 2. Click the heroImage / photo field.
-3. If empty, click **Select** → pick a photo from the asset library (already populated by `seed:images`) or upload a new one.
+3. If empty, click **Select** → pick a photo from the asset library (in the asset library) or upload a new one.
 4. **Fill in the alt text** (one short sentence describing the image).
 5. Drag the **hotspot** (the small circle) onto the most important part of the image — usually a face or the bow of the boat.
 6. Click **Publish** (bottom-right). Status pill should change from _Edited_ → _Published_.
@@ -41,7 +41,7 @@ The Astro dev server reads from Sanity's CDN, which caches reads for ~60 seconds
 - **Wait 60 seconds**, then refresh. The CDN cache will have expired.
 - **Restart the dev server** — Ctrl-C in the terminal, then `pnpm dev` again. Picks up the latest immediately.
 
-(There's a cleaner fix — disable the CDN in dev — but that requires a code change you previously rejected. If you change your mind, the patch is in `apps/web/src/lib/sanity.ts`: `useCdn: !import.meta.env.DEV`.)
+(There's a cleaner fix — disable the CDN in dev — an optional change. If you want it, the patch is in `apps/web/src/lib/sanity.ts`: `useCdn: !import.meta.env.DEV`.)
 
 ---
 
@@ -53,95 +53,95 @@ These pages all read from Sanity. Edit in Studio, click Publish, refresh.
 
 - **What it controls:** logo, primary nav, footer columns, contact email, boathouse coordinates (driving the OpenStreetMap embed), social-icon links, live-race-banner.
 - **Where:** Studio → **Site settings** (top of the left nav, singleton).
-- **Seeded:** ✅ `seed:settings`.
+- **Already in Sanity.**
 
 ### Home page
 
 - **What it controls:** hero (headline + sub + image + 2 CTAs), stat strip (4 numbers), squad-pathway cards, sponsor strip, closing CTAs.
 - **Where:** Studio → **Home page** (singleton, near the top of left nav).
-- **Seeded:** ✅ `seed:homepage`. **Featured news** intentionally blank — when blank, the home page auto-shows the 3 most recent news posts.
+- **Already in Sanity.** **Featured news** intentionally blank — when blank, the home page auto-shows the 3 most recent news posts.
 
 ### Squads — `/squads/`, `/squads/senior-men/`, `/squads/senior-women/`, `/squads/novice/`
 
 - **What it controls:** hero image, captain (reference to a committee member), captain bio, training schedule, expected standards (rich text), achievements, photo gallery, contact email.
 - **Where:** Studio → **Squads** → pick a squad.
-- **Seeded:** ✅ `seed:squads`. Captain refs resolved from `seed:committee`; coach refs from `seed:coaches`.
+- **Already in Sanity.** Captain and coach are references to committee-member and coach docs.
 - **Watch out:** the squad's `photos` field (the gallery) is empty by default. Pick 4-8 action shots from the asset library when you're ready.
 
 ### Committee
 
 - **What it controls:** the entire `/committee/` page.
 - **Where:** Studio → **Committee members**.
-- **Seeded:** ✅ `seed:committee` — 19 members for 2025/26 with photos + roles + emails + provisional bios.
+- **Already in Sanity:** 19 members for 2025/26 with photos + roles + emails + provisional bios.
 - **Bios are provisional drafts.** Walk each through with the named officer before sharing the live URL widely.
 
 ### Coaches
 
 - **What it controls:** the `/coaching/` page.
 - **Where:** Studio → **Coaches**.
-- **Seeded:** ✅ `seed:coaches`. Charlie + Marcus got best-guess photo mappings; verify each portrait is correct.
+- **Already in Sanity.** Charlie + Marcus got best-guess photo mappings; verify each portrait is correct.
 
 ### News posts
 
 - **What it controls:** every news article on `/news/` and `/news/<slug>/`.
 - **Where:** Studio → **News posts** (+ **News categories** for the filter pills).
-- **Seeded:** ✅ `seed:news-categories` (6 categories) + `seed:news` (6 draft posts).
-- **The draft posts are placeholders for the editorial calendar.** Real race reports / spotlights are written fresh in Studio; the seeded drafts can be edited or deleted.
+- **Already in Sanity:** 6 categories + 6 starter draft posts.
+- **The draft posts are placeholders for the editorial calendar.** Real race reports / spotlights are written fresh in Studio; those draft posts can be edited or deleted.
 
 ### Sponsors
 
 - **What it controls:** `/support/sponsor/`, the home-page sponsor strip, the footer sponsor band.
 - **Where:** Studio → **Sponsors**.
-- **Seeded:** ✅ `seed:sponsors` — Embecosm, Mazars, SU Bath, Rival Kit.
+- **Already in Sanity:** Embecosm, Mazars, SU Bath, Rival Kit.
 - **Tier order:** `headline` → `gold` → `silver` → `supporter`. `showOnHome=true` controls visibility in the home-page strip (headline + gold tier should always be true; silver optional).
 
 ### Campaigns
 
 - **What it controls:** `/support/campaigns/`, `/support/campaigns/<slug>/`, the donation thermometer on the donate page.
 - **Where:** Studio → **Campaigns**.
-- **Seeded:** ✅ `seed:campaigns` — New Boathouse Capital Campaign.
+- **Already in Sanity:** New Boathouse Capital Campaign.
 - **Update each time you check Hubbub:** `raisedAmount` and `donorCount` are manual; the thermometer percent is computed automatically.
 
 ### Fleet (boats)
 
 - **What it controls:** `/boathouse/fleet/`, `/boathouse/fleet/<slug>/`.
 - **Where:** Studio → **Boats**.
-- **Seeded:** ✅ `seed:fleet` — Sampson, Susan Green, Kenneth Green (provisional metadata).
+- **Already in Sanity:** Sampson, Susan Green, Kenneth Green (provisional metadata).
 - **Add more boats freely.** Each boat needs: name, slug, make, class, status. Year / donor / story optional but recommended.
 
 ### Alumni
 
 - **What it controls:** `/alumni/`, `/alumni/profile/<slug>/`, `/about/olympians/` (filtered to `category === 'olympian'`).
 - **Where:** Studio → **Alumni profile** (the doc type is internally `olympian` but covers all four categories).
-- **Seeded:** ✅ `seed:alumni` — Becky Wilde, Cedol Dafyd, Ben Furley, Angus Pollock as drafts.
+- **Already in Sanity:** Becky Wilde, Cedol Dafydd, Ben Furley, Angus Pollock as drafts.
 - **Stories are placeholders — confirm each with the named person before sharing publicly.**
 
 ### Henley honours
 
 - **What it controls:** `/about/henley-honours/`.
 - **Where:** Studio → **Henley honours**.
-- **Seeded:** ✅ `seed:henley-honours` — 5 recent appearances with provisional crew lists.
+- **Already in Sanity:** 5 recent appearances with provisional crew lists.
 - **Crew lists are placeholders.** Backfill from BUBC archives / alumni records before sharing publicly.
 
 ### Past chairs
 
 - **What it controls:** `/about/chairs/`.
 - **Where:** Studio → **Past chair**.
-- **Seeded:** ✅ `seed:chairs` — 5 year-only skeletons.
+- **Already in Sanity:** 5 year-only skeletons.
 - **Names need backfilling** from SU records by the alumni officer.
 
 ### Buy a boat (boats needed)
 
 - **What it controls:** the price-range table on `/support/buy-a-boat/`.
 - **Where:** Studio → **Boat needed (Buy-a-Boat)**.
-- **Seeded:** ✅ `seed:boats-needed` — 5 boats (M8+, W8+, 4+, 1x, 2x).
+- **Already in Sanity:** 5 boats (M8+, W8+, 4+, 1x, 2x).
 - **Price ranges are indicative** — confirm against current Empacher / Filippi / Hudson quotes.
 
 ### Long-form pages (history, welfare, meles, blazers)
 
 - **What they control:** `/about/history/`, `/welfare/`, `/alumni/meles/`, `/about/blazers/`. The Astro routes look for a `page` doc by slug first; if missing, fall back to hardcoded copy.
 - **Where:** Studio → **Page** → pick by slug.
-- **Seeded:** ✅ `seed:pages` — all four pre-populated with the canonical copy from CONTENT-BOOK.md. Edit freely in Studio.
+- **Already in Sanity:** all four pages pre-populated. Edit freely in Studio.
 
 ---
 
@@ -153,7 +153,7 @@ These have hardcoded fallbacks; the Sanity doc overrides if present.
 
 - **Current:** hardcoded in [`apps/web/src/pages/about/index.astro`](../apps/web/src/pages/about/index.astro).
 - **Why:** purely structural — links to history, chairs, olympians, etc.
-- **If you want to edit:** add a `page` doc with slug `about` in Studio and the page will read from there (you may need to also edit the .astro file to query the new doc — ask Matt if so).
+- **If you want to edit:** add a `page` doc with slug `about` in Studio and the page will read from there (you may need to also edit the .astro file to query the new doc — ask whoever maintains the code).
 
 ### Contact page — `/contact/`
 
@@ -216,7 +216,7 @@ The PDA is a British Rowing programme, not a BUBC squad, so it's handled special
 ### `/welfare/` — Welfare & safeguarding
 
 - **File:** [`apps/web/src/pages/welfare.astro`](../apps/web/src/pages/welfare.astro)
-- **Pulls from Sanity:** if a `page` doc with slug `welfare` exists, its body is rendered above the policies/reporting cards. (Seeded by `seed:pages` — so you can edit this in Studio.)
+- **Pulls from Sanity:** if a `page` doc with slug `welfare` exists, its body is rendered above the policies/reporting cards. (A `page` doc exists for it, so you can edit this in Studio.)
 - **Hardcoded:** the welfare-officer callout box, the 5 policy cards, the 4 reporting-route cards, the inclusion & accessibility bullets.
 
 ### `/contact/` — Contact page
@@ -245,7 +245,7 @@ The PDA is a British Rowing programme, not a BUBC squad, so it's handled special
 ### `/support/buy-a-boat/` — Buy-a-boat process
 
 - **File:** [`apps/web/src/pages/support/buy-a-boat.astro`](../apps/web/src/pages/support/buy-a-boat.astro)
-- **Pulls from Sanity:** the price-range table (`boatForSale` docs from `seed:boats-needed`).
+- **Pulls from Sanity:** the price-range table (`boatForSale` docs).
 - **Hardcoded:** the 4-step process narrative.
 
 ### Live race banner
@@ -301,4 +301,4 @@ If anything's broken, undo the change (Ctrl-Z) or `git checkout apps/web/src/pag
 
 ---
 
-_Last updated: 2026-05-26 (session 10 — full seed pipeline, edit checklist)._
+_Last updated: 2026-05-28._

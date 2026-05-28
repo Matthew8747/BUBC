@@ -117,18 +117,14 @@ Stop what you're doing. Read [SECURITY.md § Incident response (rollback)](SECUR
 
 ## 8. The launch path (one-time, only if not done yet)
 
-If the site is still on `bubc-web.vercel.app` and you're trying to take it live on `bubc.co.uk`, work through [PROGRESS.md § Manual interventions](PROGRESS.md#manual-interventions-still-required) in this order:
+If the site is still on `bubc-web.vercel.app` and you're taking it live on `bubc.co.uk`, work through the **Launch checklist** in [PROGRESS.md](PROGRESS.md#launch-checklist-remaining-manual-steps), roughly in this order:
 
-1. M1 — Vercel env vars (`SANITY_PROJECT_ID`, `SANITY_DATASET`)
-2. M2 — Formspree form ID
-3. M3 — Cloudflare Web Analytics token
-4. M4 — Deploy Sanity Studio (`pnpm --filter @bubc/studio deploy`)
-5. M5 — Invite editors to Sanity
-6. M13 — Sanity → Vercel webhook
-7. M14 — Seed news categories in Sanity
-8. M6–M8 — Cloudflare DNS + email + DNS cutover to Vercel (launch day)
-
-Each row in that table has links to the next steps.
+1. Vercel env vars (`SANITY_PROJECT_ID`, `SANITY_DATASET`)
+2. Formspree form ID (trial form) + Buttondown username (newsletter)
+3. Deploy Sanity Studio (`pnpm --filter @bubc/studio deploy`) + invite editors
+4. Sanity → Vercel deploy webhook (see [DEPLOYMENT.md](DEPLOYMENT.md))
+5. Cloudflare DNS + email + DNS cutover to Vercel (launch day)
+6. _(optional)_ Cloudflare Web Analytics token, Sentry DSN
 
 ## 9. Glossary (the words developers use)
 

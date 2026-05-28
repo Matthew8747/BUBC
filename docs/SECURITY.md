@@ -1,6 +1,6 @@
 # Security
 
-> How BUBC.co.uk handles trust boundaries, secrets, and user input. Read this before changing forms, headers, the CMS schema, or anything that crosses into the DOM. Last updated: 2026-05-25 (Phase 6 hardening).
+> How BUBC.co.uk handles trust boundaries, secrets, and user input. Read this before changing forms, headers, the CMS schema, or anything that crosses into the DOM. Last updated: 2026-05-28.
 
 ## Posture
 

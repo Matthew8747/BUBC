@@ -23,3 +23,12 @@ allowBuilds:
   '@resvg/resvg-js': true
   core-js: true
   puppeteer: false
+
+minimumReleaseAgeExclude:
+  - '@sanity/diff@5.28.0'
+  - '@sanity/mutator@5.28.0'
+  - '@sanity/schema@5.28.0'
+  - '@sanity/types@5.28.0'
+  - '@sanity/util@5.28.0'
+  - '@sanity/vision@5.28.0'
+  - sanity@5.28.0
