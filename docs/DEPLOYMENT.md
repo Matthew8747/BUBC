@@ -5,7 +5,7 @@
 ## TL;DR
 
 - **Hosting**: Vercel (free tier). Connected to GitHub. Auto-deploys on push to `main`. Preview deploys on every PR.
-- **Domain**: `bubc.co.uk`. DNS will move to Cloudflare on launch (Phase 6); until then the site is at <https://bubc-web.vercel.app/>.
+- **Domain**: `bubc.co.uk`. DNS will move to Cloudflare on launch; until then the site is at <https://bubc-web.vercel.app/>.
 - **CMS**: Sanity (free tier). Project ID `j7zcx618`. Studio at `bubc.sanity.studio` once deployed.
 - **Cache busting**: Pushing to `main` triggers a redeploy. Editor-driven content updates trigger a redeploy via a webhook (set up below).
 - **Secrets**: all environment variables live in Vercel project settings; never check them into the repo.
@@ -126,7 +126,7 @@ Cloudflare's role in the BUBC stack is **DNS + Email Routing + Web Analytics**. 
 4. Set `PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN` on Vercel.
 5. Redeploy. The beacon code in `BaseLayout.astro` will start firing.
 
-### DNS + Email (Phase 6 / launch)
+### DNS + Email (at launch)
 
 Deferred until launch day. Process:
 
@@ -224,4 +224,4 @@ The whole build is self-contained — no network calls during deploy except the 
 
 ---
 
-_Last updated 2026-05-25 — Phase 6 (session 6: security headers, CSP, Zod validation, /results/ + /press/ + /about/chairs/ + /about/blazers/, Sport University of the Year footer treatment)._
+_Last updated 2026-05-28._
