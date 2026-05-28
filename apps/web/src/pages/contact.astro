@@ -58,15 +58,15 @@ const seo = {
       <Eyebrow>Direct contacts</Eyebrow>
       <h2 class="mt-4 font-display text-3xl sm:text-4xl">Who to email about what.</h2>
 
-      <ul class="mt-8 divide-y divide-[--color-ink]/10">
+      <ul class="mt-8 divide-y divide-(--color-ink)/10">
         {
           directContacts.map((c) => (
             <li class="py-4 grid sm:grid-cols-[12rem_1fr_auto] gap-y-2 gap-x-6 items-baseline">
               <p class="font-display text-lg">{c.who}</p>
-              <p class="text-sm text-[--color-mute]">{c.purpose}</p>
+              <p class="text-sm text-(--color-mute)">{c.purpose}</p>
               <a
                 href={`mailto:${c.email}`}
-                class="text-sm underline decoration-[--color-gold] underline-offset-4 hover:text-[--color-gold] tabular-nums"
+                class="text-sm underline decoration-(--color-gold) underline-offset-4 hover:text-(--color-gold) tabular-nums"
               >
                 {c.email}
               </a>
@@ -79,20 +79,20 @@ const seo = {
 
   <Section tone="bone" spacing="md">
     <Container width="narrow">
-      <div class="border-l-2 border-[--color-blade] pl-6 sm:pl-8 py-2">
+      <div class="border-l-2 border-(--color-blade) pl-6 sm:pl-8 py-2">
         <Eyebrow tone="navy">Safeguarding</Eyebrow>
         <p class="mt-4 text-lg">
           For a confidential safeguarding or welfare concern, please email{' '}
           <a
             href="mailto:welfare@bubc.co.uk"
-            class="underline decoration-[--color-gold] underline-offset-4 hover:text-[--color-gold]"
+            class="underline decoration-(--color-gold) underline-offset-4 hover:text-(--color-gold)"
           >
             welfare@bubc.co.uk
           </a>
           {' '}or use one of the independent routes on the
           <a
             href="/welfare/"
-            class="underline decoration-[--color-gold] underline-offset-4 hover:text-[--color-gold]"
+            class="underline decoration-(--color-gold) underline-offset-4 hover:text-(--color-gold)"
           >
             {' '}welfare page
           </a>
@@ -107,8 +107,8 @@ const seo = {
       <Section spacing="md">
         <Container width="narrow">
           <Eyebrow>Postal address</Eyebrow>
-          <p class="mt-4 whitespace-pre-line text-[--color-ink]">{settings.address}</p>
-          <p class="mt-4 text-sm text-[--color-mute]">
+          <p class="mt-4 whitespace-pre-line text-(--color-ink)">{settings.address}</p>
+          <p class="mt-4 text-sm text-(--color-mute)">
             We don't keep regular hours at the postal address. For boathouse-related visits, please
             confirm with the captain first.
           </p>

@@ -32,14 +32,14 @@ const {
 const base =
   'inline-flex items-center justify-center font-body font-medium tracking-wide transition-colors duration-200 ease-out';
 const focus =
-  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--color-gold]';
+  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-gold)';
 
 const variantClass: Record<NonNullable<Props['variant']>, string> = {
   solid:
-    'bg-[--color-navy] text-[--color-paper] hover:bg-[--color-ink] disabled:bg-[--color-mute] disabled:cursor-not-allowed',
+    'bg-(--color-navy) text-(--color-paper) hover:bg-(--color-ink) disabled:bg-(--color-mute) disabled:cursor-not-allowed',
   ghost:
-    'border border-[--color-navy] text-[--color-navy] hover:bg-[--color-navy] hover:text-[--color-paper]',
-  gold: 'bg-[--color-gold] text-[--color-paper] hover:bg-[#a08040] disabled:bg-[--color-mute] disabled:cursor-not-allowed',
+    'border border-(--color-navy) text-(--color-navy) hover:bg-(--color-navy) hover:text-(--color-paper)',
+  gold: 'bg-(--color-gold) text-(--color-paper) hover:bg-[#a08040] disabled:bg-(--color-mute) disabled:cursor-not-allowed',
 };
 
 const sizeClass: Record<NonNullable<Props['size']>, string> = {

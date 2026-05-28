@@ -18,6 +18,16 @@
  */
 import Container from '../ui/Container.astro';
 import Button from '../ui/Button.astro';
+import { urlFor } from '../../lib/sanity';
+import type { SanityImage } from '../../lib/types';
+
+interface Props {
+  logo?: SanityImage | null;
+}
+
+const { logo } = Astro.props;
+const logoUrl =
+  logo?.asset?._ref || logo?.asset?._id ? urlFor(logo).width(72).height(72).fit('max').url() : null;
 
 interface NavItem {
   label: string;
@@ -46,13 +56,14 @@ const isActive = (href: string) =>
   data-state="top"
 >
   <Container class="flex h-20 items-center justify-between gap-4 md:gap-6">
-    <a
-      href="/"
-      class="font-display text-xl tracking-tight text-[--color-ink] flex items-baseline gap-1.5 shrink-0"
-      aria-label="BUBC home"
-    >
-      <span class="font-medium">BUBC</span>
-      <span class="hidden xl:inline text-sm text-[--color-mute] tracking-normal font-body">
+    <a href="/" class="flex items-center gap-2.5 shrink-0" aria-label="BUBC home">
+      {
+        logoUrl && (
+          <img src={logoUrl} alt="" width="32" height="32" class="h-8 w-8 object-contain" />
+        )
+      }
+      <span class="font-display text-xl tracking-tight text-(--color-ink) font-medium">BUBC</span>
+      <span class="hidden xl:inline text-sm text-(--color-mute) tracking-normal font-body">
         · University of Bath
       </span>
     </a>
@@ -67,8 +78,8 @@ const isActive = (href: string) =>
           <a
             href={item.href}
             class:list={[
-              'nav-link relative text-sm font-medium tracking-wide text-[--color-ink] py-2 transition-colors duration-200',
-              'hover:text-[--color-navy]',
+              'nav-link relative text-sm font-medium tracking-wide text-(--color-ink) py-2 transition-colors duration-200',
+              'hover:text-(--color-navy)',
               isActive(item.href) && 'is-active',
             ]}
             aria-current={isActive(item.href) ? 'page' : undefined}
@@ -85,7 +96,7 @@ const isActive = (href: string) =>
         type="button"
         data-search-open
         aria-label="Search (press /)"
-        class="inline-flex h-9 w-9 items-center justify-center rounded-full text-[--color-mute] hover:text-[--color-navy] hover:bg-[--color-bone] transition-colors duration-200"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-full text-(--color-mute) hover:text-(--color-navy) hover:bg-(--color-bone) transition-colors duration-200"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path
@@ -100,7 +111,7 @@ const isActive = (href: string) =>
         utilityNav.map((item) => (
           <a
             href={item.href}
-            class="hidden lg:inline text-sm text-[--color-mute] hover:text-[--color-navy] transition-colors duration-200"
+            class="hidden lg:inline text-sm text-(--color-mute) hover:text-(--color-navy) transition-colors duration-200"
           >
             {item.label}
           </a>
@@ -114,7 +125,7 @@ const isActive = (href: string) =>
       type="button"
       data-search-open
       aria-label="Search"
-      class="nav-mobile-only inline-flex h-11 w-11 items-center justify-center text-[--color-ink] ml-auto"
+      class="nav-mobile-only inline-flex h-11 w-11 items-center justify-center text-(--color-ink) ml-auto"
     >
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path
@@ -129,7 +140,7 @@ const isActive = (href: string) =>
     {/* Mobile burger */}
     <button
       id="nav-toggle"
-      class="nav-mobile-only burger-btn relative inline-flex h-11 w-11 items-center justify-center -mr-2 text-[--color-ink]"
+      class="nav-mobile-only burger-btn relative inline-flex h-11 w-11 items-center justify-center -mr-2 text-(--color-ink)"
       aria-expanded="false"
       aria-controls="mobile-nav"
       aria-label="Open menu"
@@ -145,7 +156,7 @@ const isActive = (href: string) =>
 <div
   id="mobile-nav"
   data-open="false"
-  class="mobile-overlay fixed inset-0 z-50 flex-col text-[--color-paper]"
+  class="mobile-overlay fixed inset-0 z-50 flex-col text-(--color-paper)"
   style="background-color: var(--color-navy);"
   role="dialog"
   aria-modal="true"
@@ -158,7 +169,7 @@ const isActive = (href: string) =>
     <span class="font-display text-xl">BUBC</span>
     <button
       id="nav-close"
-      class="inline-flex h-11 w-11 items-center justify-center -mr-2 text-[--color-paper]"
+      class="inline-flex h-11 w-11 items-center justify-center -mr-2 text-(--color-paper)"
       aria-label="Close menu"
     >
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
@@ -181,8 +192,8 @@ const isActive = (href: string) =>
           href={item.href}
           style={`--i:${i}`}
           class:list={[
-            'mobile-nav-item block py-4 font-display text-3xl border-b border-[--color-paper]/15 transition-colors duration-200',
-            isActive(item.href) ? 'text-[--color-gold]' : 'hover:text-[--color-gold]',
+            'mobile-nav-item block py-4 font-display text-3xl border-b border-(--color-paper)/15 transition-colors duration-200',
+            isActive(item.href) ? 'text-(--color-gold)' : 'hover:text-(--color-gold)',
           ]}
         >
           {item.label}
@@ -194,7 +205,7 @@ const isActive = (href: string) =>
         <a
           href={item.href}
           style={`--i:${primaryNav.length + i}`}
-          class="mobile-nav-item block py-4 font-display text-2xl text-[--color-paper]/80 border-b border-[--color-paper]/15 hover:text-[--color-paper] transition-colors duration-200"
+          class="mobile-nav-item block py-4 font-display text-2xl text-(--color-paper)/80 border-b border-(--color-paper)/15 hover:text-(--color-paper) transition-colors duration-200"
         >
           {item.label}
         </a>

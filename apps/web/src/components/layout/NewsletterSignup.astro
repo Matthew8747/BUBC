@@ -48,8 +48,8 @@ const isDark = tone === 'dark';
   class:list={[
     'rounded-sm',
     isDark
-      ? 'bg-[--color-ink]/40 text-[--color-paper] border border-[--color-paper]/10'
-      : 'bg-[--color-bone] text-[--color-ink] border border-[--color-ink]/10',
+      ? 'bg-(--color-ink)/40 text-(--color-paper) border border-(--color-paper)/10'
+      : 'bg-(--color-bone) text-(--color-ink) border border-(--color-ink)/10',
     'p-6 sm:p-8',
     className,
   ]}
@@ -59,7 +59,7 @@ const isDark = tone === 'dark';
     id={`${id}-heading`}
     class:list={[
       'font-display text-2xl sm:text-3xl',
-      isDark ? 'text-[--color-paper]' : 'text-[--color-ink]',
+      isDark ? 'text-(--color-paper)' : 'text-(--color-ink)',
     ]}
   >
     {heading}
@@ -67,7 +67,7 @@ const isDark = tone === 'dark';
   <p
     class:list={[
       'mt-3 max-w-xl text-sm',
-      isDark ? 'text-[--color-paper]/70' : 'text-[--color-mute]',
+      isDark ? 'text-(--color-paper)/70' : 'text-(--color-mute)',
     ]}
   >
     {blurb}
@@ -96,10 +96,10 @@ const isDark = tone === 'dark';
             inputmode="email"
             placeholder="you@example.com"
             class={clsx(
-              'flex-1 h-12 px-4 text-base border focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--color-gold]',
+              'flex-1 h-12 px-4 text-base border focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-gold)',
               isDark
-                ? 'bg-[--color-paper]/10 border-[--color-paper]/20 text-[--color-paper] placeholder:text-[--color-paper]/40'
-                : 'bg-[--color-paper] border-[--color-ink]/20 text-[--color-ink] placeholder:text-[--color-mute]',
+                ? 'bg-(--color-paper)/10 border-(--color-paper)/20 text-(--color-paper) placeholder:text-(--color-paper)/40'
+                : 'bg-(--color-paper) border-(--color-ink)/20 text-(--color-ink) placeholder:text-(--color-mute)',
             )}
           />
           <input type="hidden" name="tag" value="bubc.co.uk" />
@@ -114,13 +114,13 @@ const isDark = tone === 'dark';
           />
           <button
             type="submit"
-            class="inline-flex h-12 items-center justify-center px-6 bg-[--color-gold] text-[--color-ink] font-medium tracking-wide hover:bg-[#a08040] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--color-paper]"
+            class="inline-flex h-12 items-center justify-center px-6 bg-(--color-gold) text-(--color-ink) font-medium tracking-wide hover:bg-[#a08040] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-paper)"
           >
             Subscribe
           </button>
         </form>
         <p
-          class:list={['mt-4 text-xs', isDark ? 'text-[--color-paper]/50' : 'text-[--color-mute]']}
+          class:list={['mt-4 text-xs', isDark ? 'text-(--color-paper)/50' : 'text-(--color-mute)']}
         >
           By subscribing you agree to receive emails from BUBC. Unsubscribe any time — every email
           has a one-click link. Powered by{' '}
@@ -128,7 +128,7 @@ const isDark = tone === 'dark';
             href="https://buttondown.com/refer/bubc"
             target="_blank"
             rel="noopener noreferrer"
-            class="underline decoration-[--color-gold] underline-offset-2"
+            class="underline decoration-(--color-gold) underline-offset-2"
           >
             Buttondown
           </a>
@@ -138,7 +138,7 @@ const isDark = tone === 'dark';
           data-newsletter-status
           class:list={[
             'mt-4 text-sm hidden',
-            isDark ? 'text-[--color-paper]' : 'text-[--color-ink]',
+            isDark ? 'text-(--color-paper)' : 'text-(--color-ink)',
           ]}
           role="status"
           aria-live="polite"
@@ -149,8 +149,8 @@ const isDark = tone === 'dark';
         class:list={[
           'mt-6 border border-dashed p-4 text-sm',
           isDark
-            ? 'border-[--color-paper]/20 text-[--color-paper]/70'
-            : 'border-[--color-ink]/20 text-[--color-mute]',
+            ? 'border-(--color-paper)/20 text-(--color-paper)/70'
+            : 'border-(--color-ink)/20 text-(--color-mute)',
         ]}
       >
         <p>
@@ -181,7 +181,7 @@ const isDark = tone === 'dark';
       if (!status) return;
       status.textContent = msg;
       status.classList.remove('hidden');
-      status.classList.toggle('text-[--color-blade]', tone === 'error');
+      status.classList.toggle('text-(--color-blade)', tone === 'error');
     }
 
     form.addEventListener('submit', async (e) => {

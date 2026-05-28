@@ -56,10 +56,22 @@ export const squad = defineType({
       validation: (rule) => rule.required().max(220),
     }),
     defineField({
+      name: 'externalUrl',
+      title: 'External link',
+      description:
+        'Optional. Use for a "linked" programme that isn\'t a standard BUBC squad — e.g. the GB Performance Development Academy. When set, the squad card links straight here and NO squad detail page is generated (so the captain/training/standards fields below are ignored). Accepts a full URL (https://…) or a site path (/squads/pda/).',
+      type: 'string',
+    }),
+    defineField({
       name: 'heroImage',
       title: 'Hero image',
       type: 'imageBlock',
-      validation: (rule) => rule.required(),
+      validation: (rule) =>
+        rule.custom((value, context) => {
+          const doc = context.document as {externalUrl?: string} | undefined
+          if (doc?.externalUrl) return true
+          return value ? true : 'Required'
+        }),
     }),
     defineField({
       name: 'captain',
@@ -70,10 +82,16 @@ export const squad = defineType({
     defineField({
       name: 'captainBio',
       title: 'Captain bio',
-      description: 'Required. 200 chars max — shown in a callout on the squad page.',
+      description:
+        'Shown in a callout on the squad page (max 400 chars). Required unless this squad uses an External link.',
       type: 'text',
       rows: 4,
-      validation: (rule) => rule.required().max(400),
+      validation: (rule) =>
+        rule.max(400).custom((value, context) => {
+          const doc = context.document as {externalUrl?: string} | undefined
+          if (doc?.externalUrl) return true
+          return value ? true : 'Required for squads with a detail page'
+        }),
     }),
     defineField({
       name: 'coaches',

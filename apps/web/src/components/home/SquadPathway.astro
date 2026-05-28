@@ -60,40 +60,51 @@ const items = squads.length > 0 ? squads : defaultSquads;
     <div class="max-w-3xl">
       <Eyebrow>Squad pathway</Eyebrow>
       <h2 class="mt-3 text-3xl sm:text-4xl">Find your level.</h2>
-      {intro && <p class="mt-4 text-lg text-[--color-mute]">{intro}</p>}
+      {intro && <p class="mt-4 text-lg text-(--color-mute)">{intro}</p>}
     </div>
 
     <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
       {
-        items.map((squad) => (
-          <a href={`/squads/${squad.slug}/`} class="group relative flex flex-col overflow-hidden">
-            <Picture
-              image={squad.heroImage}
-              ratio="4/5"
-              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-              fallbackLabel={squad.name}
-              class="transition-transform duration-500 group-hover:scale-[1.02]"
-            />
-            <div class="mt-4">
-              <h3 class="font-display text-xl group-hover:text-[--color-gold] transition-colors">
-                {squad.name}
-              </h3>
-              <p class="mt-2 text-sm text-[--color-mute] line-clamp-3">{squad.shortDescription}</p>
-              <span class="mt-3 inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.12em] text-[--color-navy]">
-                Read more
-                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                  <path
-                    d="M3 7h8M7 3l4 4-4 4"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
-            </div>
-          </a>
-        ))
+        items.map((squad) => {
+          const href = squad.externalUrl ?? `/squads/${squad.slug.replace(/^\/+|\/+$/g, '')}/`;
+          const external = /^https?:\/\//i.test(href);
+          return (
+            <a
+              href={href}
+              target={external ? '_blank' : undefined}
+              rel={external ? 'noopener noreferrer' : undefined}
+              class="group relative flex flex-col overflow-hidden"
+            >
+              <Picture
+                image={squad.heroImage}
+                ratio="4/5"
+                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                fallbackLabel={squad.name}
+                class="transition-transform duration-500 group-hover:scale-[1.02]"
+              />
+              <div class="mt-4">
+                <h3 class="font-display text-xl group-hover:text-(--color-gold) transition-colors">
+                  {squad.name}
+                </h3>
+                <p class="mt-2 text-sm text-(--color-mute) line-clamp-3">
+                  {squad.shortDescription}
+                </p>
+                <span class="mt-3 inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.12em] text-(--color-navy)">
+                  Read more
+                  <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path
+                      d="M3 7h8M7 3l4 4-4 4"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </a>
+          );
+        })
       }
     </div>
   </Container>

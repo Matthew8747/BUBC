@@ -91,39 +91,39 @@ function athleteLink(name?: string, slug?: string) {
 
   <Section spacing="lg">
     <Container>
-      <p class="text-sm text-[--color-mute] mb-8">
-        <a href="/about/" class="hover:text-[--color-navy]">About</a>
+      <p class="text-sm text-(--color-mute) mb-8">
+        <a href="/about/" class="hover:text-(--color-navy)">About</a>
         <span class="mx-2 opacity-50">/</span>
-        <span class="text-[--color-ink]">Henley honours</span>
+        <span class="text-(--color-ink)">Henley honours</span>
       </p>
 
       {
         honours.length > 0 ? (
           <>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-px bg-[--color-line] border border-[--color-line] mb-12">
-              <div class="bg-[--color-paper] p-5">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-px bg-(--color-line) border border-(--color-line) mb-12">
+              <div class="bg-(--color-paper) p-5">
                 <div class="text-3xl font-display tabular-nums">{honours.length}</div>
-                <div class="text-xs uppercase tracking-[0.12em] text-[--color-mute] mt-1">
+                <div class="text-xs uppercase tracking-[0.12em] text-(--color-mute) mt-1">
                   Total appearances
                 </div>
               </div>
-              <div class="bg-[--color-paper] p-5">
+              <div class="bg-(--color-paper) p-5">
                 <div class="text-3xl font-display tabular-nums">{totalHRR}</div>
-                <div class="text-xs uppercase tracking-[0.12em] text-[--color-mute] mt-1">
+                <div class="text-xs uppercase tracking-[0.12em] text-(--color-mute) mt-1">
                   HRR entries
                 </div>
               </div>
-              <div class="bg-[--color-paper] p-5">
+              <div class="bg-(--color-paper) p-5">
                 <div class="text-3xl font-display tabular-nums">{totalHWR}</div>
-                <div class="text-xs uppercase tracking-[0.12em] text-[--color-mute] mt-1">
+                <div class="text-xs uppercase tracking-[0.12em] text-(--color-mute) mt-1">
                   Henley Women’s entries
                 </div>
               </div>
-              <div class="bg-[--color-paper] p-5">
+              <div class="bg-(--color-paper) p-5">
                 <div class="text-3xl font-display tabular-nums">
                   {years.length > 0 ? years[years.length - 1] : '—'}
                 </div>
-                <div class="text-xs uppercase tracking-[0.12em] text-[--color-mute] mt-1">
+                <div class="text-xs uppercase tracking-[0.12em] text-(--color-mute) mt-1">
                   First appearance
                 </div>
               </div>
@@ -170,7 +170,7 @@ function athleteLink(name?: string, slug?: string) {
                   <section data-year={year} aria-labelledby={`hh-year-${year}`} class="honour-year">
                     <h2
                       id={`hh-year-${year}`}
-                      class="font-display text-3xl border-b border-[--color-line] pb-2 mb-6 tabular-nums"
+                      class="font-display text-3xl border-b border-(--color-line) pb-2 mb-6 tabular-nums"
                     >
                       {year}
                     </h2>
@@ -188,7 +188,7 @@ function athleteLink(name?: string, slug?: string) {
                               </Tag>
                             </div>
                             {h.crewName && (
-                              <p class="text-sm text-[--color-mute] mt-1">{h.crewName}</p>
+                              <p class="text-sm text-(--color-mute) mt-1">{h.crewName}</p>
                             )}
                             {h.athletes && h.athletes.length > 0 && (
                               <ol class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm">
@@ -197,13 +197,13 @@ function athleteLink(name?: string, slug?: string) {
                                   const link = athleteLink(name, seat.athlete?.slug);
                                   return (
                                     <li class="inline-flex items-baseline gap-1.5">
-                                      <span class="font-mono text-xs text-[--color-mute]">
+                                      <span class="font-mono text-xs text-(--color-mute)">
                                         {seatLabel(seat.seat)}
                                       </span>
                                       {link.href ? (
                                         <a
                                           href={link.href}
-                                          class="hover:text-[--color-gold] underline decoration-transparent hover:decoration-[--color-gold] underline-offset-2"
+                                          class="hover:text-(--color-gold) underline decoration-transparent hover:decoration-(--color-gold) underline-offset-2"
                                         >
                                           {link.name}
                                         </a>
@@ -216,22 +216,22 @@ function athleteLink(name?: string, slug?: string) {
                               </ol>
                             )}
                             {(h.cox || h.coach) && (
-                              <p class="text-xs text-[--color-mute] mt-3 flex flex-wrap gap-x-4">
+                              <p class="text-xs text-(--color-mute) mt-3 flex flex-wrap gap-x-4">
                                 {h.cox && <span>Cox: {h.cox}</span>}
                                 {h.coach && <span>Coach: {h.coach}</span>}
                               </p>
                             )}
                             {h.notes && (
-                              <p class="text-sm text-[--color-mute] mt-3 italic">{h.notes}</p>
+                              <p class="text-sm text-(--color-mute) mt-3 italic">{h.notes}</p>
                             )}
                           </div>
                           <div class="md:text-right md:min-w-[200px]">
-                            <p class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">
+                            <p class="text-xs uppercase tracking-[0.12em] text-(--color-mute)">
                               Furthest round
                             </p>
                             <p class="mt-1 font-display text-2xl">{h.finish}</p>
                             {h.opposition && (
-                              <p class="text-xs text-[--color-mute] mt-1">vs {h.opposition}</p>
+                              <p class="text-xs text-(--color-mute) mt-1">vs {h.opposition}</p>
                             )}
                           </div>
                         </article>
@@ -243,9 +243,9 @@ function athleteLink(name?: string, slug?: string) {
             </div>
           </>
         ) : (
-          <div class="rounded border border-dashed border-[--color-line] bg-[--color-bone]/60 p-10 text-center max-w-2xl mx-auto">
+          <div class="rounded border border-dashed border-(--color-line) bg-(--color-bone)/60 p-10 text-center max-w-2xl mx-auto">
             <h2 class="font-display text-2xl">Records are being catalogued</h2>
-            <p class="mt-3 text-sm text-[--color-mute]">
+            <p class="mt-3 text-sm text-(--color-mute)">
               BUBC's Henley record stretches back decades. Crew lists, finishes, and opposition are
               being digitised entry by entry — when we have something to show, it'll live here. If
               you raced for Bath at Henley and want to make sure the record's right, email{' '}

@@ -56,39 +56,39 @@ const breadcrumbs = {
 
   <Section spacing="lg">
     <Container>
-      <p class="text-sm text-[--color-mute] mb-8">
-        <a href="/" class="hover:text-[--color-navy]">Home</a>
+      <p class="text-sm text-(--color-mute) mb-8">
+        <a href="/" class="hover:text-(--color-navy)">Home</a>
         <span class="mx-2 opacity-50">/</span>
-        <span class="text-[--color-ink]">Race results</span>
+        <span class="text-(--color-ink)">Race results</span>
       </p>
 
       {
         results.length > 0 ? (
           <>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-px bg-[--color-line] border border-[--color-line] mb-12">
-              <div class="bg-[--color-paper] p-5">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-px bg-(--color-line) border border-(--color-line) mb-12">
+              <div class="bg-(--color-paper) p-5">
                 <div class="text-3xl font-display tabular-nums">{results.length}</div>
-                <div class="text-xs uppercase tracking-[0.12em] text-[--color-mute] mt-1">
+                <div class="text-xs uppercase tracking-[0.12em] text-(--color-mute) mt-1">
                   Total entries
                 </div>
               </div>
-              <div class="bg-[--color-paper] p-5">
+              <div class="bg-(--color-paper) p-5">
                 <div class="text-3xl font-display tabular-nums">{regattas.length}</div>
-                <div class="text-xs uppercase tracking-[0.12em] text-[--color-mute] mt-1">
+                <div class="text-xs uppercase tracking-[0.12em] text-(--color-mute) mt-1">
                   Regattas raced
                 </div>
               </div>
-              <div class="bg-[--color-paper] p-5">
+              <div class="bg-(--color-paper) p-5">
                 <div class="text-3xl font-display tabular-nums">{years[0] ?? '—'}</div>
-                <div class="text-xs uppercase tracking-[0.12em] text-[--color-mute] mt-1">
+                <div class="text-xs uppercase tracking-[0.12em] text-(--color-mute) mt-1">
                   Most recent
                 </div>
               </div>
-              <div class="bg-[--color-paper] p-5">
+              <div class="bg-(--color-paper) p-5">
                 <div class="text-3xl font-display tabular-nums">
                   {years[years.length - 1] ?? '—'}
                 </div>
-                <div class="text-xs uppercase tracking-[0.12em] text-[--color-mute] mt-1">
+                <div class="text-xs uppercase tracking-[0.12em] text-(--color-mute) mt-1">
                   Earliest on record
                 </div>
               </div>
@@ -100,7 +100,7 @@ const breadcrumbs = {
                 role="group"
                 aria-label="Filter by year"
               >
-                <span class="text-xs uppercase tracking-[0.14em] text-[--color-mute] mr-2">
+                <span class="text-xs uppercase tracking-[0.14em] text-(--color-mute) mr-2">
                   Year
                 </span>
                 <button
@@ -129,7 +129,7 @@ const breadcrumbs = {
                 role="group"
                 aria-label="Filter by regatta"
               >
-                <span class="text-xs uppercase tracking-[0.14em] text-[--color-mute] mr-2">
+                <span class="text-xs uppercase tracking-[0.14em] text-(--color-mute) mr-2">
                   Regatta
                 </span>
                 <button
@@ -155,7 +155,7 @@ const breadcrumbs = {
               </div>
               <p
                 id="results-status"
-                class="text-xs text-[--color-mute] mt-3"
+                class="text-xs text-(--color-mute) mt-3"
                 role="status"
                 aria-live="polite"
               />
@@ -170,11 +170,11 @@ const breadcrumbs = {
                 >
                   <h2
                     id={`results-year-${year}`}
-                    class="font-display text-3xl border-b border-[--color-line] pb-2 mb-6 tabular-nums"
+                    class="font-display text-3xl border-b border-(--color-line) pb-2 mb-6 tabular-nums"
                   >
                     {year}
                   </h2>
-                  <ul class="divide-y divide-[--color-line] border-y border-[--color-line]">
+                  <ul class="divide-y divide-(--color-line) border-y border-(--color-line)">
                     {results.map((r) => (
                       <li
                         class="results-entry grid sm:grid-cols-[1fr_auto] gap-x-8 gap-y-2 py-5"
@@ -187,10 +187,10 @@ const breadcrumbs = {
                             <Tag tone="navy">{r.regatta}</Tag>
                           </div>
                           {r.crewName && (
-                            <p class="text-sm text-[--color-mute] mt-1">{r.crewName}</p>
+                            <p class="text-sm text-(--color-mute) mt-1">{r.crewName}</p>
                           )}
                           {r.athletes && r.athletes.length > 0 && (
-                            <ol class="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-[--color-mute]">
+                            <ol class="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-(--color-mute)">
                               {r.athletes.map((a) => (
                                 <li>{a.name}</li>
                               ))}
@@ -202,14 +202,14 @@ const breadcrumbs = {
                         <div class="sm:text-right sm:min-w-[180px]">
                           {r.finish && <p class="font-display text-xl text-balance">{r.finish}</p>}
                           {r.time && (
-                            <p class="text-xs text-[--color-mute] tabular-nums mt-1">{r.time}</p>
+                            <p class="text-xs text-(--color-mute) tabular-nums mt-1">{r.time}</p>
                           )}
                           {r.video && sanitizeUrl(r.video) !== '#' && (
                             <a
                               href={sanitizeUrl(r.video)}
                               target="_blank"
                               rel="noopener noreferrer"
-                              class="text-xs underline decoration-[--color-gold] underline-offset-2 mt-1 inline-block"
+                              class="text-xs underline decoration-(--color-gold) underline-offset-2 mt-1 inline-block"
                             >
                               Watch
                             </a>
@@ -223,9 +223,9 @@ const breadcrumbs = {
             </div>
           </>
         ) : (
-          <div class="rounded border border-dashed border-[--color-line] bg-[--color-bone]/60 p-10 text-center max-w-2xl mx-auto">
+          <div class="rounded border border-dashed border-(--color-line) bg-(--color-bone)/60 p-10 text-center max-w-2xl mx-auto">
             <h2 class="font-display text-2xl">Results archive in progress</h2>
-            <p class="mt-3 text-sm text-[--color-mute]">
+            <p class="mt-3 text-sm text-(--color-mute)">
               We're working through the club archives season by season. If you have a record we
               don't, email{' '}
               <a class="underline" href="mailto:alumni@bubc.co.uk">

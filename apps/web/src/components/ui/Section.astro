@@ -21,10 +21,10 @@ interface Props {
 const { tone = 'paper', spacing = 'md', as: Tag = 'section', id, class: className } = Astro.props;
 
 const toneClass: Record<NonNullable<Props['tone']>, string> = {
-  paper: 'bg-[--color-paper] text-[--color-ink]',
-  bone: 'bg-[--color-bone] text-[--color-ink]',
-  navy: 'bg-[--color-navy] text-[--color-paper]',
-  ink: 'bg-[--color-ink] text-[--color-paper]',
+  paper: 'bg-(--color-paper) text-(--color-ink)',
+  bone: 'bg-(--color-bone) text-(--color-ink)',
+  navy: 'bg-(--color-navy) text-(--color-paper)',
+  ink: 'bg-(--color-ink) text-(--color-paper)',
   transparent: '',
 };
 

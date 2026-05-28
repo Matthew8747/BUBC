@@ -73,10 +73,10 @@ const criteria: { tier: string; rule: string; trim: string }[] = [
 
   <Section spacing="lg">
     <Container width="narrow">
-      <p class="text-sm text-[--color-mute] mb-8">
-        <a href="/about/" class="hover:text-[--color-navy]">About</a>
+      <p class="text-sm text-(--color-mute) mb-8">
+        <a href="/about/" class="hover:text-(--color-navy)">About</a>
         <span class="mx-2 opacity-50">/</span>
-        <span class="text-[--color-ink]">Blazers</span>
+        <span class="text-(--color-ink)">Blazers</span>
       </p>
 
       {
@@ -93,7 +93,7 @@ const criteria: { tier: string; rule: string; trim: string }[] = [
             </p>
             <p>
               The blazer's roots run with the club itself — gold-on-navy was carried on the first
-              shells off the river in 1965, and the trim system was formalised by the committee in
+              shells off the river in 1966, and the trim system was formalised by the committee in
               the early seventies after the first generation of half-blues started returning to row
               Henley with Meles.
             </p>
@@ -111,17 +111,17 @@ const criteria: { tier: string; rule: string; trim: string }[] = [
         <h2 id="blazer-tiers" class="mt-3 font-display text-2xl sm:text-3xl">
           The four blazer tiers
         </h2>
-        <ul class="mt-8 divide-y divide-[--color-line] border-y border-[--color-line]">
+        <ul class="mt-8 divide-y divide-(--color-line) border-y border-(--color-line)">
           {
             criteria.map((c) => (
               <li class="grid sm:grid-cols-[1fr_2fr] gap-x-8 gap-y-2 py-6">
                 <div>
                   <p class="font-display text-xl">{c.tier}</p>
-                  <p class="mt-2 text-xs uppercase tracking-[0.12em] text-[--color-gold]">
+                  <p class="mt-2 text-xs uppercase tracking-[0.12em] text-(--color-gold)">
                     {c.trim}
                   </p>
                 </div>
-                <p class="text-sm text-[--color-ink] leading-relaxed">{c.rule}</p>
+                <p class="text-sm text-(--color-ink) leading-relaxed">{c.rule}</p>
               </li>
             ))
           }
@@ -129,15 +129,15 @@ const criteria: { tier: string; rule: string; trim: string }[] = [
       </section>
 
       <section
-        class="mt-16 not-prose border-l-2 border-[--color-gold] bg-[--color-bone] p-6 sm:p-8"
+        class="mt-16 not-prose border-l-2 border-(--color-gold) bg-(--color-bone) p-6 sm:p-8"
         aria-labelledby="how-to-order"
       >
         <Eyebrow>If you've been awarded</Eyebrow>
         <h2 id="how-to-order" class="mt-3 font-display text-xl">How to order yours</h2>
-        <p class="mt-3 text-sm text-[--color-ink]">
+        <p class="mt-3 text-sm text-(--color-ink)">
           The committee notifies awardees at the end-of-season dinner. To place an order, email{' '}
           <a
-            class="underline decoration-[--color-gold] underline-offset-2"
+            class="underline decoration-(--color-gold) underline-offset-2"
             href="mailto:treasurer@bubc.co.uk">treasurer@bubc.co.uk</a
           >
           with your award tier and contact details — they'll loop you in with Perry &amp; Co. and confirm

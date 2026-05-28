@@ -34,7 +34,7 @@ const banner = validateLiveRaceBanner(settings?.liveRaceBanner);
 <BaseLayout seo={seo} bodyClass={bodyClass}>
   <slot name="head" slot="head" />
   {banner?.active && <LiveRaceBanner banner={banner} />}
-  <Header />
+  <Header logo={settings?.logo} />
   <main id="main" data-pagefind-body>
     <slot />
   </main>

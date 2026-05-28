@@ -82,9 +82,9 @@ function bestMedal(p: AlumniProfileCard): Medal | null {
 }
 
 const medalTone: Record<Medal, string> = {
-  gold: 'bg-[--color-gold] text-[--color-ink]',
-  silver: 'bg-[#C0C0C0] text-[--color-ink]',
-  bronze: 'bg-[#A97142] text-[--color-paper]',
+  gold: 'bg-(--color-gold) text-(--color-ink)',
+  silver: 'bg-[#C0C0C0] text-(--color-ink)',
+  bronze: 'bg-[#A97142] text-(--color-paper)',
   none: '',
 };
 
@@ -132,11 +132,11 @@ const breadcrumbs = {
         <div class="lg:col-span-2">
           <Eyebrow>Profiles</Eyebrow>
           <h2 class="mt-3 font-display text-3xl sm:text-4xl">The wider club.</h2>
-          <p class="mt-4 text-[--color-mute]">
+          <p class="mt-4 text-(--color-mute)">
             Filter by category. Each profile is published with the alumnus's input — if you raced
             for Bath and we don't have you yet, please get in touch:{' '}
             <a
-              class="underline decoration-[--color-gold] underline-offset-4"
+              class="underline decoration-(--color-gold) underline-offset-4"
               href="mailto:alumni@bubc.co.uk"
             >
               alumni@bubc.co.uk
@@ -145,34 +145,34 @@ const breadcrumbs = {
           </p>
         </div>
 
-        <aside class="bg-[--color-bone] p-6">
+        <aside class="bg-(--color-bone) p-6">
           <h3 class="font-display text-lg">Quick links</h3>
           <ul class="mt-4 space-y-3 text-sm">
             <li>
-              <a class="hover:text-[--color-gold]" href="/alumni/meles/">
+              <a class="hover:text-(--color-gold)" href="/alumni/meles/">
                 Meles Boat Club (alumni rowing) →
               </a>
             </li>
             <li>
-              <a class="hover:text-[--color-gold]" href="/alumni/events/">
+              <a class="hover:text-(--color-gold)" href="/alumni/events/">
                 Alumni dinners and events →
               </a>
             </li>
             <li>
-              <a class="hover:text-[--color-gold]" href="/about/olympians/">
+              <a class="hover:text-(--color-gold)" href="/about/olympians/">
                 Olympic honours roll →
               </a>
             </li>
             <li>
-              <a class="hover:text-[--color-gold]" href="/about/henley-honours/">
+              <a class="hover:text-(--color-gold)" href="/about/henley-honours/">
                 Henley honours →
               </a>
             </li>
             <li>
-              <a class="hover:text-[--color-gold]" href="/about/chairs/"> Past chairs → </a>
+              <a class="hover:text-(--color-gold)" href="/about/chairs/"> Past chairs → </a>
             </li>
             <li>
-              <a class="hover:text-[--color-gold]" href="/support/donate/"> Donate → </a>
+              <a class="hover:text-(--color-gold)" href="/support/donate/"> Donate → </a>
             </li>
           </ul>
         </aside>
@@ -185,7 +185,7 @@ const breadcrumbs = {
             return (
               <button
                 type="button"
-                class="alumni-filter inline-flex items-center gap-2 rounded-full border border-[--color-ink]/15 bg-[--color-paper] px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.1em] hover:border-[--color-ink]/30 aria-pressed:bg-[--color-ink] aria-pressed:text-[--color-paper] aria-pressed:border-[--color-ink]"
+                class="alumni-filter inline-flex items-center gap-2 rounded-full border border-(--color-ink)/15 bg-(--color-paper) px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.1em] hover:border-(--color-ink)/30 aria-pressed:bg-(--color-ink) aria-pressed:text-(--color-paper) aria-pressed:border-(--color-ink)"
                 data-filter={f.id}
                 aria-pressed={f.id === 'all' ? 'true' : 'false'}
               >
@@ -237,15 +237,15 @@ const breadcrumbs = {
                         )}
                       </div>
                       <div class="mt-4">
-                        <p class="text-[10px] uppercase tracking-[0.14em] text-[--color-gold]">
+                        <p class="text-[10px] uppercase tracking-[0.14em] text-(--color-gold)">
                           {categoryLabel[cat]}
                         </p>
-                        <h3 class="mt-1 font-display text-2xl group-hover:underline decoration-[--color-gold] underline-offset-4">
+                        <h3 class="mt-1 font-display text-2xl group-hover:underline decoration-(--color-gold) underline-offset-4">
                           {p.name}
                         </h3>
-                        <p class="mt-1 text-sm text-[--color-mute]">{summarise(p)}</p>
+                        <p class="mt-1 text-sm text-(--color-mute)">{summarise(p)}</p>
                         {(p.bubcYears || p.currentRole) && (
-                          <p class="mt-2 text-xs text-[--color-mute]">
+                          <p class="mt-2 text-xs text-(--color-mute)">
                             {p.bubcYears && <span>BUBC {p.bubcYears}</span>}
                             {p.bubcYears && p.currentRole && <span class="mx-2 opacity-50">·</span>}
                             {p.currentRole && <span class="italic">{p.currentRole}</span>}
@@ -259,7 +259,7 @@ const breadcrumbs = {
             </ul>
 
             <p
-              class="mt-12 hidden italic text-[--color-mute]"
+              class="mt-12 hidden italic text-(--color-mute)"
               id="alumni-empty-filter"
               role="status"
               aria-live="polite"
@@ -272,14 +272,14 @@ const breadcrumbs = {
             </p>
           </>
         ) : (
-          <div class="mt-10 rounded border border-dashed border-[--color-ink]/15 bg-[--color-bone]/60 p-10 text-center max-w-2xl mx-auto">
+          <div class="mt-10 rounded border border-dashed border-(--color-ink)/15 bg-(--color-bone)/60 p-10 text-center max-w-2xl mx-auto">
             <h2 class="font-display text-2xl">Alumni outreach is underway</h2>
-            <p class="mt-3 text-sm text-[--color-mute]">
+            <p class="mt-3 text-sm text-(--color-mute)">
               We're building the alumni archive one profile at a time, with each alumnus's input.
               The first published profiles will appear here. If you raced for Bath and would like to
               be listed, please email{' '}
               <a
-                class="underline decoration-[--color-gold] underline-offset-4"
+                class="underline decoration-(--color-gold) underline-offset-4"
                 href="mailto:alumni@bubc.co.uk"
               >
                 alumni@bubc.co.uk

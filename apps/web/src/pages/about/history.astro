@@ -25,29 +25,34 @@ const page = (await safeFetch<PageDoc>(pageBySlugQuery, { slug: 'history' })) ??
 // happen, then port to Sanity.
 const fallbackTimeline = [
   {
-    year: 1965,
+    year: 1966,
     title: 'Club founded',
     body: 'The University of Bath Boat Club is constituted, rowing initially on the Avon at Bath.',
   },
   {
-    year: 1985,
-    title: 'Move to dedicated boathouse',
-    body: 'Bath establishes a permanent boathouse downstream, giving the senior squad year-round water.',
+    year: 1988,
+    title: 'Joins Minerva at Bathampton',
+    body: 'BUBC begins sharing a boathouse with Minerva Bath Rowing Club at Bathampton — the first settled home on the Avon.',
   },
   {
     year: 2003,
-    title: 'First BUCS Championship pennant',
-    body: 'Bath puts its first senior crew on the BUCS Regatta podium — a step into the top tier of student rowing.',
+    title: 'GB Start programme comes to Bath',
+    body: "Bath becomes a host for the GB Rowing Team's Start programme (today the Performance Development Academy) — the Olympic talent pathway behind athletes such as Helen Glover and Heather Stanning.",
   },
   {
-    year: 2012,
-    title: 'Bath rowers at the London Olympics',
-    body: "Multiple BUBC alumni race at London 2012, marking the club's arrival on the international stage.",
+    year: 2005,
+    title: 'Move to Newbridge',
+    body: "BUBC and Minerva relocate to the Newbridge boathouse on the River Avon — the club's home to this day.",
   },
   {
-    year: 2020,
-    title: 'Henley Royal Regatta',
-    body: "Bath's senior men's eight qualifies for the Temple Challenge Cup, becoming a regular fixture at the Royal Regatta.",
+    year: 2024,
+    title: 'Henley Double Sculls Challenge Cup',
+    body: "Jamie Gare and Cedol Dafydd win the Double Sculls Challenge Cup at Henley Royal Regatta. The same summer, BUBC's Becky Wilde takes Olympic bronze in the double sculls at Paris 2024.",
+  },
+  {
+    year: 2025,
+    title: 'Victor Ludorum at the Club Championships',
+    body: 'Bath win the Victor Ludorum at the British Rowing Club Championships for the first time.',
   },
 ];
 
@@ -55,7 +60,7 @@ const seo = {
   title: page?.seo?.title ?? 'History of BUBC',
   description:
     page?.seo?.description ??
-    'A short history of the University of Bath Boat Club — from a single eight in 1965 to a national-pathway rowing programme today.',
+    'A short history of the University of Bath Boat Club — from a single eight in 1966 to a national-pathway rowing programme today.',
   noIndex: page?.seo?.noIndex,
 };
 ---
@@ -83,7 +88,7 @@ const seo = {
     <Container width="narrow">
       <Eyebrow>Milestones</Eyebrow>
       <h2 class="mt-4 font-display text-3xl sm:text-4xl">A short timeline.</h2>
-      <p class="mt-3 text-[--color-mute]">
+      <p class="mt-3 text-(--color-mute)">
         Decade by decade — major regatta finals, boathouse moves, the people who built the club.
         Send us a missing entry and the comms officer will add it.
       </p>

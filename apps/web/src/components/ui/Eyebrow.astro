@@ -12,15 +12,15 @@ interface Props {
 
 const { class: className, tone = 'gold' } = Astro.props;
 const toneClass = {
-  gold: 'text-[--color-gold]',
-  paper: 'text-[--color-paper]/80',
-  navy: 'text-[--color-navy]',
+  gold: 'text-(--color-gold)',
+  paper: 'text-(--color-paper)/80',
+  navy: 'text-(--color-navy)',
 }[tone];
 
 const lineClass = {
-  gold: 'bg-[--color-gold]',
-  paper: 'bg-[--color-paper]/60',
-  navy: 'bg-[--color-navy]',
+  gold: 'bg-(--color-gold)',
+  paper: 'bg-(--color-paper)/60',
+  navy: 'bg-(--color-navy)',
 }[tone];
 ---
 

@@ -87,7 +87,7 @@ export const homePageQuery = /* groq */ `
     ),
     pathwayIntro,
     pathwaySquads[]->{
-      _id, name, "slug": slug.current, tier, gender, shortDescription,
+      _id, name, "slug": slug.current, tier, gender, shortDescription, externalUrl,
       heroImage { ${imageBlockFields} }
     },
     sponsorStripHeading,
@@ -106,13 +106,15 @@ export const homePageQuery = /* groq */ `
 
 export const allSquadsQuery = /* groq */ `
   *[_type == "squad"] | order(tier asc, name asc) {
-    _id, name, "slug": slug.current, tier, gender, shortDescription,
+    _id, name, "slug": slug.current, tier, gender, shortDescription, externalUrl,
     heroImage { ${imageBlockFields} }
   }
 `;
 
+// Linked squads (those with an externalUrl, e.g. the PDA) don't get a generated
+// detail page — their card links straight out — so they're excluded here.
 export const allSquadSlugsQuery = /* groq */ `
-  *[_type == "squad" && defined(slug.current)] {
+  *[_type == "squad" && defined(slug.current) && !defined(externalUrl)] {
     "slug": slug.current
   }
 `;

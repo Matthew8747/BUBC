@@ -14,6 +14,7 @@ import Container from '../../components/ui/Container.astro';
 import Eyebrow from '../../components/ui/Eyebrow.astro';
 import Button from '../../components/ui/Button.astro';
 import Picture from '../../components/content/Picture.astro';
+import ConditionsPanel from '../../components/boathouse/ConditionsPanel.astro';
 import { safeFetch } from '../../lib/sanity';
 import { settingsQuery, fleetQuery } from '../../lib/queries';
 import type { Settings, BoatCardData } from '../../lib/types';
@@ -57,7 +58,7 @@ const seo = {
           simulation, sheltered enough to row through most of the winter, shared sensibly with the
           other Bath-based clubs and the navigation.
         </p>
-        <p class="text-[--color-mute]">
+        <p class="text-(--color-mute)">
           Outings cover everything from technical work in fours and pairs to full eights race pace.
           The squad runs upstream-and-back loops at race pace and longer downstream pieces in the
           off-season — the kind of structured rowing that produces oars who arrive at Henley already
@@ -67,43 +68,46 @@ const seo = {
     </Container>
   </Section>
 
+  {/* Live conditions — river level + 24h weather */}
+  <ConditionsPanel lat={lat} lng={lng} />
+
   <Section spacing="md">
     <Container>
       <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
         <div>
           <Eyebrow>Facilities</Eyebrow>
           <h2 class="mt-4 font-display text-3xl sm:text-4xl">What's on site.</h2>
-          <ul class="mt-6 space-y-4 text-[--color-ink]">
+          <ul class="mt-6 space-y-4 text-(--color-ink)">
             <li class="flex gap-3">
-              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-[--color-gold] flex-shrink-0"></span>
+              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-(--color-gold) flex-shrink-0"></span>
               <span>
                 <strong class="font-display">Boat hall</strong> housing the senior eights, fours, pairs,
                 sculling fleet, and reserve boats.
               </span>
             </li>
             <li class="flex gap-3">
-              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-[--color-gold] flex-shrink-0"></span>
+              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-(--color-gold) flex-shrink-0"></span>
               <span>
                 <strong class="font-display">Indoor erg suite</strong> with Concept2 RowErgs and dynamic
                 ergs for land sessions.
               </span>
             </li>
             <li class="flex gap-3">
-              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-[--color-gold] flex-shrink-0"></span>
+              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-(--color-gold) flex-shrink-0"></span>
               <span>
                 <strong class="font-display">Weights room</strong> shared with strength &amp; conditioning
                 — squat rack, platforms, dumbbells to 50&nbsp;kg.
               </span>
             </li>
             <li class="flex gap-3">
-              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-[--color-gold] flex-shrink-0"></span>
+              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-(--color-gold) flex-shrink-0"></span>
               <span>
                 <strong class="font-display">Changing rooms &amp; kit store</strong> — secure storage
                 for kit and personal effects during sessions.
               </span>
             </li>
             <li class="flex gap-3">
-              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-[--color-gold] flex-shrink-0"></span>
+              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-(--color-gold) flex-shrink-0"></span>
               <span>
                 <strong class="font-display">Coach launches and bank-bikes</strong> for technical coaching
                 the whole length of the reach.
@@ -112,14 +116,14 @@ const seo = {
           </ul>
         </div>
 
-        <aside class="bg-[--color-bone] p-6 sm:p-8">
+        <aside class="bg-(--color-bone) p-6 sm:p-8">
           <Eyebrow>Find us</Eyebrow>
           <h3 class="mt-3 font-display text-2xl">Boathouse map.</h3>
-          <p class="mt-3 text-sm text-[--color-mute]">
+          <p class="mt-3 text-sm text-(--color-mute)">
             Park on the public road and walk down the short track to the river — there's no parking
             on the riverbank itself.
           </p>
-          <div class="mt-5 border border-[--color-ink]/15">
+          <div class="mt-5 border border-(--color-ink)/15">
             <iframe
               src={mapSrc}
               title="Map showing the BUBC boathouse location"
@@ -127,10 +131,10 @@ const seo = {
               referrerpolicy="no-referrer-when-downgrade"
               class="block w-full h-72"></iframe>
           </div>
-          <p class="mt-3 text-xs text-[--color-mute]">
+          <p class="mt-3 text-xs text-(--color-mute)">
             <a
               href={`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=16/${lat}/${lng}`}
-              class="underline decoration-[--color-gold] underline-offset-4"
+              class="underline decoration-(--color-gold) underline-offset-4"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -139,7 +143,7 @@ const seo = {
             ·
             <a
               href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`}
-              class="underline decoration-[--color-gold] underline-offset-4"
+              class="underline decoration-(--color-gold) underline-offset-4"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -161,11 +165,11 @@ const seo = {
   {/* New boathouse — capital project */}
   <Section tone="navy" spacing="md">
     <Container>
-      <div class="grid lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-16 items-start text-[--color-paper]">
+      <div class="grid lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-16 items-start text-(--color-paper)">
         <div>
           <Eyebrow tone="paper">Capital project</Eyebrow>
           <h2 class="mt-4 font-display text-3xl sm:text-4xl">A new boathouse, in build now.</h2>
-          <div class="mt-6 space-y-5 leading-relaxed text-[--color-paper]/90">
+          <div class="mt-6 space-y-5 leading-relaxed text-(--color-paper)/90">
             <p>
               For the first time since the 1990s, BUBC is building a new boathouse. The capital
               project — backed by the University and the alumni community — replaces the existing
@@ -188,31 +192,31 @@ const seo = {
             <Button
               href="/news/"
               variant="ghost"
-              class="!border-[--color-paper] !text-[--color-paper] hover:!bg-[--color-paper] hover:!text-[--color-ink]"
+              class="!border-(--color-paper) !text-(--color-paper) hover:!bg-(--color-paper) hover:!text-(--color-ink)"
             >
               Latest updates
             </Button>
           </div>
         </div>
-        <aside class="bg-[--color-paper]/5 border border-[--color-paper]/20 p-6 sm:p-8">
+        <aside class="bg-(--color-paper)/5 border border-(--color-paper)/20 p-6 sm:p-8">
           <Eyebrow tone="paper">Why it matters</Eyebrow>
-          <dl class="mt-5 space-y-5 text-[--color-paper]/90">
+          <dl class="mt-5 space-y-5 text-(--color-paper)/90">
             <div>
-              <dt class="font-display text-lg text-[--color-paper]">More fleet, on site.</dt>
+              <dt class="font-display text-lg text-(--color-paper)">More fleet, on site.</dt>
               <dd class="mt-1 text-sm leading-relaxed">
                 Storage for the senior eights, the development fleet, and a sculling rotation that
                 doesn't depend on shuffling boats between clubs.
               </dd>
             </div>
             <div>
-              <dt class="font-display text-lg text-[--color-paper]">Coaching room.</dt>
+              <dt class="font-display text-lg text-(--color-paper)">Coaching room.</dt>
               <dd class="mt-1 text-sm leading-relaxed">
                 Dedicated space for video review, crew meetings and selection conversations away
                 from the bay.
               </dd>
             </div>
             <div>
-              <dt class="font-display text-lg text-[--color-paper]">Alumni &amp; family area.</dt>
+              <dt class="font-display text-lg text-(--color-paper)">Alumni &amp; family area.</dt>
               <dd class="mt-1 text-sm leading-relaxed">
                 A proper home base on race weekends — instead of the current arrangement, which is
                 "the lawn, plus an umbrella, in November."
@@ -230,7 +234,7 @@ const seo = {
       <div class="max-w-2xl">
         <Eyebrow>Strength &amp; conditioning</Eyebrow>
         <h2 class="mt-4 font-display text-3xl sm:text-4xl">Land training at the STV.</h2>
-        <p class="mt-4 text-[--color-mute] leading-relaxed">
+        <p class="mt-4 text-(--color-mute) leading-relaxed">
           On campus, the Sports Training Village (STV) gives BUBC athletes access to one of the best
           university training facilities in the country. Land sessions run out of two STV spaces —
           the high-performance gym, and a dedicated indoor rowing room.
@@ -239,21 +243,21 @@ const seo = {
       <ul class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-8">
         <li>
           <h3 class="font-display text-lg">High-performance gym</h3>
-          <p class="mt-2 text-sm text-[--color-mute] leading-relaxed">
+          <p class="mt-2 text-sm text-(--color-mute) leading-relaxed">
             Olympic lifting platforms and bumper-plate range. Shared with Team Bath performance
             squads and supported by qualified S&amp;C staff who write squad-specific programmes.
           </p>
         </li>
         <li>
           <h3 class="font-display text-lg">Indoor rowing room</h3>
-          <p class="mt-2 text-sm text-[--color-mute] leading-relaxed">
+          <p class="mt-2 text-sm text-(--color-mute) leading-relaxed">
             Concept2 RowErg and dynamic ergometer stable. Where the senior squad does its row
             pieces, technical work and the long aerobic sessions that don't belong on the river.
           </p>
         </li>
         <li>
           <h3 class="font-display text-lg">Testing &amp; recovery</h3>
-          <p class="mt-2 text-sm text-[--color-mute] leading-relaxed">
+          <p class="mt-2 text-sm text-(--color-mute) leading-relaxed">
             Strength testing protocols aligned to the British Rowing performance framework.
             Physiotherapy, soft-tissue and recovery services on the same campus.
           </p>
@@ -269,14 +273,14 @@ const seo = {
         <div class="max-w-2xl">
           <Eyebrow>The fleet</Eyebrow>
           <h2 class="mt-4 font-display text-3xl sm:text-4xl">Boats with names.</h2>
-          <p class="mt-4 text-[--color-mute]">
+          <p class="mt-4 text-(--color-mute)">
             Every BUBC racing shell carries a name and a story — donors, christenings, crews. A
             taste of the current fleet below; browse the full fleet for each boat's profile.
           </p>
         </div>
         <a
           href="/boathouse/fleet/"
-          class="hidden sm:inline-flex items-center gap-2 text-sm font-medium tracking-wide hover:text-[--color-gold]"
+          class="hidden sm:inline-flex items-center gap-2 text-sm font-medium tracking-wide hover:text-(--color-gold)"
         >
           View the full fleet
           <span aria-hidden="true">→</span>
@@ -302,15 +306,15 @@ const seo = {
                     class="transition-transform duration-500 group-hover:scale-[1.02]"
                   />
                   <div class="mt-4">
-                    <h3 class="font-display text-xl group-hover:underline decoration-[--color-gold] underline-offset-4">
+                    <h3 class="font-display text-xl group-hover:underline decoration-(--color-gold) underline-offset-4">
                       {boat.name}
                     </h3>
-                    <p class="mt-1 text-sm text-[--color-mute]">
+                    <p class="mt-1 text-sm text-(--color-mute)">
                       {boat.make} · {boat.class}
                       {boat.yearBought ? ` · ${boat.yearBought}` : ''}
                     </p>
                     {boat.donor && (
-                      <p class="mt-2 text-xs uppercase tracking-[0.12em] text-[--color-gold]">
+                      <p class="mt-2 text-xs uppercase tracking-[0.12em] text-(--color-gold)">
                         Donated by {boat.donor}
                       </p>
                     )}
@@ -320,7 +324,7 @@ const seo = {
             ))}
           </ul>
         ) : (
-          <p class="mt-8 italic text-[--color-mute]">
+          <p class="mt-8 italic text-(--color-mute)">
             Fleet profiles will be published as boat-by-boat photography is completed. The full
             fleet directory is at{' '}
             <a href="/boathouse/fleet/" class="underline">

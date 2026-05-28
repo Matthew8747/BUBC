@@ -17,10 +17,10 @@ interface Props {
 const { tone = 'navy', as: Tag = 'span', class: className } = Astro.props;
 
 const toneClass: Record<NonNullable<Props['tone']>, string> = {
-  navy: 'text-[--color-navy]',
-  gold: 'text-[--color-gold]',
-  blade: 'text-[--color-blade]',
-  paper: 'text-[--color-paper]',
+  navy: 'text-(--color-navy)',
+  gold: 'text-(--color-gold)',
+  blade: 'text-(--color-blade)',
+  paper: 'text-(--color-paper)',
 };
 ---
 

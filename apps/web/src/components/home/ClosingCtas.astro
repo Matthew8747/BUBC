@@ -51,7 +51,7 @@ const useCustom = ctas && ctas.length > 0;
     {
       useCustom ? (
         <div class="flex flex-col items-center text-center gap-6">
-          <h2 class="text-3xl sm:text-4xl text-[--color-paper]">Take the next step.</h2>
+          <h2 class="text-3xl sm:text-4xl text-(--color-paper)">Take the next step.</h2>
           <div class="flex flex-wrap gap-3 justify-center">
             {ctas!.map((cta) => (
               <Button
@@ -61,7 +61,7 @@ const useCustom = ctas && ctas.length > 0;
                 external={cta.link.external}
                 class={
                   cta.variant === 'ghost'
-                    ? '!border-[--color-paper] !text-[--color-paper] hover:!bg-[--color-paper] hover:!text-[--color-navy]'
+                    ? '!border-(--color-paper) !text-(--color-paper) hover:!bg-(--color-paper) hover:!text-(--color-navy)'
                     : ''
                 }
               >
@@ -72,19 +72,19 @@ const useCustom = ctas && ctas.length > 0;
         </div>
       ) : (
         <>
-          <h2 class="text-3xl sm:text-4xl text-[--color-paper] max-w-2xl">Three ways in.</h2>
-          <div class="mt-12 grid md:grid-cols-3 gap-px bg-[--color-paper]/10 border border-[--color-paper]/10">
+          <h2 class="text-3xl sm:text-4xl text-(--color-paper) max-w-2xl">Three ways in.</h2>
+          <div class="mt-12 grid md:grid-cols-3 gap-px bg-(--color-paper)/10 border border-(--color-paper)/10">
             {defaults.map(({ title, description, cta }) => (
-              <div class="p-8 bg-[--color-navy] flex flex-col gap-5">
-                <h3 class="font-display text-2xl text-[--color-paper]">{title}</h3>
-                <p class="text-[--color-paper]/75 flex-1">{description}</p>
+              <div class="p-8 bg-(--color-navy) flex flex-col gap-5">
+                <h3 class="font-display text-2xl text-(--color-paper)">{title}</h3>
+                <p class="text-(--color-paper)/75 flex-1">{description}</p>
                 <Button
                   href={cta.link.url}
                   variant={cta.variant}
                   external={cta.link.external}
                   class={
                     cta.variant === 'ghost'
-                      ? '!border-[--color-paper] !text-[--color-paper] hover:!bg-[--color-paper] hover:!text-[--color-navy] self-start'
+                      ? '!border-(--color-paper) !text-(--color-paper) hover:!bg-(--color-paper) hover:!text-(--color-navy) self-start'
                       : 'self-start'
                   }
                 >

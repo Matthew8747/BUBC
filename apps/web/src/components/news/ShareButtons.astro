@@ -23,7 +23,7 @@ const { title, url, class: className } = Astro.props;
   data-share-url={url}
   data-share-title={title}
 >
-  <span class="text-xs uppercase tracking-[0.14em] text-[--color-mute] mr-2">Share</span>
+  <span class="text-xs uppercase tracking-[0.14em] text-(--color-mute) mr-2">Share</span>
 
   <a
     data-share-twitter
@@ -31,7 +31,7 @@ const { title, url, class: className } = Astro.props;
     target="_blank"
     rel="noopener noreferrer"
     aria-label="Share on Twitter"
-    class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[--color-line] hover:bg-[--color-bone] transition-colors"
+    class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-(--color-line) hover:bg-(--color-bone) transition-colors"
   >
     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path
@@ -46,7 +46,7 @@ const { title, url, class: className } = Astro.props;
     target="_blank"
     rel="noopener noreferrer"
     aria-label="Share on Facebook"
-    class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[--color-line] hover:bg-[--color-bone] transition-colors"
+    class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-(--color-line) hover:bg-(--color-bone) transition-colors"
   >
     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path
@@ -59,7 +59,7 @@ const { title, url, class: className } = Astro.props;
     type="button"
     data-share-copy
     aria-label="Copy link"
-    class="inline-flex h-9 items-center gap-2 rounded-full border border-[--color-line] px-4 text-xs font-medium uppercase tracking-[0.12em] hover:bg-[--color-bone] transition-colors"
+    class="inline-flex h-9 items-center gap-2 rounded-full border border-(--color-line) px-4 text-xs font-medium uppercase tracking-[0.12em] hover:bg-(--color-bone) transition-colors"
   >
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path

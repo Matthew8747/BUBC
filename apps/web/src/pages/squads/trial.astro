@@ -40,14 +40,14 @@ const isConfigured = Boolean(formId);
     <Container width="narrow">
       <Eyebrow>Sign up</Eyebrow>
       <h1 class="mt-4 text-4xl sm:text-5xl">Trial with us.</h1>
-      <p class="mt-6 text-lg text-[--color-mute]">
+      <p class="mt-6 text-lg text-(--color-mute)">
         Whether you rowed at school or have never sat in a boat, we want to hear from you. Drop your
         details below and we'll be in touch with your trial date, what to bring, and where to meet.
       </p>
 
-      <div class="mt-10 p-5 sm:p-6 border-l-2 border-[--color-gold] bg-[--color-bone]">
+      <div class="mt-10 p-5 sm:p-6 border-l-2 border-(--color-gold) bg-(--color-bone)">
         <h2 class="font-display text-xl">What to expect</h2>
-        <ul class="mt-3 space-y-1.5 text-sm text-[--color-ink] list-disc pl-5">
+        <ul class="mt-3 space-y-1.5 text-sm text-(--color-ink) list-disc pl-5">
           <li>2-kilometre ergo (rowing machine) under supervision</li>
           <li>A 100-metre swim test in the university pool</li>
           <li>A short chat with the captains and head coach</li>
@@ -59,7 +59,7 @@ const isConfigured = Boolean(formId);
         !isConfigured && (
           <div
             role="alert"
-            class="mt-8 p-4 border border-[--color-blade]/30 bg-[--color-blade]/10 text-sm"
+            class="mt-8 p-4 border border-(--color-blade)/30 bg-(--color-blade)/10 text-sm"
           >
             <strong>Form not yet configured.</strong> Set{' '}
             <code class="font-mono text-xs">PUBLIC_FORMSPREE_TRIAL_ID</code> in
@@ -185,7 +185,7 @@ const isConfigured = Boolean(formId);
           <Button type="submit" variant="gold" size="lg">Send my application</Button>
           <p
             id="trial-form-status"
-            class="text-sm text-[--color-mute]"
+            class="text-sm text-(--color-mute)"
             role="status"
             aria-live="polite"
           >
@@ -195,19 +195,19 @@ const isConfigured = Boolean(formId);
 
       <div
         id="trial-success"
-        class="mt-10 hidden p-6 sm:p-8 border-l-2 border-[--color-avon] bg-[--color-bone]"
+        class="mt-10 hidden p-6 sm:p-8 border-l-2 border-(--color-avon) bg-(--color-bone)"
         role="status"
         aria-live="polite"
       >
         <h2 class="font-display text-2xl">Application received.</h2>
-        <p class="mt-3 text-[--color-ink]">
+        <p class="mt-3 text-(--color-ink)">
           Thanks — the captains will be in touch within 48 hours. Check your inbox (and spam, just
           in case) for confirmation.
         </p>
-        <p class="mt-3 text-sm text-[--color-mute]">
+        <p class="mt-3 text-sm text-(--color-mute)">
           Questions before then? Email <a
             href="mailto:captain.m@bubc.co.uk"
-            class="underline decoration-[--color-gold] underline-offset-4">captain.m@bubc.co.uk</a
+            class="underline decoration-(--color-gold) underline-offset-4">captain.m@bubc.co.uk</a
           >.
         </p>
       </div>
@@ -234,7 +234,7 @@ const isConfigured = Boolean(formId);
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       status.textContent = '';
-      status.classList.remove('text-[--color-blade]');
+      status.classList.remove('text-(--color-blade)');
 
       // Native browser validation first — gives accessible per-field errors.
       if (!form.reportValidity()) return;
@@ -242,7 +242,7 @@ const isConfigured = Boolean(formId);
       // Anti-bot: too-fast submission.
       if (performance.now() - formMountedAt < MIN_FILL_TIME_MS) {
         status.textContent = 'Please double-check your answers before sending.';
-        status.classList.add('text-[--color-blade]');
+        status.classList.add('text-(--color-blade)');
         return;
       }
 
@@ -251,13 +251,13 @@ const isConfigured = Boolean(formId);
       const parsed = parseTrialForm(data);
       if (!parsed.ok) {
         status.textContent = parsed.errors[0] ?? 'Some fields need checking.';
-        status.classList.add('text-[--color-blade]');
+        status.classList.add('text-(--color-blade)');
         return;
       }
 
       if (!isFormspree) {
         status.textContent = 'Form is not yet configured — see the notice above.';
-        status.classList.add('text-[--color-blade]');
+        status.classList.add('text-(--color-blade)');
         return;
       }
 
@@ -285,7 +285,7 @@ const isConfigured = Boolean(formId);
           status.textContent =
             json?.errors?.[0]?.message ??
             'Something went wrong sending the form. Try again, or email captain.m@bubc.co.uk.';
-          status.classList.add('text-[--color-blade]');
+          status.classList.add('text-(--color-blade)');
           if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.textContent = 'Send my application';
@@ -293,7 +293,7 @@ const isConfigured = Boolean(formId);
         }
       } catch {
         status.textContent = 'Network error. Check your connection and try again.';
-        status.classList.add('text-[--color-blade]');
+        status.classList.add('text-(--color-blade)');
         if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.textContent = 'Send my application';

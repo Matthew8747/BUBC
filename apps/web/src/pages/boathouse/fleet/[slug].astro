@@ -84,12 +84,12 @@ const seo = {
   <article>
     <Section spacing="md">
       <Container>
-        <p class="text-sm text-[--color-mute] mb-6">
-          <a href="/boathouse/" class="hover:text-[--color-navy]">Boathouse</a>
+        <p class="text-sm text-(--color-mute) mb-6">
+          <a href="/boathouse/" class="hover:text-(--color-navy)">Boathouse</a>
           <span class="mx-2 opacity-50">/</span>
-          <a href="/boathouse/fleet/" class="hover:text-[--color-navy]">Fleet</a>
+          <a href="/boathouse/fleet/" class="hover:text-(--color-navy)">Fleet</a>
           <span class="mx-2 opacity-50">/</span>
-          <span class="text-[--color-ink]">{boat.name}</span>
+          <span class="text-(--color-ink)">{boat.name}</span>
         </p>
 
         <div class="grid lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-16 items-start">
@@ -106,20 +106,20 @@ const seo = {
             <h1 class="mt-4 font-display text-4xl sm:text-5xl leading-[1.05]">{boat.name}</h1>
 
             <dl
-              class="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-y border-[--color-ink]/10 py-6 text-sm"
+              class="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-y border-(--color-ink)/10 py-6 text-sm"
             >
               <div>
-                <dt class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">Make</dt>
+                <dt class="text-xs uppercase tracking-[0.12em] text-(--color-mute)">Make</dt>
                 <dd class="mt-1 font-display text-lg">{boat.make}</dd>
               </div>
               <div>
-                <dt class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">Class</dt>
+                <dt class="text-xs uppercase tracking-[0.12em] text-(--color-mute)">Class</dt>
                 <dd class="mt-1 font-display text-lg">{boat.class}</dd>
               </div>
               {
                 boat.weight && (
                   <div>
-                    <dt class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">
+                    <dt class="text-xs uppercase tracking-[0.12em] text-(--color-mute)">
                       Weight category
                     </dt>
                     <dd class="mt-1 font-display text-lg">
@@ -131,7 +131,7 @@ const seo = {
               {
                 boat.yearBought && (
                   <div>
-                    <dt class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">
+                    <dt class="text-xs uppercase tracking-[0.12em] text-(--color-mute)">
                       Acquired
                     </dt>
                     <dd class="mt-1 font-display text-lg">{boat.yearBought}</dd>
@@ -139,14 +139,14 @@ const seo = {
                 )
               }
               <div class="col-span-2">
-                <dt class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">Status</dt>
+                <dt class="text-xs uppercase tracking-[0.12em] text-(--color-mute)">Status</dt>
                 <dd class="mt-1 text-base">{statusLabel[boat.status]}</dd>
               </div>
             </dl>
 
             {
               classDescription[boat.class] && (
-                <p class="mt-5 text-sm italic text-[--color-mute]">
+                <p class="mt-5 text-sm italic text-(--color-mute)">
                   {classDescription[boat.class]}
                 </p>
               )
@@ -154,8 +154,8 @@ const seo = {
 
             {
               boat.donor && (
-                <div class="mt-8 rounded-sm border-l-4 border-[--color-gold] bg-[--color-bone]/60 p-5">
-                  <p class="text-xs uppercase tracking-[0.14em] text-[--color-gold]">Donated by</p>
+                <div class="mt-8 rounded-sm border-l-4 border-(--color-gold) bg-(--color-bone)/60 p-5">
+                  <p class="text-xs uppercase tracking-[0.14em] text-(--color-gold)">Donated by</p>
                   <p class="mt-2 font-display text-2xl">{boat.donor}</p>
                 </div>
               )
@@ -163,7 +163,7 @@ const seo = {
 
             {
               boat.namingCeremonyDate && (
-                <p class="mt-5 text-sm text-[--color-mute]">
+                <p class="mt-5 text-sm text-(--color-mute)">
                   Christened{' '}
                   {new Date(boat.namingCeremonyDate).toLocaleDateString('en-GB', {
                     year: 'numeric',
@@ -223,16 +223,16 @@ const seo = {
 
     <Section tone="bone" spacing="sm">
       <Container class="flex flex-wrap items-center justify-between gap-6">
-        <p class="text-sm text-[--color-mute]">
+        <p class="text-sm text-(--color-mute)">
           Want to put a name on the fleet?{' '}
           <a
             href="/support/buy-a-boat/"
-            class="underline decoration-[--color-gold] underline-offset-4"
+            class="underline decoration-(--color-gold) underline-offset-4"
           >
             Buy a boat
           </a>{' '}
           or{' '}
-          <a href="/support/donate/" class="underline decoration-[--color-gold] underline-offset-4">
+          <a href="/support/donate/" class="underline decoration-(--color-gold) underline-offset-4">
             support the next purchase
           </a>
           .

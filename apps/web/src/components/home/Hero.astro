@@ -48,21 +48,21 @@ const ctas = Astro.props.ctas ?? defaultCtas;
       class="h-full w-full"
     />
     <div
-      class="absolute inset-0 bg-gradient-to-t from-[--color-ink]/85 via-[--color-ink]/45 to-transparent"
+      class="absolute inset-0 bg-gradient-to-t from-(--color-ink)/85 via-(--color-ink)/45 to-transparent"
     >
     </div>
   </div>
 
-  <Container class="pb-16 sm:pb-24 pt-24 text-[--color-paper]">
-    <Eyebrow tone="paper">Founded 1965 · Bath, UK</Eyebrow>
+  <Container class="pb-16 sm:pb-24 pt-24 text-(--color-paper)">
+    <Eyebrow tone="paper">Founded 1966 · Bath, UK</Eyebrow>
     <h1
-      class="mt-6 max-w-4xl text-4xl sm:text-5xl md:text-[5.5rem] leading-[1.05] text-[--color-paper]"
+      class="mt-6 max-w-4xl text-4xl sm:text-5xl md:text-[5.5rem] leading-[1.05] text-(--color-paper)"
     >
       {headline}
     </h1>
     {
       subhead && (
-        <p class="mt-6 max-w-2xl text-base sm:text-lg text-[--color-paper]/85">{subhead}</p>
+        <p class="mt-6 max-w-2xl text-base sm:text-lg text-(--color-paper)/85">{subhead}</p>
       )
     }
     {
@@ -76,7 +76,7 @@ const ctas = Astro.props.ctas ?? defaultCtas;
               external={cta.link.external}
               class={
                 cta.variant === 'ghost'
-                  ? '!border-[--color-paper] !text-[--color-paper] hover:!bg-[--color-paper] hover:!text-[--color-ink]'
+                  ? '!border-(--color-paper) !text-(--color-paper) hover:!bg-(--color-paper) hover:!text-(--color-ink)'
                   : ''
               }
             >

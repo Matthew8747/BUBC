@@ -28,43 +28,158 @@ const ALUMNI = [
   {
     slug: 'becky-wilde',
     name: 'Becky Wilde',
-    category: 'international',
-    bubcYears: '[provisional — confirm]',
-    currentRole: 'Team GB rower',
+    category: 'olympian',
+    bubcYears: '[confirm years]',
+    currentRole: 'GB Rowing Team',
     location: 'United Kingdom',
     photoPattern: 'alumni',
     story: [
       para(
-        "Becky came through the BUBC senior women's squad and went on to race for Great Britain. One of the names every current senior at Bath has heard, and one of the reasons the senior women's programme runs at the standard it does.",
+        "Becky Wilde studied at the University of Bath and came through the Bath rowing environment before joining the GB Rowing Team. At Paris 2024, in her first full senior season, she won Olympic bronze in the women's double sculls with Mathilda Hodgkins-Byrne.",
       ),
       para(
-        "[Provisional draft — confirm racing record, the boat class she rowed best, the year she first wore a GB vest, and what she's doing now. Edit in Studio after speaking with Becky directly via alumni@bubc.co.uk.]",
+        'A former swimmer, Becky switched to rowing after the London 2012 Olympics and progressed through the GB pathway based at Bath. She was later named the British Olympic Association’s Female Olympic Athlete of the Year for rowing.',
+      ),
+      para(
+        '[Confirm her exact BUBC years and add a personal quote before sharing widely — alumni@bubc.co.uk.]',
       ),
     ],
-    internationalAppearances: [
+    olympicYears: [
       {
         year: 2024,
-        team: 'GB Senior',
-        event: 'Paris 2024 Olympic Games',
-        boat: '[provisional]',
-        medal: 'none',
+        host: 'Paris',
+        event: 'W2x (double sculls)',
+        medal: 'bronze',
       },
     ],
   },
   {
-    slug: 'cedol-dafyd',
-    name: 'Cedol Dafyd',
+    slug: 'cedol-dafydd',
+    name: 'Cedol Dafydd',
     category: 'international',
-    bubcYears: '[provisional — confirm]',
-    currentRole: '[provisional]',
-    location: '[provisional]',
+    bubcYears: '[confirm years]',
+    currentRole: '[confirm]',
+    location: '[confirm]',
     photoPattern: 'alumni',
     story: [
       para(
-        'BUBC senior squad athlete who progressed to international racing. [Provisional — long version to be confirmed in conversation with Cedol before publish.]',
+        'Cedol Dafydd is one of BUBC’s most successful recent oarsmen. In 2024 he won the Double Sculls Challenge Cup at Henley Royal Regatta with Jamie Gare — one of the club’s landmark Henley results.',
+      ),
+      para(
+        '[Confirm any GB representation, current status and BUBC years before sharing widely — alumni@bubc.co.uk.]',
       ),
     ],
     internationalAppearances: [],
+  },
+  // --- Verified Bath-connected Olympians & internationals (session 11 research) ---
+  // Sources: en.wikipedia.org/wiki/Bath_University_Boat_Club, British Rowing, Team Bath.
+  // NOTE: Helen Glover & Heather Stanning (London 2012 + Rio 2016 gold) came through the
+  // GB Start programme HOSTED at Bath, not the BUBC student club — they are celebrated on
+  // /squads/pda/. Add them here only if the committee wants them in the BUBC alumni list.
+  {
+    slug: 'vicky-thornley',
+    name: 'Vicky Thornley',
+    category: 'olympian',
+    bubcYears: '[confirm]',
+    currentRole: '[confirm]',
+    location: 'United Kingdom',
+    photoPattern: 'alumni',
+    story: [
+      para(
+        'Vicky Thornley studied Business Management at the University of Bath. She won Olympic silver in the women’s double sculls with Katherine Grainger at Rio 2016, raced in the women’s eight at London 2012, and finished fourth in the single sculls at Tokyo 2020.',
+      ),
+      para('[Confirm her BUBC connection and current role before publishing — alumni@bubc.co.uk.]'),
+    ],
+    olympicYears: [
+      {year: 2012, host: 'London', event: 'W8+', medal: 'none', finalPlace: 5},
+      {year: 2016, host: 'Rio de Janeiro', event: 'W2x (double sculls)', medal: 'silver'},
+      {year: 2020, host: 'Tokyo', event: 'W1x (single sculls)', medal: 'none', finalPlace: 4},
+    ],
+  },
+  {
+    slug: 'sara-parfett',
+    name: 'Sara Parfett',
+    category: 'olympian',
+    bubcYears: '[confirm]',
+    currentRole: '[confirm]',
+    location: 'United Kingdom',
+    photoPattern: 'alumni',
+    story: [
+      para(
+        'Sara Parfett rowed for Great Britain at the Tokyo 2020 Olympic Games, having developed through the Bath rowing environment. [Confirm boat class and BUBC years before publishing.]',
+      ),
+    ],
+    olympicYears: [{year: 2020, host: 'Tokyo', event: 'W4- [confirm]', medal: 'none'}],
+  },
+  {
+    slug: 'marcus-bateman',
+    name: 'Marcus Bateman',
+    category: 'international',
+    bubcYears: '[confirm]',
+    currentRole: '[confirm]',
+    location: 'United Kingdom',
+    photoPattern: 'alumni',
+    story: [
+      para(
+        'Marcus Bateman won World Championship silver in the double sculls in 2010 and was a sweep spare for the GB team at the London 2012 Olympic Games. [Confirm BUBC years before publishing.]',
+      ),
+    ],
+    internationalAppearances: [
+      {
+        year: 2010,
+        team: 'GB Senior',
+        event: 'World Rowing Championships',
+        boat: '2x',
+        medal: 'silver',
+      },
+    ],
+  },
+  {
+    slug: 'adam-freeman',
+    name: 'Adam Freeman',
+    category: 'international',
+    bubcYears: '[confirm]',
+    currentRole: '[confirm]',
+    location: 'United Kingdom',
+    photoPattern: 'alumni',
+    story: [
+      para(
+        'Adam Freeman finished sixth in the lightweight single sculls at the World Championships and was a lightweight sculling spare for the GB team at London 2012. [Confirm BUBC years before publishing.]',
+      ),
+    ],
+    internationalAppearances: [
+      {
+        year: 2012,
+        team: 'GB Senior',
+        event: 'World Rowing Championships',
+        boat: 'LM1x',
+        medal: 'none',
+        finalPlace: 6,
+      },
+    ],
+  },
+  {
+    slug: 'sam-courty',
+    name: 'Sam Courty',
+    category: 'international',
+    bubcYears: '[confirm]',
+    currentRole: '[confirm]',
+    location: 'United Kingdom',
+    photoPattern: 'alumni',
+    story: [
+      para(
+        'Sam Courty won bronze at the 2015 World U23 Championships and went on to race for the GB senior squad, including qualifying the women’s pair for Tokyo 2020. [Confirm whether she raced at the Games — if so, change her category to Olympian.]',
+      ),
+    ],
+    internationalAppearances: [
+      {
+        year: 2015,
+        team: 'GB U23',
+        event: 'World Rowing U23 Championships',
+        boat: 'W2-',
+        medal: 'bronze',
+      },
+    ],
   },
   {
     slug: 'ben-furley',
@@ -133,6 +248,13 @@ async function run() {
         story: a.story,
       }
 
+      if (a.category === 'olympian' && a.olympicYears) {
+        doc.olympicYears = a.olympicYears.map((oy, i) => ({
+          _type: 'olympicAppearance',
+          _key: `oly-${a.slug}-${i}`,
+          ...oy,
+        }))
+      }
       if (a.category === 'international' && a.internationalAppearances) {
         doc.internationalAppearances = a.internationalAppearances.map((ia, i) => ({
           _type: 'internationalAppearance',

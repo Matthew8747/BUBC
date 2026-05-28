@@ -26,7 +26,7 @@ const { eyebrow, headline, lead, image, ctas = [], align = 'start' } = Astro.pro
 ---
 
 <section
-  class="relative isolate min-h-[44vh] sm:min-h-[52vh] flex flex-col justify-end overflow-hidden bg-[--color-navy]"
+  class="relative isolate min-h-[44vh] sm:min-h-[52vh] flex flex-col justify-end overflow-hidden bg-(--color-navy)"
 >
   {
     image && (
@@ -40,13 +40,13 @@ const { eyebrow, headline, lead, image, ctas = [], align = 'start' } = Astro.pro
           decorative
           class="h-full w-full"
         />
-        <div class="absolute inset-0 bg-gradient-to-t from-[--color-ink]/85 via-[--color-ink]/40 to-[--color-ink]/30" />
+        <div class="absolute inset-0 bg-gradient-to-t from-(--color-ink)/85 via-(--color-ink)/40 to-(--color-ink)/30" />
       </div>
     )
   }
 
   <Container
-    class={`pb-14 sm:pb-20 pt-24 text-[--color-paper] ${align === 'center' ? 'text-center' : ''}`}
+    class={`pb-14 sm:pb-20 pt-24 text-(--color-paper) ${align === 'center' ? 'text-center' : ''}`}
   >
     {
       eyebrow && (
@@ -56,14 +56,14 @@ const { eyebrow, headline, lead, image, ctas = [], align = 'start' } = Astro.pro
       )
     }
     <h1
-      class={`mt-6 max-w-4xl text-4xl sm:text-5xl md:text-6xl leading-[1.05] text-[--color-paper] ${align === 'center' ? 'mx-auto' : ''}`}
+      class={`mt-6 max-w-4xl text-4xl sm:text-5xl md:text-6xl leading-[1.05] text-(--color-paper) ${align === 'center' ? 'mx-auto' : ''}`}
     >
       {headline}
     </h1>
     {
       lead && (
         <p
-          class={`mt-5 max-w-2xl text-base sm:text-lg text-[--color-paper]/85 ${align === 'center' ? 'mx-auto' : ''}`}
+          class={`mt-5 max-w-2xl text-base sm:text-lg text-(--color-paper)/85 ${align === 'center' ? 'mx-auto' : ''}`}
         >
           {lead}
         </p>
@@ -79,7 +79,7 @@ const { eyebrow, headline, lead, image, ctas = [], align = 'start' } = Astro.pro
               external={cta.link.external}
               class={
                 cta.variant === 'ghost'
-                  ? '!border-[--color-paper] !text-[--color-paper] hover:!bg-[--color-paper] hover:!text-[--color-ink]'
+                  ? '!border-(--color-paper) !text-(--color-paper) hover:!bg-(--color-paper) hover:!text-(--color-ink)'
                   : ''
               }
             >

@@ -54,22 +54,7 @@ const items = squads.length > 0 ? squads : defaults;
 const tierOrder: Record<string, number> = { senior: 0, development: 1, novice: 2, trial: 3 };
 const sorted = [...items].sort((a, b) => (tierOrder[a.tier] ?? 9) - (tierOrder[b.tier] ?? 9));
 
-/**
- * The GB Performance Development Academy is rendered as a permanent extra
- * squad card. It's NOT a BUBC-run programme (British Rowing operates it,
- * hosted in Bath) — but for visitors choosing a programme to apply to it
- * belongs in the same visual list as the BUBC squads.
- *
- * The detail page at `/squads/pda/` is a static .astro file with the full
- * editorial copy and links out to british rowing for applications.
- */
-const pdaCard = {
-  slug: 'pda',
-  name: 'Performance Development',
-  eyebrow: 'GB Olympic pathway',
-  shortDescription:
-    "British Rowing's GB Performance Development Academy — hosted in Bath since 2003. Olympic-pathway talent ID for athletes aged 14–22. Alumni include Helen Glover and Heather Stanning.",
-};
+const isAbsolute = (url: string) => /^https?:\/\//i.test(url);
 
 const seo = {
   title: 'Squads',
@@ -90,91 +75,59 @@ const seo = {
     <Container>
       <ul class="grid md:grid-cols-2 gap-10 lg:gap-14">
         {
-          sorted.map((squad) => (
-            <li>
-              <a
-                href={`/squads/${squad.slug}/`}
-                class="group block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[--color-gold]"
-              >
-                <div class="overflow-hidden">
-                  <Picture
-                    image={squad.heroImage}
-                    ratio="3/2"
-                    sizes="(min-width: 768px) 50vw, 100vw"
-                    fallbackLabel={squad.name}
-                    class="transition-transform duration-500 group-hover:scale-[1.02]"
-                  />
-                </div>
-                <div class="mt-5">
-                  <Eyebrow tone="navy">
-                    {squad.tier}
-                    {squad.gender && squad.gender !== 'mixed' ? ` · ${squad.gender}` : ''}
-                  </Eyebrow>
-                  <h2 class="mt-3 font-display text-3xl group-hover:text-[--color-gold] transition-colors">
-                    {squad.name}
-                  </h2>
-                  <p class="mt-3 text-[--color-mute]">{squad.shortDescription}</p>
-                  <span class="mt-4 inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.12em] text-[--color-navy]">
-                    See squad page
-                    <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                      <path
-                        d="M3 7h8M7 3l4 4-4 4"
-                        stroke="currentColor"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </span>
-                </div>
-              </a>
-            </li>
-          ))
+          sorted.map((squad) => {
+            const href = squad.externalUrl ?? `/squads/${squad.slug.replace(/^\/+|\/+$/g, '')}/`;
+            const external = isAbsolute(href);
+            return (
+              <li>
+                <a
+                  href={href}
+                  target={external ? '_blank' : undefined}
+                  rel={external ? 'noopener noreferrer' : undefined}
+                  class="group block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-gold)"
+                >
+                  <div class="overflow-hidden">
+                    <Picture
+                      image={squad.heroImage}
+                      ratio="3/2"
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                      fallbackLabel={squad.name}
+                      class="transition-transform duration-500 group-hover:scale-[1.02]"
+                    />
+                  </div>
+                  <div class="mt-5">
+                    <Eyebrow tone="navy">
+                      {squad.tier}
+                      {squad.gender && squad.gender !== 'mixed' ? ` · ${squad.gender}` : ''}
+                    </Eyebrow>
+                    <h2 class="mt-3 font-display text-3xl group-hover:text-(--color-gold) transition-colors">
+                      {squad.name}
+                    </h2>
+                    <p class="mt-3 text-(--color-mute)">{squad.shortDescription}</p>
+                    <span class="mt-4 inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.12em] text-(--color-navy)">
+                      See squad page
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 14 14"
+                        fill="none"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M3 7h8M7 3l4 4-4 4"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </a>
+              </li>
+            );
+          })
         }
-
-        {
-          /* GB Performance Development Academy — hosted in Bath by British Rowing.
-            Rendered as a permanent extra card so prospective rowers see it
-            alongside the BUBC squads. */
-        }
-        <li>
-          <a
-            href={`/squads/${pdaCard.slug}/`}
-            class="group block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[--color-gold]"
-          >
-            <div class="overflow-hidden">
-              <Picture
-                image={undefined}
-                ratio="3/2"
-                sizes="(min-width: 768px) 50vw, 100vw"
-                fallbackLabel={pdaCard.name}
-                class="transition-transform duration-500 group-hover:scale-[1.02]"
-              />
-            </div>
-            <div class="mt-5">
-              <Eyebrow tone="navy">{pdaCard.eyebrow}</Eyebrow>
-              <h2
-                class="mt-3 font-display text-3xl group-hover:text-[--color-gold] transition-colors"
-              >
-                {pdaCard.name}
-              </h2>
-              <p class="mt-3 text-[--color-mute]">{pdaCard.shortDescription}</p>
-              <span
-                class="mt-4 inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.12em] text-[--color-navy]"
-              >
-                See squad page
-                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                  <path
-                    d="M3 7h8M7 3l4 4-4 4"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"></path>
-                </svg>
-              </span>
-            </div>
-          </a>
-        </li>
       </ul>
     </Container>
   </Section>
@@ -184,10 +137,10 @@ const seo = {
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
         <div class="max-w-xl">
           <Eyebrow tone="paper">Not sure where you fit?</Eyebrow>
-          <h2 class="mt-4 font-display text-3xl sm:text-4xl text-[--color-paper]">
+          <h2 class="mt-4 font-display text-3xl sm:text-4xl text-(--color-paper)">
             Sign up to trial — we'll work it out together.
           </h2>
-          <p class="mt-4 text-[--color-paper]/80">
+          <p class="mt-4 text-(--color-paper)/80">
             One ergo, one swim test, one chat with the captains. Around 90 minutes start to finish.
           </p>
         </div>
@@ -197,7 +150,7 @@ const seo = {
             href="/coaching/"
             variant="ghost"
             size="lg"
-            class="!border-[--color-paper] !text-[--color-paper] hover:!bg-[--color-paper] hover:!text-[--color-ink]"
+            class="!border-(--color-paper) !text-(--color-paper) hover:!bg-(--color-paper) hover:!text-(--color-ink)"
           >
             Meet the coaches
           </Button>

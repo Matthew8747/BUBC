@@ -13,10 +13,10 @@ interface Props {
 }
 
 const defaults: StatType[] = [
-  { value: '60', suffix: 'yrs', label: 'Founded 1965' },
+  { value: '1966', label: 'Founded' },
+  { value: '140', suffix: '+', label: 'Athletes' },
   { value: '9', label: 'BUBC Olympians' },
-  { value: '14', label: 'Henley wins' },
-  { value: '200', suffix: '+', label: 'Members' },
+  { value: '60', suffix: 'yrs', label: 'Years on the Avon' },
 ];
 
 // `??` instead of destructuring default — Sanity returns `null` for empty arrays.
@@ -25,10 +25,10 @@ const stats = Astro.props.stats ?? defaults;
 
 <Section tone="ink" spacing="md">
   <Container>
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-10 text-[--color-paper]">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-10 text-(--color-paper)">
       {
         stats.map((s) => (
-          <div class="text-[--color-paper]">
+          <div class="text-(--color-paper)">
             <Stat value={s.value} suffix={s.suffix} label={s.label} />
           </div>
         ))

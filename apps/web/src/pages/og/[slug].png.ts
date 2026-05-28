@@ -34,7 +34,7 @@ const STATIC_CARDS: Record<string, OgCard> = {
   default: {
     eyebrow: 'University of Bath Boat Club',
     title: 'BUBC.',
-    subtitle: 'Performance student rowing from the River Avon. Founded 1965.',
+    subtitle: 'Performance student rowing from the River Avon. Founded 1966.',
   },
   home: {
     eyebrow: 'University of Bath Boat Club',
@@ -89,7 +89,7 @@ const STATIC_CARDS: Record<string, OgCard> = {
   about: {
     eyebrow: 'About',
     title: 'The story of BUBC.',
-    subtitle: 'A boat club founded in 1965 — and the people who built it.',
+    subtitle: 'A boat club founded in 1966 — and the people who built it.',
   },
   history: {
     eyebrow: 'About',
@@ -159,7 +159,7 @@ const STATIC_CARDS: Record<string, OgCard> = {
   chairs: {
     eyebrow: 'About',
     title: 'Chairs of BUBC.',
-    subtitle: 'Every committee chair since 1965 — the line of student officers who built the club.',
+    subtitle: 'Every committee chair since 1966 — the line of student officers who built the club.',
   },
   blazers: {
     eyebrow: 'About',

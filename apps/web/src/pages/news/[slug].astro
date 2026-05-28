@@ -114,13 +114,13 @@ const articleSchema = {
 
     <Section spacing="md">
       <Container width="narrow">
-        <p class="text-sm text-[--color-mute] mb-6">
-          <a href="/news/" class="hover:text-[--color-navy]">All news</a>
+        <p class="text-sm text-(--color-mute) mb-6">
+          <a href="/news/" class="hover:text-(--color-navy)">All news</a>
           {
             post.category && (
               <>
                 <span class="mx-2 opacity-50">/</span>
-                <a href={`/news/category/${post.category.slug}/`} class="hover:text-[--color-navy]">
+                <a href={`/news/category/${post.category.slug}/`} class="hover:text-(--color-navy)">
                   {post.category.title}
                 </a>
               </>
@@ -135,10 +135,10 @@ const articleSchema = {
           >
             {post.title}
           </h1>
-          <p class="mt-6 text-lg text-[--color-mute]">{post.excerpt}</p>
+          <p class="mt-6 text-lg text-(--color-mute)">{post.excerpt}</p>
 
           <div
-            class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-[--color-mute] border-t border-b border-[--color-line] py-4"
+            class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-(--color-mute) border-t border-b border-(--color-line) py-4"
           >
             <time datetime={dateIso}>{dateLabel}</time>
             {post.author && <span>By {post.author}</span>}
@@ -150,19 +150,19 @@ const articleSchema = {
 
         {
           (post.relatedAthletes?.length || post.relatedSquads?.length) && (
-            <aside class="mt-16 pt-10 border-t border-[--color-line]">
+            <aside class="mt-16 pt-10 border-t border-(--color-line)">
               <h2 class="text-xl font-display mb-4">Related</h2>
               <div class="flex flex-wrap gap-2">
                 {post.relatedSquads?.map((s) => (
                   <a
                     href={`/squads/${s.slug}/`}
-                    class="inline-flex items-center rounded-full border border-[--color-line] px-3 h-8 text-xs uppercase tracking-[0.1em] hover:border-[--color-navy] transition-colors"
+                    class="inline-flex items-center rounded-full border border-(--color-line) px-3 h-8 text-xs uppercase tracking-[0.1em] hover:border-(--color-navy) transition-colors"
                   >
                     {s.name}
                   </a>
                 ))}
                 {post.relatedAthletes?.map((a) => (
-                  <span class="inline-flex items-center rounded-full bg-[--color-bone] px-3 h-8 text-xs uppercase tracking-[0.1em] text-[--color-ink]">
+                  <span class="inline-flex items-center rounded-full bg-(--color-bone) px-3 h-8 text-xs uppercase tracking-[0.1em] text-(--color-ink)">
                     {a.name}
                   </span>
                 ))}
@@ -187,21 +187,21 @@ const articleSchema = {
         {
           (prev || next) && (
             <nav
-              class="mt-16 pt-8 border-t border-[--color-line] grid sm:grid-cols-2 gap-6"
+              class="mt-16 pt-8 border-t border-(--color-line) grid sm:grid-cols-2 gap-6"
               aria-label="More posts"
             >
               <div class="text-left">
                 {prev ? (
                   <a href={`/news/${prev.slug}/`} class="group block">
-                    <span class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">
+                    <span class="text-xs uppercase tracking-[0.12em] text-(--color-mute)">
                       ← Previous
                     </span>
-                    <span class="block mt-2 font-display text-lg group-hover:text-[--color-gold]">
+                    <span class="block mt-2 font-display text-lg group-hover:text-(--color-gold)">
                       {prev.title}
                     </span>
                   </a>
                 ) : (
-                  <span class="text-xs uppercase tracking-[0.12em] text-[--color-mute]/40">
+                  <span class="text-xs uppercase tracking-[0.12em] text-(--color-mute)/40">
                     The earliest post
                   </span>
                 )}
@@ -209,15 +209,15 @@ const articleSchema = {
               <div class="sm:text-right">
                 {next ? (
                   <a href={`/news/${next.slug}/`} class="group block">
-                    <span class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">
+                    <span class="text-xs uppercase tracking-[0.12em] text-(--color-mute)">
                       Next →
                     </span>
-                    <span class="block mt-2 font-display text-lg group-hover:text-[--color-gold]">
+                    <span class="block mt-2 font-display text-lg group-hover:text-(--color-gold)">
                       {next.title}
                     </span>
                   </a>
                 ) : (
-                  <span class="text-xs uppercase tracking-[0.12em] text-[--color-mute]/40">
+                  <span class="text-xs uppercase tracking-[0.12em] text-(--color-mute)/40">
                     The latest post
                   </span>
                 )}

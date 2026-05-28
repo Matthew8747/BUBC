@@ -44,7 +44,7 @@ const nextHref = current < total ? pageHref(current + 1) : null;
   total > 1 && (
     <nav
       aria-label="Pagination"
-      class="flex items-center justify-between gap-4 border-t border-[--color-line] pt-8"
+      class="flex items-center justify-between gap-4 border-t border-(--color-line) pt-8"
     >
       <a
         href={prevHref ?? undefined}
@@ -52,8 +52,8 @@ const nextHref = current < total ? pageHref(current + 1) : null;
         class:list={[
           'inline-flex h-10 items-center gap-2 px-4 text-sm font-medium',
           prevHref
-            ? 'text-[--color-navy] hover:text-[--color-gold]'
-            : 'pointer-events-none text-[--color-mute]/50',
+            ? 'text-(--color-navy) hover:text-(--color-gold)'
+            : 'pointer-events-none text-(--color-mute)/50',
         ]}
       >
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -72,7 +72,7 @@ const nextHref = current < total ? pageHref(current + 1) : null;
         {pages.map((p) => (
           <li>
             {p === 'ellipsis' ? (
-              <span class="px-2 text-[--color-mute]" aria-hidden="true">
+              <span class="px-2 text-(--color-mute)" aria-hidden="true">
                 …
               </span>
             ) : (
@@ -83,8 +83,8 @@ const nextHref = current < total ? pageHref(current + 1) : null;
                 class:list={[
                   'inline-flex h-10 w-10 items-center justify-center text-sm font-medium',
                   p === current
-                    ? 'bg-[--color-navy] text-[--color-paper]'
-                    : 'text-[--color-ink] hover:bg-[--color-bone]',
+                    ? 'bg-(--color-navy) text-(--color-paper)'
+                    : 'text-(--color-ink) hover:bg-(--color-bone)',
                 ]}
               >
                 {p}
@@ -94,7 +94,7 @@ const nextHref = current < total ? pageHref(current + 1) : null;
         ))}
       </ol>
 
-      <span class="md:hidden text-sm text-[--color-mute]">
+      <span class="md:hidden text-sm text-(--color-mute)">
         Page {current} of {total}
       </span>
 
@@ -104,8 +104,8 @@ const nextHref = current < total ? pageHref(current + 1) : null;
         class:list={[
           'inline-flex h-10 items-center gap-2 px-4 text-sm font-medium',
           nextHref
-            ? 'text-[--color-navy] hover:text-[--color-gold]'
-            : 'pointer-events-none text-[--color-mute]/50',
+            ? 'text-(--color-navy) hover:text-(--color-gold)'
+            : 'pointer-events-none text-(--color-mute)/50',
         ]}
       >
         Next

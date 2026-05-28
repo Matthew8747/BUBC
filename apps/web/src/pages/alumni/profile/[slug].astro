@@ -49,10 +49,10 @@ const universityLabel = { oxford: 'Oxford', cambridge: 'Cambridge' } as const;
 const boatLabel = { blue: 'Blue Boat', reserves: 'Reserves' } as const;
 
 const medalTone: Record<Medal, string> = {
-  gold: 'bg-[--color-gold] text-[--color-ink]',
-  silver: 'bg-[#C0C0C0] text-[--color-ink]',
-  bronze: 'bg-[#A97142] text-[--color-paper]',
-  none: 'bg-[--color-ink]/15 text-[--color-ink]',
+  gold: 'bg-(--color-gold) text-(--color-ink)',
+  silver: 'bg-[#C0C0C0] text-(--color-ink)',
+  bronze: 'bg-[#A97142] text-(--color-paper)',
+  none: 'bg-(--color-ink)/15 text-(--color-ink)',
 };
 
 const category = (profile.category ?? 'notableCareer') as AlumniCategory;
@@ -109,10 +109,10 @@ const breadcrumbs = {
   <article>
     <Section spacing="md">
       <Container>
-        <p class="text-sm text-[--color-mute] mb-6">
-          <a href="/alumni/" class="hover:text-[--color-navy]">Alumni</a>
+        <p class="text-sm text-(--color-mute) mb-6">
+          <a href="/alumni/" class="hover:text-(--color-navy)">Alumni</a>
           <span class="mx-2 opacity-50">/</span>
-          <span class="text-[--color-ink]">{profile.name}</span>
+          <span class="text-(--color-ink)">{profile.name}</span>
         </p>
 
         <div class="grid lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-16 items-start">
@@ -129,19 +129,19 @@ const breadcrumbs = {
             <h1 class="mt-4 font-display text-4xl sm:text-5xl leading-[1.05]">{profile.name}</h1>
             {
               profile.careerHighlight && (
-                <p class="mt-4 font-display text-xl text-[--color-mute] italic">
+                <p class="mt-4 font-display text-xl text-(--color-mute) italic">
                   {profile.careerHighlight}
                 </p>
               )
             }
 
             <dl
-              class="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-y border-[--color-ink]/10 py-6 text-sm"
+              class="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-y border-(--color-ink)/10 py-6 text-sm"
             >
               {
                 profile.bubcYears && (
                   <div>
-                    <dt class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">
+                    <dt class="text-xs uppercase tracking-[0.12em] text-(--color-mute)">
                       BUBC years
                     </dt>
                     <dd class="mt-1 font-display text-lg">{profile.bubcYears}</dd>
@@ -151,7 +151,7 @@ const breadcrumbs = {
               {
                 profile.currentRole && (
                   <div>
-                    <dt class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">
+                    <dt class="text-xs uppercase tracking-[0.12em] text-(--color-mute)">
                       Currently
                     </dt>
                     <dd class="mt-1">{profile.currentRole}</dd>
@@ -161,7 +161,7 @@ const breadcrumbs = {
               {
                 profile.location && (
                   <div>
-                    <dt class="text-xs uppercase tracking-[0.12em] text-[--color-mute]">Based</dt>
+                    <dt class="text-xs uppercase tracking-[0.12em] text-(--color-mute)">Based</dt>
                     <dd class="mt-1">{profile.location}</dd>
                   </div>
                 )
@@ -172,14 +172,14 @@ const breadcrumbs = {
               category === 'international' && profile.internationalAppearances?.length && (
                 <div class="mt-8">
                   <h2 class="font-display text-xl">GB / international appearances</h2>
-                  <ul class="mt-4 divide-y divide-[--color-ink]/10 border-y border-[--color-ink]/10">
+                  <ul class="mt-4 divide-y divide-(--color-ink)/10 border-y border-(--color-ink)/10">
                     {profile.internationalAppearances.map((a) => (
                       <li class="py-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                         <div>
                           <span class="font-display text-base tabular-nums">{a.year}</span>
                           <span class="mx-2 opacity-50">·</span>
                           <span>{[a.team, a.event].filter(Boolean).join(' · ')}</span>
-                          {a.boat && <span class="ml-2 text-[--color-mute]">({a.boat})</span>}
+                          {a.boat && <span class="ml-2 text-(--color-mute)">({a.boat})</span>}
                         </div>
                         {a.medal && a.medal !== 'none' && (
                           <span
@@ -192,7 +192,7 @@ const breadcrumbs = {
                           </span>
                         )}
                         {a.finalPlace && a.medal === 'none' && (
-                          <span class="text-xs text-[--color-mute]">Finished {a.finalPlace}</span>
+                          <span class="text-xs text-(--color-mute)">Finished {a.finalPlace}</span>
                         )}
                       </li>
                     ))}
@@ -205,7 +205,7 @@ const breadcrumbs = {
               category === 'boatRace' && profile.boatRaceAppearances?.length && (
                 <div class="mt-8">
                   <h2 class="font-display text-xl">Boat Race appearances</h2>
-                  <ul class="mt-4 divide-y divide-[--color-ink]/10 border-y border-[--color-ink]/10">
+                  <ul class="mt-4 divide-y divide-(--color-ink)/10 border-y border-(--color-ink)/10">
                     {profile.boatRaceAppearances.map((a) => (
                       <li class="py-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                         <div>
@@ -221,8 +221,8 @@ const breadcrumbs = {
                             class:list={[
                               'inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.12em]',
                               a.result === 'won'
-                                ? 'bg-[--color-gold] text-[--color-ink]'
-                                : 'bg-[--color-ink]/15 text-[--color-ink]',
+                                ? 'bg-(--color-gold) text-(--color-ink)'
+                                : 'bg-(--color-ink)/15 text-(--color-ink)',
                             ]}
                           >
                             {a.result === 'won' ? 'Won' : 'Lost'}
@@ -257,11 +257,11 @@ const breadcrumbs = {
 
     <Section spacing="sm">
       <Container class="flex flex-wrap items-center justify-between gap-6">
-        <p class="text-sm text-[--color-mute]">
+        <p class="text-sm text-(--color-mute)">
           Were you at BUBC? Add yourself to the alumni archive —{' '}
           <a
             href="mailto:alumni@bubc.co.uk"
-            class="underline decoration-[--color-gold] underline-offset-4"
+            class="underline decoration-(--color-gold) underline-offset-4"
           >
             alumni@bubc.co.uk
           </a>
