@@ -172,25 +172,15 @@ These have hardcoded fallbacks; the Sanity doc overrides if present.
 
 These pages don't read from Sanity. To change them, edit the `.astro` file, commit, push. Vercel auto-deploys on push to `main`.
 
-### `/squads/pda/` — Performance Development Academy
+### `/squads/pda/` — Performance Development Academy (hybrid: Sanity card + code page)
 
-- **File:** [`apps/web/src/pages/squads/pda.astro`](../apps/web/src/pages/squads/pda.astro)
-- **Why static:** this is a British Rowing programme (not a BUBC squad), and the page links out to britishrowing.org. The structure + Olympic-pathway copy is unlikely to change often.
-- **Likely edits:** if Tom Selby's role changes, update the **"A separate coaching team"** section. Currently around line 170.
+The PDA is a British Rowing programme, not a BUBC squad, so it's handled specially:
 
-**Example edit** — to update the head coach:
+- **The CARD on `/squads/`** is a normal **Sanity squad doc** (Studio → Squads → "Performance Development"). Edit its name, pitch, image, and ordering there like any squad. To make it link to the detail page (and stop a generic squad page being generated for it), fill in the new **External link** field on that squad doc with `/squads/pda/`. _(If you'd rather the card jump straight to British Rowing, put their URL there instead.)_
+- **The DETAIL page** at `/squads/pda/` is still rich editorial **code** in [`apps/web/src/pages/squads/pda.astro`](../apps/web/src/pages/squads/pda.astro) — Olympic alumni, eligibility, the "apply via British Rowing" links. The generic squad template can't reproduce this, so it stays in code.
+- **Likely code edits:** if the head coach changes, update the **"A separate coaching team"** section (around line 170 — currently names Tom Selby).
 
-```astro
-{/* find this block in pda.astro around line 170 */}
-<p>
-  Each PDA is run by a GB Performance Development Coach employed by British Rowing, supported by a
-  satellite coach for athletes outside the host city. The South West academy is currently led by <strong
-    >Tom Selby</strong
-  >.
-</p>
-```
-
-Just change `Tom Selby` to the new name. Commit → push → live in ~60 seconds.
+> **The "External link" field is new.** Any squad with it set links its card straight to that URL and is skipped by the dynamic `/squads/<slug>/` route. Leave it blank for normal BUBC squads. **Until you set it on the PDA doc, `pnpm build` prints a harmless warning** about `/squads/pda` conflicting between the static page and the squad route — setting `externalUrl` to `/squads/pda/` clears it.
 
 ### `/squads/trial/` — Trial form
 

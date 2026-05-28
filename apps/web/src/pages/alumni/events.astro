@@ -103,10 +103,10 @@ const eventJsonLd = eventList.length
 
   <Section spacing="md">
     <Container>
-      <p class="text-sm text-[--color-mute] mb-10">
-        <a href="/alumni/" class="hover:text-[--color-navy]">Alumni</a>
+      <p class="text-sm text-(--color-mute) mb-10">
+        <a href="/alumni/" class="hover:text-(--color-navy)">Alumni</a>
         <span class="mx-2 opacity-50">/</span>
-        <span class="text-[--color-ink]">Events</span>
+        <span class="text-(--color-ink)">Events</span>
       </p>
 
       <Eyebrow>Upcoming</Eyebrow>
@@ -114,11 +114,11 @@ const eventJsonLd = eventList.length
 
       {
         eventList.length === 0 ? (
-          <p class="mt-8 italic text-[--color-mute] max-w-2xl">
+          <p class="mt-8 italic text-(--color-mute) max-w-2xl">
             No alumni events on the calendar at the moment. Sign up to the alumni list to be the
             first to hear about the next dinner or Henley meet —{' '}
             <a
-              class="underline decoration-[--color-gold] underline-offset-4"
+              class="underline decoration-(--color-gold) underline-offset-4"
               href="mailto:alumni@bubc.co.uk?subject=Alumni%20list"
             >
               alumni@bubc.co.uk
@@ -129,7 +129,7 @@ const eventJsonLd = eventList.length
           <ul class="mt-10 grid lg:grid-cols-2 gap-10">
             {eventList.map((e) => (
               <li>
-                <article class="flex flex-col bg-[--color-bone]">
+                <article class="flex flex-col bg-(--color-bone)">
                   <Picture
                     image={e.heroImage}
                     ratio="3/2"
@@ -137,11 +137,11 @@ const eventJsonLd = eventList.length
                     fallbackLabel={e.title}
                   />
                   <div class="p-6 sm:p-8 flex flex-col gap-4">
-                    <p class="text-xs uppercase tracking-[0.14em] text-[--color-gold] font-medium tabular-nums">
+                    <p class="text-xs uppercase tracking-[0.14em] text-(--color-gold) font-medium tabular-nums">
                       {dateRange(e.date, e.endDate)}
                     </p>
                     <h3 class="font-display text-2xl">{e.title}</h3>
-                    {e.location && <p class="text-sm text-[--color-mute]">{e.location}</p>}
+                    {e.location && <p class="text-sm text-(--color-mute)">{e.location}</p>}
                     {e.description != null && (
                       <div class="text-sm">
                         <PortableText value={e.description} />
@@ -174,11 +174,11 @@ const eventJsonLd = eventList.length
         <Container>
           <Eyebrow>Recent</Eyebrow>
           <h2 class="mt-3 font-display text-3xl">Past alumni events.</h2>
-          <ul class="mt-8 divide-y divide-[--color-ink]/10 border-y border-[--color-ink]/10">
+          <ul class="mt-8 divide-y divide-(--color-ink)/10 border-y border-(--color-ink)/10">
             {past.map((e) => (
               <li class="py-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
                 <p class="font-display text-lg">{e.title}</p>
-                <p class="text-sm text-[--color-mute] tabular-nums">
+                <p class="text-sm text-(--color-mute) tabular-nums">
                   {fmtDate(e.date)}
                   {e.location && <span class="mx-2 opacity-50">·</span>}
                   {e.location && <span>{e.location}</span>}

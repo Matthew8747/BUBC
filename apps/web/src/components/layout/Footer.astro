@@ -71,18 +71,18 @@ const columns: Column[] = [
 const year = new Date().getFullYear();
 ---
 
-<footer class="bg-[--color-navy] text-[--color-paper]">
+<footer class="bg-(--color-navy) text-(--color-paper)">
   <SportUniBadge />
 
   {/* Sponsor strip placeholder — will read from settings.social or sponsor docs */}
-  <div class="border-b border-[--color-paper]/10">
+  <div class="border-b border-(--color-paper)/10">
     <Container
       class="py-6 flex flex-wrap items-center gap-x-10 gap-y-4 justify-center sm:justify-between"
     >
-      <span class="text-xs uppercase tracking-[0.18em] text-[--color-paper]/60">
+      <span class="text-xs uppercase tracking-[0.18em] text-(--color-paper)/60">
         With thanks to our partners
       </span>
-      <div class="flex items-center gap-8 text-sm text-[--color-paper]/70">
+      <div class="flex items-center gap-8 text-sm text-(--color-paper)/70">
         <span>University of Bath</span>
         <span>British Rowing</span>
         <span>Hubbub Foundation</span>
@@ -104,7 +104,7 @@ const year = new Date().getFullYear();
                       href={l.href}
                       target={l.external ? '_blank' : undefined}
                       rel={l.external ? 'noopener noreferrer' : undefined}
-                      class="text-sm text-[--color-paper]/80 hover:text-[--color-gold] transition-colors"
+                      class="text-sm text-(--color-paper)/80 hover:text-(--color-gold) transition-colors"
                     >
                       {l.label}
                     </a>
@@ -120,17 +120,17 @@ const year = new Date().getFullYear();
     </div>
 
     <div
-      class="mt-16 pt-8 border-t border-[--color-paper]/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+      class="mt-16 pt-8 border-t border-(--color-paper)/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
     >
-      <div class="text-xs text-[--color-paper]/60 leading-relaxed">
+      <div class="text-xs text-(--color-paper)/60 leading-relaxed">
         <p>© {year} University of Bath Boat Club. All rights reserved.</p>
         <p class="mt-1">Registered charity in England & Wales (number TBD).</p>
       </div>
-      <div class="text-xs text-[--color-paper]/60 flex flex-wrap gap-x-6 gap-y-2">
-        <a href="/welfare/" class="hover:text-[--color-paper]">Welfare</a>
-        <a href="/privacy/" class="hover:text-[--color-paper]">Privacy</a>
-        <a href="/press/" class="hover:text-[--color-paper]">Press</a>
-        <a href="/news/rss.xml" class="hover:text-[--color-paper]">RSS</a>
+      <div class="text-xs text-(--color-paper)/60 flex flex-wrap gap-x-6 gap-y-2">
+        <a href="/welfare/" class="hover:text-(--color-paper)">Welfare</a>
+        <a href="/privacy/" class="hover:text-(--color-paper)">Privacy</a>
+        <a href="/press/" class="hover:text-(--color-paper)">Press</a>
+        <a href="/news/rss.xml" class="hover:text-(--color-paper)">RSS</a>
       </div>
     </div>
   </Container>

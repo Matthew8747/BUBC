@@ -26,16 +26,16 @@
 
 <div
   id="search-dialog"
-  class="fixed inset-0 z-[60] hidden items-start justify-center bg-[--color-ink]/60 backdrop-blur-sm p-4 pt-[10vh]"
+  class="fixed inset-0 z-[60] hidden items-start justify-center bg-(--color-ink)/60 backdrop-blur-sm p-4 pt-[10vh]"
   role="dialog"
   aria-modal="true"
   aria-labelledby="search-title"
   aria-hidden="true"
 >
   <div
-    class="w-full max-w-2xl rounded bg-[--color-paper] shadow-2xl ring-1 ring-[--color-line] overflow-hidden flex flex-col max-h-[80vh]"
+    class="w-full max-w-2xl rounded bg-(--color-paper) shadow-2xl ring-1 ring-(--color-line) overflow-hidden flex flex-col max-h-[80vh]"
   >
-    <div class="flex items-center gap-3 border-b border-[--color-line] px-5 py-3">
+    <div class="flex items-center gap-3 border-b border-(--color-line) px-5 py-3">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path
           d="M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm10 2-4.35-4.35"
@@ -50,10 +50,10 @@
         type="search"
         placeholder="Search news, squads, athletes, boats…"
         autocomplete="off"
-        class="flex-1 bg-transparent text-base outline-none placeholder:text-[--color-mute]"
+        class="flex-1 bg-transparent text-base outline-none placeholder:text-(--color-mute)"
       />
       <kbd
-        class="hidden sm:inline-flex h-6 items-center rounded border border-[--color-line] px-2 text-xs font-mono text-[--color-mute]"
+        class="hidden sm:inline-flex h-6 items-center rounded border border-(--color-line) px-2 text-xs font-mono text-(--color-mute)"
         title="Press Escape to close">esc</kbd
       >
       <button
@@ -73,22 +73,22 @@
     </div>
 
     <div class="flex-1 overflow-y-auto">
-      <p id="search-empty" class="px-5 py-12 text-center text-sm text-[--color-mute]">
+      <p id="search-empty" class="px-5 py-12 text-center text-sm text-(--color-mute)">
         Start typing to search news, squads, athletes, boats…
       </p>
-      <p id="search-no-results" class="hidden px-5 py-12 text-center text-sm text-[--color-mute]">
+      <p id="search-no-results" class="hidden px-5 py-12 text-center text-sm text-(--color-mute)">
         Nothing matched. Try a broader term or check the
         <a href="/news/" class="underline">news index</a>.
       </p>
-      <p id="search-unavailable" class="hidden px-5 py-12 text-center text-sm text-[--color-mute]">
+      <p id="search-unavailable" class="hidden px-5 py-12 text-center text-sm text-(--color-mute)">
         Search isn't available right now — the index isn't built. Try the
         <a href="/news/" class="underline">news index</a> in the meantime.
       </p>
-      <ul id="search-results" role="listbox" class="divide-y divide-[--color-line]"></ul>
+      <ul id="search-results" role="listbox" class="divide-y divide-(--color-line)"></ul>
     </div>
 
     <div
-      class="border-t border-[--color-line] px-5 py-2 text-xs text-[--color-mute] flex items-center justify-between"
+      class="border-t border-(--color-line) px-5 py-2 text-xs text-(--color-mute) flex items-center justify-between"
     >
       <span aria-live="polite" id="search-status"></span>
       <span class="hidden sm:inline">
@@ -182,7 +182,7 @@
       const items = results.querySelectorAll<HTMLAnchorElement>('a[data-result]');
       items.forEach((el, i) => {
         const on = i === idx;
-        el.classList.toggle('bg-[--color-bone]', on);
+        el.classList.toggle('bg-(--color-bone)', on);
         el.setAttribute('aria-selected', on ? 'true' : 'false');
         if (on) el.scrollIntoView({ block: 'nearest' });
       });
@@ -234,12 +234,12 @@
                 href="${d.url}"
                 data-result
                 data-index="${i}"
-                class="block px-5 py-4 hover:bg-[--color-bone] aria-[selected=true]:bg-[--color-bone]"
+                class="block px-5 py-4 hover:bg-(--color-bone) aria-[selected=true]:bg-(--color-bone)"
                 aria-selected="false"
               >
                 <p class="font-display text-base">${escapeHtml(title)}</p>
-                <p class="mt-1 text-xs text-[--color-mute] truncate">${d.url}</p>
-                <p class="mt-2 text-sm text-[--color-mute] line-clamp-2">${d.excerpt}</p>
+                <p class="mt-1 text-xs text-(--color-mute) truncate">${d.url}</p>
+                <p class="mt-2 text-sm text-(--color-mute) line-clamp-2">${d.excerpt}</p>
               </a>
             </li>
           `;

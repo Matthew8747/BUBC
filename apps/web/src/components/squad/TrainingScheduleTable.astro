@@ -8,14 +8,14 @@
 import type { TrainingSession } from '../../lib/types';
 
 interface Props {
-  sessions?: TrainingSession[];
+  sessions?: TrainingSession[] | null;
 }
 
-const { sessions = [] } = Astro.props;
+const { sessions } = Astro.props;
 
 const dayOrder = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-const sorted = [...sessions].sort((a, b) => {
+const sorted = (Array.isArray(sessions) ? sessions : []).slice().sort((a, b) => {
   const da = dayOrder.indexOf(a.day ?? '');
   const db = dayOrder.indexOf(b.day ?? '');
   if (da !== db) return da - db;
@@ -25,14 +25,14 @@ const sorted = [...sessions].sort((a, b) => {
 
 {
   sorted.length === 0 ? (
-    <p class="italic text-[--color-mute]">
+    <p class="italic text-(--color-mute)">
       Training schedule for the upcoming season is being finalised. Sign up for a trial and the
       captain will share it directly.
     </p>
   ) : (
     <div class="overflow-x-auto -mx-4 sm:mx-0">
       <table class="w-full text-left text-sm tabular-nums">
-        <thead class="border-b border-[--color-ink]/20 text-xs uppercase tracking-[0.12em] text-[--color-mute]">
+        <thead class="border-b border-(--color-ink)/20 text-xs uppercase tracking-[0.12em] text-(--color-mute)">
           <tr>
             <th scope="col" class="py-3 pl-4 sm:pl-0 pr-4 font-medium">
               Day
@@ -48,7 +48,7 @@ const sorted = [...sessions].sort((a, b) => {
             </th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-[--color-ink]/10">
+        <tbody class="divide-y divide-(--color-ink)/10">
           {sorted.map((s) => (
             <tr>
               <td class="py-3 pl-4 sm:pl-0 pr-4 font-medium">{s.day ?? '—'}</td>
@@ -57,7 +57,7 @@ const sorted = [...sessions].sort((a, b) => {
                 {s.endTime ? ` – ${s.endTime}` : ''}
               </td>
               <td class="py-3 px-4">{s.type ?? '—'}</td>
-              <td class="py-3 px-4 text-[--color-mute]">{s.location ?? '—'}</td>
+              <td class="py-3 px-4 text-(--color-mute)">{s.location ?? '—'}</td>
             </tr>
           ))}
         </tbody>

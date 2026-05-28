@@ -26,9 +26,9 @@ import type { OlympianCard } from '../../../lib/types';
 const olympians = (await safeFetch<OlympianCard[]>(olympiansQuery)) ?? [];
 
 const medalTone: Record<string, string> = {
-  gold: 'bg-[--color-gold] text-[--color-ink]',
-  silver: 'bg-[#C0C0C0] text-[--color-ink]',
-  bronze: 'bg-[#A97142] text-[--color-paper]',
+  gold: 'bg-(--color-gold) text-(--color-ink)',
+  silver: 'bg-[#C0C0C0] text-(--color-ink)',
+  bronze: 'bg-[#A97142] text-(--color-paper)',
 };
 
 function bestMedal(o: OlympianCard): 'gold' | 'silver' | 'bronze' | null {
@@ -84,10 +84,10 @@ const breadcrumbs = {
 
   <Section spacing="lg">
     <Container>
-      <p class="text-sm text-[--color-mute] mb-10">
-        <a href="/about/" class="hover:text-[--color-navy]">About</a>
+      <p class="text-sm text-(--color-mute) mb-10">
+        <a href="/about/" class="hover:text-(--color-navy)">About</a>
         <span class="mx-2 opacity-50">/</span>
-        <span class="text-[--color-ink]">Olympians</span>
+        <span class="text-(--color-ink)">Olympians</span>
       </p>
 
       {
@@ -126,18 +126,18 @@ const breadcrumbs = {
                     )}
                   </div>
                   <div class="mt-5">
-                    <h3 class="font-display text-2xl group-hover:underline decoration-[--color-gold] underline-offset-4">
+                    <h3 class="font-display text-2xl group-hover:underline decoration-(--color-gold) underline-offset-4">
                       {o.name}
                     </h3>
                     {(o.bubcYears || years) && (
-                      <p class="mt-2 text-sm text-[--color-mute]">
+                      <p class="mt-2 text-sm text-(--color-mute)">
                         {o.bubcYears && <span>BUBC {o.bubcYears}</span>}
                         {o.bubcYears && years && <span class="mx-2 opacity-50">·</span>}
                         {years && <span>Olympics {years}</span>}
                       </p>
                     )}
                     {o.currentRole && (
-                      <p class="mt-2 text-sm text-[--color-mute] italic">{o.currentRole}</p>
+                      <p class="mt-2 text-sm text-(--color-mute) italic">{o.currentRole}</p>
                     )}
                     {o.olympicYears && o.olympicYears.length > 0 && (
                       <div class="mt-3 flex flex-wrap gap-1.5">
@@ -155,9 +155,9 @@ const breadcrumbs = {
             })}
           </div>
         ) : (
-          <div class="rounded border border-dashed border-[--color-line] bg-[--color-bone]/60 p-10 text-center max-w-2xl mx-auto">
+          <div class="rounded border border-dashed border-(--color-line) bg-(--color-bone)/60 p-10 text-center max-w-2xl mx-auto">
             <h2 class="font-display text-2xl">Profiles coming</h2>
-            <p class="mt-3 text-sm text-[--color-mute]">
+            <p class="mt-3 text-sm text-(--color-mute)">
               BUBC has alumni in Olympic and World Championship boats. We're writing the profiles
               one by one with their input — when they're ready, they'll live here. If you raced for
               Bath and went on to compete at the Olympics, we'd love to get in touch:{' '}

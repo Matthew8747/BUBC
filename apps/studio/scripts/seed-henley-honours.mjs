@@ -28,6 +28,17 @@ const seat = (label, name) => ({_type: 'seat', _key: `seat-${label}-${name}`, se
 
 const HONOURS = [
   {
+    // VERIFIED result — see en.wikipedia.org/wiki/Bath_University_Boat_Club
+    year: 2024,
+    regatta: 'hrr',
+    event: 'Double Sculls Challenge Cup',
+    crewName: 'Bath (Gare / Dafydd)',
+    finish: 'Winners',
+    athletes: [seat('Bow', 'Jamie Gare'), seat('Stroke', 'Cedol Dafydd')],
+    notes:
+      'VERIFIED: BUBC won the Double Sculls Challenge Cup at Henley Royal Regatta 2024 (Jamie Gare & Cedol Dafydd). Confirm seat order and add the coach.',
+  },
+  {
     year: 2025,
     regatta: 'hrr',
     event: 'Temple Challenge Cup',

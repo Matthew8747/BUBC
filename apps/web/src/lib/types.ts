@@ -241,6 +241,8 @@ export interface SquadCardData {
   gender?: 'men' | 'women' | 'mixed';
   shortDescription: string;
   heroImage?: SanityImage;
+  /** When set, the card links here and no detail page is generated (e.g. the PDA). */
+  externalUrl?: string;
 }
 
 export interface SponsorData {

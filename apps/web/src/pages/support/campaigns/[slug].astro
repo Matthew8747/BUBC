@@ -60,7 +60,7 @@ const seo = {
   <JsonLd data={breadcrumbs} slot="head" />
 
   <article>
-    <header class="relative isolate bg-[--color-navy]">
+    <header class="relative isolate bg-(--color-navy)">
       {
         campaign.heroImage && (
           <div class="absolute inset-0 -z-10">
@@ -73,26 +73,26 @@ const seo = {
               decorative
               class="h-full w-full"
             />
-            <div class="absolute inset-0 bg-gradient-to-t from-[--color-ink]/90 via-[--color-ink]/50 to-[--color-ink]/30" />
+            <div class="absolute inset-0 bg-gradient-to-t from-(--color-ink)/90 via-(--color-ink)/50 to-(--color-ink)/30" />
           </div>
         )
       }
-      <Container class="pt-24 pb-16 sm:pt-32 sm:pb-24 text-[--color-paper]">
-        <p class="text-sm text-[--color-paper]/70 mb-6">
-          <a href="/support/campaigns/" class="hover:text-[--color-paper]">Campaigns</a>
+      <Container class="pt-24 pb-16 sm:pt-32 sm:pb-24 text-(--color-paper)">
+        <p class="text-sm text-(--color-paper)/70 mb-6">
+          <a href="/support/campaigns/" class="hover:text-(--color-paper)">Campaigns</a>
           <span class="mx-2 opacity-50">/</span>
-          <span class="text-[--color-paper]">{campaign.title}</span>
+          <span class="text-(--color-paper)">{campaign.title}</span>
         </p>
         {
           isActive && (
-            <span class="inline-flex items-center rounded-sm bg-[--color-gold] text-[--color-ink] px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.12em]">
+            <span class="inline-flex items-center rounded-sm bg-(--color-gold) text-(--color-ink) px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.12em]">
               Active campaign
             </span>
           )
         }
         {
           isReached && (
-            <span class="inline-flex items-center rounded-sm bg-[--color-paper]/15 text-[--color-paper] px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.12em]">
+            <span class="inline-flex items-center rounded-sm bg-(--color-paper)/15 text-(--color-paper) px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.12em]">
               Goal reached
             </span>
           )
@@ -100,7 +100,7 @@ const seo = {
         <h1 class="mt-5 max-w-4xl font-display text-4xl sm:text-5xl md:text-6xl leading-[1.05]">
           {campaign.title}
         </h1>
-        <p class="mt-4 max-w-2xl text-base sm:text-lg text-[--color-paper]/85">
+        <p class="mt-4 max-w-2xl text-base sm:text-lg text-(--color-paper)/85">
           {campaign.shortDescription}
         </p>
       </Container>
@@ -117,7 +117,7 @@ const seo = {
                   <PortableText value={campaign.story} class="mt-6" />
                 </>
               ) : (
-                <p class="text-[--color-mute] italic">
+                <p class="text-(--color-mute) italic">
                   Campaign story coming soon. In the meantime — every pound towards the goal helps;
                   the link is on the right.
                 </p>
@@ -126,7 +126,7 @@ const seo = {
           </div>
 
           <aside class="lg:sticky lg:top-24">
-            <div class="bg-[--color-bone] p-6 sm:p-8 flex flex-col gap-6">
+            <div class="bg-(--color-bone) p-6 sm:p-8 flex flex-col gap-6">
               <DonationThermometer
                 goal={campaign.goalAmount}
                 raised={campaign.raisedAmount}
@@ -141,12 +141,12 @@ const seo = {
               }
               {
                 isReached && (
-                  <p class="text-sm text-[--color-mute]">
+                  <p class="text-sm text-(--color-mute)">
                     This campaign hit its goal. Thank you to everyone who gave. New campaigns are
                     listed on the{' '}
                     <a
                       href="/support/campaigns/"
-                      class="underline decoration-[--color-gold] underline-offset-4"
+                      class="underline decoration-(--color-gold) underline-offset-4"
                     >
                       campaigns page
                     </a>
@@ -155,7 +155,7 @@ const seo = {
                 )
               }
               <div>
-                <p class="text-xs uppercase tracking-[0.12em] text-[--color-mute] mb-3">Share</p>
+                <p class="text-xs uppercase tracking-[0.12em] text-(--color-mute) mb-3">Share</p>
                 <ShareButtons url={shareUrl} title={campaign.title} />
               </div>
             </div>
@@ -190,7 +190,7 @@ const seo = {
       <Container class="flex flex-wrap items-center justify-between gap-6">
         <div>
           <Eyebrow tone="paper">All campaigns</Eyebrow>
-          <p class="mt-2 font-display text-2xl text-[--color-paper]">More ways to help.</p>
+          <p class="mt-2 font-display text-2xl text-(--color-paper)">More ways to help.</p>
         </div>
         <Button href="/support/campaigns/" variant="gold">View all campaigns</Button>
       </Container>

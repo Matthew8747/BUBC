@@ -13,7 +13,7 @@ const subSections = [
   {
     title: 'History',
     href: '/about/history/',
-    blurb: 'How the club started in 1965, and the moments that have defined it since.',
+    blurb: 'How the club started in 1966, and the moments that have defined it since.',
   },
   {
     title: 'Henley Honours',
@@ -48,7 +48,7 @@ const seo = {
   <PageHero
     eyebrow="About"
     headline="A club, not a brand."
-    lead="Founded in 1965 and run by students ever since, BUBC has trained more than two thousand rowers, sent dozens to international careers, and crewed the Henley reach every year it has been able to. This is how that has happened — and continues to."
+    lead="Founded in 1966 and run by students ever since, BUBC has trained more than two thousand rowers, sent dozens to international careers, and crewed the Henley reach every year it has been able to. This is how that has happened — and continues to."
   />
 
   <Section spacing="lg">
@@ -62,13 +62,13 @@ const seo = {
             <li>
               <a
                 href={s.href}
-                class="group block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[--color-gold]"
+                class="group block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-gold)"
               >
-                <h3 class="font-display text-2xl group-hover:text-[--color-gold] transition-colors">
+                <h3 class="font-display text-2xl group-hover:text-(--color-gold) transition-colors">
                   {s.title}
                 </h3>
-                <p class="mt-2 text-[--color-mute]">{s.blurb}</p>
-                <span class="mt-3 inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.12em] text-[--color-navy]">
+                <p class="mt-2 text-(--color-mute)">{s.blurb}</p>
+                <span class="mt-3 inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.12em] text-(--color-navy)">
                   Read
                   <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                     <path

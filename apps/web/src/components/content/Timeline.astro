@@ -19,17 +19,17 @@ interface Props {
 const { entries } = Astro.props;
 ---
 
-<ol class="relative border-l border-[--color-ink]/15 pl-6 sm:pl-10 space-y-10">
+<ol class="relative border-l border-(--color-ink)/15 pl-6 sm:pl-10 space-y-10">
   {
     entries.map((e) => (
       <li class="relative">
         <span
-          class="absolute -left-[27px] sm:-left-[42px] top-1.5 inline-flex h-3 w-3 rounded-full bg-[--color-gold]"
+          class="absolute -left-[27px] sm:-left-[42px] top-1.5 inline-flex h-3 w-3 rounded-full bg-(--color-gold)"
           aria-hidden="true"
         />
-        <p class="font-display text-2xl tabular-nums text-[--color-gold]">{e.year}</p>
+        <p class="font-display text-2xl tabular-nums text-(--color-gold)">{e.year}</p>
         <h3 class="mt-2 font-display text-xl">{e.title}</h3>
-        {e.body && <p class="mt-2 text-[--color-mute]">{e.body}</p>}
+        {e.body && <p class="mt-2 text-(--color-mute)">{e.body}</p>}
       </li>
     ))
   }

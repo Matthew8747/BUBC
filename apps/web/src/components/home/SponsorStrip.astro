@@ -22,7 +22,9 @@ const placeholderSponsors = [
   'Concept2',
 ];
 
-const { heading = 'With thanks to our sponsors', sponsors = [] } = Astro.props;
+// `??` instead of destructuring default — Sanity returns `null` for empty arrays.
+const { heading = 'With thanks to our sponsors' } = Astro.props;
+const sponsors = Astro.props.sponsors ?? [];
 
 const hasSponsors = sponsors.length > 0;
 ---
@@ -50,7 +52,7 @@ const hasSponsors = sponsors.length > 0;
                       loading="lazy"
                     />
                   ) : (
-                    <span class="font-display text-base text-[--color-mute]">{s.name}</span>
+                    <span class="font-display text-base text-(--color-mute)">{s.name}</span>
                   )}
                 </>
               );
@@ -74,7 +76,7 @@ const hasSponsors = sponsors.length > 0;
               );
             })
           : placeholderSponsors.map((name) => (
-              <span class="flex items-center justify-center font-display text-base text-[--color-mute]">
+              <span class="flex items-center justify-center font-display text-base text-(--color-mute)">
                 {name}
               </span>
             ))

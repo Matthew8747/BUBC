@@ -15,7 +15,7 @@ export const SITE = {
   shortName: 'BUBC',
   url: 'https://bubc.co.uk',
   defaultDescription:
-    'University of Bath Boat Club. Performance student rowing from the River Avon. Founded 1965.',
+    'University of Bath Boat Club. Performance student rowing from the River Avon. Founded 1966.',
   twitter: '@bubc',
   /** Default OG image — generated at build time by `pages/og/[slug].png.ts`. */
   ogImage: '/og/default.png',

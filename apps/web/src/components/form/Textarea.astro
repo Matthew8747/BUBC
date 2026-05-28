@@ -15,10 +15,10 @@ const hintId = hint ? `${id}-hint` : undefined;
 ---
 
 <div class="flex flex-col gap-1.5">
-  <label for={id} class="text-sm font-medium text-[--color-ink]">
+  <label for={id} class="text-sm font-medium text-(--color-ink)">
     {label}{
       required && (
-        <span aria-hidden="true" class="text-[--color-blade] ml-0.5">
+        <span aria-hidden="true" class="text-(--color-blade) ml-0.5">
           *
         </span>
       )
@@ -32,11 +32,11 @@ const hintId = hint ? `${id}-hint` : undefined;
     required={required}
     maxlength={maxlength}
     aria-describedby={hintId}
-    class="px-3.5 py-3 border border-[--color-line] bg-[--color-paper] text-[--color-ink] rounded-sm placeholder:text-[--color-mute] focus:border-[--color-navy] focus:outline-2 focus:outline-[--color-gold] focus:outline-offset-2 resize-y"
+    class="px-3.5 py-3 border border-(--color-line) bg-(--color-paper) text-(--color-ink) rounded-sm placeholder:text-(--color-mute) focus:border-(--color-navy) focus:outline-2 focus:outline-(--color-gold) focus:outline-offset-2 resize-y"
   ></textarea>
   {
     hint && (
-      <p id={hintId} class="text-xs text-[--color-mute]">
+      <p id={hintId} class="text-xs text-(--color-mute)">
         {hint}
       </p>
     )

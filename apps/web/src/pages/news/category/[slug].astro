@@ -52,10 +52,10 @@ if (!category) {
 
   <Section spacing="lg">
     <Container>
-      <p class="text-sm text-[--color-mute] mb-6">
-        <a href="/news/" class="hover:text-[--color-navy]">All news</a>
+      <p class="text-sm text-(--color-mute) mb-6">
+        <a href="/news/" class="hover:text-(--color-navy)">All news</a>
         <span class="mx-2 opacity-50">/</span>
-        <span class="text-[--color-ink]">{category.title}</span>
+        <span class="text-(--color-ink)">{category.title}</span>
       </p>
 
       {
@@ -73,9 +73,9 @@ if (!category) {
               ))}
             </div>
           ) : (
-            <div class="rounded border border-dashed border-[--color-line] bg-[--color-bone]/60 p-10 text-center">
+            <div class="rounded border border-dashed border-(--color-line) bg-(--color-bone)/60 p-10 text-center">
               <h2 class="font-display text-2xl">Nothing here yet</h2>
-              <p class="mt-3 text-sm text-[--color-mute] max-w-md mx-auto">
+              <p class="mt-3 text-sm text-(--color-mute) max-w-md mx-auto">
                 No posts have been tagged <strong>{category.title}</strong> yet. Try{' '}
                 <a href="/news/" class="underline">
                   all news

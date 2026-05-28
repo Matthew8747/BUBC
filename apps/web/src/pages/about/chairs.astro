@@ -51,7 +51,7 @@ function term(c: ChairRecord): string {
   seo={{
     title: 'Chairs of BUBC',
     description:
-      'Every committee chair of the University of Bath Boat Club, decade by decade — the line of student officers who have led the club since 1965.',
+      'Every committee chair of the University of Bath Boat Club, decade by decade — the line of student officers who have led the club since 1966.',
     image: ogImage({ kind: 'page', slug: 'chairs' }),
   }}
 >
@@ -60,15 +60,15 @@ function term(c: ChairRecord): string {
   <PageHero
     eyebrow="About"
     headline="Chairs of BUBC."
-    lead="The student officers who have led the club, one year at a time, since 1965. A running record — fill any gaps you can."
+    lead="The student officers who have led the club, one year at a time, since 1966. A running record — fill any gaps you can."
   />
 
   <Section spacing="lg">
     <Container>
-      <p class="text-sm text-[--color-mute] mb-8">
-        <a href="/about/" class="hover:text-[--color-navy]">About</a>
+      <p class="text-sm text-(--color-mute) mb-8">
+        <a href="/about/" class="hover:text-(--color-navy)">About</a>
         <span class="mx-2 opacity-50">/</span>
-        <span class="text-[--color-ink]">Chairs of BUBC</span>
+        <span class="text-(--color-ink)">Chairs of BUBC</span>
       </p>
 
       {
@@ -80,7 +80,7 @@ function term(c: ChairRecord): string {
                 <section aria-labelledby={`chairs-${decade}s`}>
                   <h2
                     id={`chairs-${decade}s`}
-                    class="font-display text-3xl border-b border-[--color-line] pb-2 mb-6 tabular-nums"
+                    class="font-display text-3xl border-b border-(--color-line) pb-2 mb-6 tabular-nums"
                   >
                     {decade}s
                   </h2>
@@ -97,7 +97,7 @@ function term(c: ChairRecord): string {
                           <Eyebrow>Chair, {term(c)}</Eyebrow>
                           <h3 class="mt-2 font-display text-xl">{c.name}</h3>
                           {c.bio && (
-                            <div class="mt-3 text-sm text-[--color-mute]">
+                            <div class="mt-3 text-sm text-(--color-mute)">
                               <PortableText value={c.bio} />
                             </div>
                           )}
@@ -110,10 +110,10 @@ function term(c: ChairRecord): string {
             })}
           </div>
         ) : (
-          <div class="rounded border border-dashed border-[--color-line] bg-[--color-bone]/60 p-10 text-center max-w-2xl mx-auto">
+          <div class="rounded border border-dashed border-(--color-line) bg-(--color-bone)/60 p-10 text-center max-w-2xl mx-auto">
             <h2 class="font-display text-2xl">A record being assembled</h2>
-            <p class="mt-3 text-sm text-[--color-mute]">
-              BUBC has been chaired by a student officer every year since 1965, but the
+            <p class="mt-3 text-sm text-(--color-mute)">
+              BUBC has been chaired by a student officer every year since 1966, but the
               committee-by-committee roll-call is being rebuilt from minutes and alumni memory. If
               you chaired the club, were close to someone who did, or have a photo to credit, email{' '}
               <a class="underline" href="mailto:alumni@bubc.co.uk">

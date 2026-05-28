@@ -18,10 +18,10 @@ const hintId = hint ? `${name}-hint` : undefined;
 ---
 
 <fieldset class="flex flex-col gap-3" aria-describedby={hintId}>
-  <legend class="text-sm font-medium text-[--color-ink]">
+  <legend class="text-sm font-medium text-(--color-ink)">
     {legend}{
       required && (
-        <span aria-hidden="true" class="text-[--color-blade] ml-0.5">
+        <span aria-hidden="true" class="text-(--color-blade) ml-0.5">
           *
         </span>
       )
@@ -29,7 +29,7 @@ const hintId = hint ? `${name}-hint` : undefined;
   </legend>
   {
     hint && (
-      <p id={hintId} class="text-xs text-[--color-mute]">
+      <p id={hintId} class="text-xs text-(--color-mute)">
         {hint}
       </p>
     )
@@ -37,18 +37,18 @@ const hintId = hint ? `${name}-hint` : undefined;
   <div class="grid sm:grid-cols-2 gap-2">
     {
       options.map((opt, idx) => (
-        <label class="flex items-start gap-3 p-3.5 border border-[--color-line] rounded-sm cursor-pointer hover:border-[--color-navy] has-[:checked]:border-[--color-navy] has-[:checked]:bg-[--color-bone] transition-colors">
+        <label class="flex items-start gap-3 p-3.5 border border-(--color-line) rounded-sm cursor-pointer hover:border-(--color-navy) has-[:checked]:border-(--color-navy) has-[:checked]:bg-(--color-bone) transition-colors">
           <input
             type="radio"
             name={name}
             value={opt.value}
             required={required && idx === 0}
-            class="mt-0.5 accent-[--color-navy]"
+            class="mt-0.5 accent-(--color-navy)"
           />
           <span>
-            <span class="block text-sm font-medium text-[--color-ink]">{opt.label}</span>
+            <span class="block text-sm font-medium text-(--color-ink)">{opt.label}</span>
             {opt.description && (
-              <span class="block text-xs text-[--color-mute] mt-0.5">{opt.description}</span>
+              <span class="block text-xs text-(--color-mute) mt-0.5">{opt.description}</span>
             )}
           </span>
         </label>

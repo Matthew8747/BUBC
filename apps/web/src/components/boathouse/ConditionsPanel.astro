@@ -1,0 +1,252 @@
+---
+/**
+ * ConditionsPanel — live "next 24 hours on the water" panel for the boathouse page.
+ *
+ * Two cards, populated client-side (the site is static, so this fetches in the
+ * browser):
+ *   - River level: Environment Agency real-time flood-monitoring API for the
+ *     Saltford gauge (the downstream end of the reach). Open data, CORS-enabled.
+ *   - Weather: Open-Meteo (no API key, CORS-enabled) for the next 24h at the
+ *     boathouse coordinates — wind + gusts matter most for rowing.
+ *
+ * Config travels via data-* attributes so the <script> stays a bundled module
+ * (CSP-safe, no inline). If either fetch fails the card falls back to a link to
+ * the authoritative source, so the panel is always useful.
+ */
+import Section from '../ui/Section.astro';
+import Container from '../ui/Container.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+
+interface Props {
+  lat: number;
+  lng: number;
+  /** check-for-flooding station id (RLOIid) — the user-facing river page. */
+  rloiId?: string;
+  /** EA flood-monitoring measure id for the water-level reading. */
+  measureId?: string;
+  /** Met Office location code (the bit after /forecast/ in the URL). */
+  metofficeCode?: string;
+  stationLabel?: string;
+}
+
+const {
+  lat,
+  lng,
+  rloiId = '3043',
+  measureId = '53126-level-stage-i-15_min-mASD',
+  metofficeCode = 'gcnk62de6',
+  stationLabel = 'Saltford gauge, River Avon',
+} = Astro.props;
+
+const stationId = measureId.split('-')[0];
+const stationUrl = `https://check-for-flooding.service.gov.uk/station/${rloiId}`;
+const metofficeUrl = `https://weather.metoffice.gov.uk/forecast/${metofficeCode}`;
+---
+
+<Section tone="bone" spacing="md">
+  <Container>
+    <div class="max-w-2xl">
+      <Eyebrow>On the water today</Eyebrow>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl">Conditions for the next 24 hours.</h2>
+      <p class="mt-3 text-(--color-mute)">
+        Live river level and weather for the reach. Always your own call on the day — check with the
+        captain or coach before boating.
+      </p>
+    </div>
+
+    <div
+      class="mt-10 grid sm:grid-cols-2 gap-6"
+      data-conditions
+      data-lat={lat}
+      data-lng={lng}
+      data-measure-id={measureId}
+      data-station-id={stationId}
+      data-station-url={stationUrl}
+      data-metoffice-code={metofficeCode}
+    >
+      {/* River card */}
+      <article class="bg-(--color-paper) border border-(--color-ink)/10 p-6 sm:p-8">
+        <div class="flex items-center justify-between gap-4">
+          <h3 class="font-display text-xl">River level</h3>
+          <span
+            data-river-status
+            class="hidden text-xs font-medium uppercase tracking-[0.12em] px-2.5 py-1"></span>
+        </div>
+        <p class="mt-1 text-sm text-(--color-mute)">{stationLabel}</p>
+        <div data-river-body class="mt-5">
+          <p class="text-(--color-mute) text-sm animate-pulse">Loading the latest reading…</p>
+        </div>
+        <p class="mt-5 text-xs">
+          <a
+            href={stationUrl}
+            class="underline decoration-(--color-gold) underline-offset-4 hover:text-(--color-gold)"
+            target="_blank"
+            rel="noopener noreferrer">Full river data — Environment Agency →</a
+          >
+        </p>
+      </article>
+
+      {/* Weather card */}
+      <article class="bg-(--color-paper) border border-(--color-ink)/10 p-6 sm:p-8">
+        <div class="flex items-center justify-between gap-4">
+          <h3 class="font-display text-xl">Weather</h3>
+          <span class="text-xs font-medium uppercase tracking-[0.12em] text-(--color-mute)"
+            >Next 24h</span
+          >
+        </div>
+        <p class="mt-1 text-sm text-(--color-mute)">Bath reach</p>
+        <div data-weather-body class="mt-5">
+          <p class="text-(--color-mute) text-sm animate-pulse">Loading the forecast…</p>
+        </div>
+        <p class="mt-5 text-xs">
+          <a
+            data-metoffice-link
+            href={metofficeUrl}
+            class="underline decoration-(--color-gold) underline-offset-4 hover:text-(--color-gold)"
+            target="_blank"
+            rel="noopener noreferrer">Full forecast — Met Office →</a
+          >
+        </p>
+      </article>
+    </div>
+  </Container>
+</Section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-conditions]');
+  if (root) {
+    const lat = root.dataset.lat;
+    const lng = root.dataset.lng;
+    const measureId = root.dataset.measureId!;
+    const stationId = root.dataset.stationId!;
+    const metofficeCode = root.dataset.metofficeCode!;
+
+    const riverBody = root.querySelector<HTMLElement>('[data-river-body]')!;
+    const riverStatus = root.querySelector<HTMLElement>('[data-river-status]')!;
+    const weatherBody = root.querySelector<HTMLElement>('[data-weather-body]')!;
+    const metLink = root.querySelector<HTMLAnchorElement>('[data-metoffice-link]');
+
+    const fetchJson = async (url: string) => {
+      const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    };
+
+    const fail = (el: HTMLElement, msg: string) => {
+      el.innerHTML = `<p class="text-sm text-(--color-mute)">${msg}</p>`;
+    };
+
+    // Point the "Full forecast" link at today's date.
+    if (metLink) {
+      const today = new Date().toISOString().slice(0, 10);
+      metLink.href = `https://weather.metoffice.gov.uk/forecast/${metofficeCode}#?date=${today}`;
+    }
+
+    // --- River level (Environment Agency) ---
+    (async () => {
+      try {
+        const base = 'https://environment.data.gov.uk/flood-monitoring/id';
+        const [readingData, stationData] = await Promise.all([
+          fetchJson(`${base}/measures/${measureId}/readings?_sorted&_limit=8`),
+          fetchJson(`${base}/stations/${stationId}?_view=full`).catch(() => null),
+        ]);
+
+        const readings = (readingData.items ?? [])
+          .filter((r: any) => typeof r.value === 'number')
+          .sort((a: any, b: any) => (a.dateTime < b.dateTime ? 1 : -1));
+        if (readings.length === 0) throw new Error('no readings');
+
+        const latest = readings[0];
+        const value = latest.value as number;
+        const prev = readings.find(
+          (r: any) => Date.parse(latest.dateTime) - Date.parse(r.dateTime) >= 45 * 60 * 1000,
+        );
+        let trend = '→ steady';
+        if (prev) {
+          const delta = value - prev.value;
+          if (delta > 0.03) trend = '↗ rising';
+          else if (delta < -0.03) trend = '↘ falling';
+        }
+
+        const scale = stationData?.items?.stageScale;
+        const low = scale?.typicalRangeLow;
+        const high = scale?.typicalRangeHigh;
+        if (typeof low === 'number' && typeof high === 'number') {
+          let label = 'Normal';
+          let cls = 'bg-(--color-avon)/15 text-(--color-avon)';
+          if (value > high) {
+            label = 'High';
+            cls = 'bg-(--color-blade)/15 text-(--color-blade)';
+          } else if (value < low) {
+            label = 'Low';
+            cls = 'bg-(--color-ink)/10 text-(--color-mute)';
+          }
+          riverStatus.textContent = label;
+          riverStatus.className = `text-xs font-medium uppercase tracking-[0.12em] px-2.5 py-1 ${cls}`;
+        }
+
+        const when = new Date(latest.dateTime).toLocaleTimeString('en-GB', {
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+        riverBody.innerHTML = `
+          <p class="font-display text-4xl tabular-nums">${value.toFixed(2)}<span class="text-lg text-(--color-mute)"> m</span></p>
+          <p class="mt-2 text-sm">${trend}</p>
+          <p class="mt-1 text-xs text-(--color-mute)">Updated ${when} · level above station datum</p>`;
+      } catch {
+        fail(
+          riverBody,
+          'Live level unavailable right now — open the Environment Agency page below.',
+        );
+      }
+    })();
+
+    // --- Weather (Open-Meteo, next 24h) ---
+    (async () => {
+      try {
+        const url =
+          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}` +
+          `&hourly=temperature_2m,precipitation_probability,wind_speed_10m,wind_gusts_10m` +
+          `&wind_speed_unit=mph&forecast_days=2&timezone=Europe%2FLondon`;
+        const data = await fetchJson(url);
+        const h = data.hourly;
+        const times: string[] = h.time;
+        const now = Date.now();
+        const idx = Math.max(
+          0,
+          times.findIndex((t) => Date.parse(t) >= now - 60 * 60 * 1000),
+        );
+        const span = (arr: number[]) => arr.slice(idx, idx + 24).filter((n) => n != null);
+        const temps = span(h.temperature_2m);
+        const winds = span(h.wind_speed_10m);
+        const gusts = span(h.wind_gusts_10m);
+        const rain = span(h.precipitation_probability);
+        if (temps.length === 0) throw new Error('no forecast');
+
+        const r = Math.round;
+        const tMin = r(Math.min(...temps));
+        const tMax = r(Math.max(...temps));
+        const wMin = r(Math.min(...winds));
+        const wMax = r(Math.max(...winds));
+        const gMax = r(Math.max(...gusts));
+        const rMax = r(Math.max(...rain));
+        const rainLabel =
+          rMax >= 50 ? `up to ${rMax}% chance` : rMax >= 20 ? `${rMax}% chance` : 'mostly dry';
+
+        const row = (label: string, value: string) =>
+          `<div class="flex items-baseline justify-between gap-4 py-1.5 border-b border-(--color-ink)/5 last:border-0">
+             <dt class="text-sm text-(--color-mute)">${label}</dt>
+             <dd class="font-medium tabular-nums">${value}</dd>
+           </div>`;
+        weatherBody.innerHTML = `<dl>
+          ${row('Wind', `${wMin}–${wMax} mph`)}
+          ${row('Gusts to', `${gMax} mph`)}
+          ${row('Temp', `${tMin}–${tMax}°C`)}
+          ${row('Rain', rainLabel)}
+        </dl>`;
+      } catch {
+        fail(weatherBody, 'Live forecast unavailable right now — open the Met Office page below.');
+      }
+    })();
+  }
+</script>

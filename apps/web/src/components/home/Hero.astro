@@ -19,15 +19,19 @@ interface Props {
   ctas?: Cta[];
 }
 
+const defaultCtas: Cta[] = [
+  { label: 'Come and trial', variant: 'gold', link: { label: 'Trial', url: '/squads/trial/' } },
+  { label: 'Find your squad', variant: 'ghost', link: { label: 'Squads', url: '/squads/' } },
+];
+
+// Sanity returns `null` (not `undefined`) for empty array fields, so destructuring
+// defaults don't fire. Read the prop separately and `??`-fallback to the defaults.
 const {
   headline = 'Rowing fast from the Avon.',
   subhead = 'University of Bath Boat Club is a high-performance student rowing club. We race the BUCS, Henley and Head circuits — and we welcome novices every September.',
   image,
-  ctas = [
-    { label: 'Come and trial', variant: 'gold', link: { label: 'Trial', url: '/squads/trial/' } },
-    { label: 'Find your squad', variant: 'ghost', link: { label: 'Squads', url: '/squads/' } },
-  ],
 } = Astro.props;
+const ctas = Astro.props.ctas ?? defaultCtas;
 ---
 
 <section
@@ -44,21 +48,21 @@ const {
       class="h-full w-full"
     />
     <div
-      class="absolute inset-0 bg-gradient-to-t from-[--color-ink]/85 via-[--color-ink]/45 to-transparent"
+      class="absolute inset-0 bg-gradient-to-t from-(--color-ink)/85 via-(--color-ink)/45 to-transparent"
     >
     </div>
   </div>
 
-  <Container class="pb-16 sm:pb-24 pt-24 text-[--color-paper]">
-    <Eyebrow tone="paper">Founded 1965 · Bath, UK</Eyebrow>
+  <Container class="pb-16 sm:pb-24 pt-24 text-(--color-paper)">
+    <Eyebrow tone="paper">Founded 1966 · Bath, UK</Eyebrow>
     <h1
-      class="mt-6 max-w-4xl text-4xl sm:text-5xl md:text-[5.5rem] leading-[1.05] text-[--color-paper]"
+      class="mt-6 max-w-4xl text-4xl sm:text-5xl md:text-[5.5rem] leading-[1.05] text-(--color-paper)"
     >
       {headline}
     </h1>
     {
       subhead && (
-        <p class="mt-6 max-w-2xl text-base sm:text-lg text-[--color-paper]/85">{subhead}</p>
+        <p class="mt-6 max-w-2xl text-base sm:text-lg text-(--color-paper)/85">{subhead}</p>
       )
     }
     {
@@ -72,7 +76,7 @@ const {
               external={cta.link.external}
               class={
                 cta.variant === 'ghost'
-                  ? '!border-[--color-paper] !text-[--color-paper] hover:!bg-[--color-paper] hover:!text-[--color-ink]'
+                  ? '!border-(--color-paper) !text-(--color-paper) hover:!bg-(--color-paper) hover:!text-(--color-ink)'
                   : ''
               }
             >

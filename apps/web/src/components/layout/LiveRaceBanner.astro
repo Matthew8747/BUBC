@@ -28,9 +28,9 @@ const safeResultsUrl = banner.liveResultsUrl ? sanitizeUrl(banner.liveResultsUrl
 const hasResultsLink = safeResultsUrl && safeResultsUrl !== '#';
 
 const toneClass: Record<NonNullable<LiveRaceBanner['tone']>, string> = {
-  navy: 'bg-[--color-navy] text-[--color-paper]',
-  gold: 'bg-[--color-gold] text-[--color-ink]',
-  blade: 'bg-[--color-blade] text-[--color-paper]',
+  navy: 'bg-(--color-navy) text-(--color-paper)',
+  gold: 'bg-(--color-gold) text-(--color-ink)',
+  blade: 'bg-(--color-blade) text-(--color-paper)',
 };
 ---
 

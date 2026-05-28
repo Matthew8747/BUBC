@@ -19,10 +19,10 @@ interface Props {
 const { ratio = '16/9', label, tone = 'navy', class: className } = Astro.props;
 
 const toneClass: Record<NonNullable<Props['tone']>, string> = {
-  navy: 'bg-[--color-navy]/85 text-[--color-paper]',
-  avon: 'bg-[--color-avon]/85 text-[--color-paper]',
-  gold: 'bg-[--color-gold]/85 text-[--color-ink]',
-  bone: 'bg-[--color-bone] text-[--color-mute]',
+  navy: 'bg-(--color-navy)/85 text-(--color-paper)',
+  avon: 'bg-(--color-avon)/85 text-(--color-paper)',
+  gold: 'bg-(--color-gold)/85 text-(--color-ink)',
+  bone: 'bg-(--color-bone) text-(--color-mute)',
 };
 
 const aspectClass: Record<NonNullable<Props['ratio']>, string> = {
