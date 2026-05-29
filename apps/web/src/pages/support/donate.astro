@@ -15,13 +15,16 @@ import Picture from '../../components/content/Picture.astro';
 import DonationThermometer from '../../components/support/DonationThermometer.astro';
 import { safeFetch } from '../../lib/sanity';
 import { activeCampaignsQuery } from '../../lib/queries';
+import { withLiveTotals } from '../../lib/hubbub';
 import { ogImage } from '../../lib/og/url';
 import type { CampaignData } from '../../lib/types';
 
-const campaigns = (await safeFetch<CampaignData[]>(activeCampaignsQuery)) ?? [];
+const campaigns = await Promise.all(
+  ((await safeFetch<CampaignData[]>(activeCampaignsQuery)) ?? []).map(withLiveTotals),
+);
 
 // Primary destination for the headline donate button.
-const HUBBUB_URL = 'https://bath.hubbub.net/p/BUBC/pledge/';
+const HUBBUB_URL = 'https://bath.hubbub.net/p/BUBC/';
 
 const waysToGive = [
   {

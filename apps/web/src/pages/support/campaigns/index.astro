@@ -17,11 +17,14 @@ import DonationThermometer from '../../../components/support/DonationThermometer
 import JsonLd from '../../../components/seo/JsonLd.astro';
 import { safeFetch } from '../../../lib/sanity';
 import { allCampaignsQuery } from '../../../lib/queries';
+import { withLiveTotals } from '../../../lib/hubbub';
 import { SITE } from '../../../lib/seo';
 import { ogImage } from '../../../lib/og/url';
 import type { CampaignData } from '../../../lib/types';
 
-const campaigns = (await safeFetch<CampaignData[]>(allCampaignsQuery)) ?? [];
+const campaigns = await Promise.all(
+  ((await safeFetch<CampaignData[]>(allCampaignsQuery)) ?? []).map(withLiveTotals),
+);
 
 const active = campaigns.filter((c) => c.status === 'active');
 const reached = campaigns.filter((c) => c.status === 'reached');
@@ -33,7 +36,7 @@ const statusLabel: Record<NonNullable<CampaignData['status']>, string> = {
   closed: 'Closed',
 };
 
-const HUBBUB_URL = 'https://bath.hubbub.net/p/BUBC/pledge/';
+const HUBBUB_URL = 'https://bath.hubbub.net/p/BUBC/';
 
 const breadcrumbs = {
   '@context': 'https://schema.org',

@@ -80,6 +80,14 @@ export const campaign = defineType({
       type: 'url',
       validation: (rule) => rule.required().uri({scheme: ['http', 'https']}),
     }),
+    defineField({
+      name: 'hubbubUrl',
+      title: 'Hubbub project URL (auto-update)',
+      description:
+        'Optional. A Hubbub project page, e.g. https://bath.hubbub.net/p/BUBC/. If set, the site reads the live raised total + donor count from this page at build time and shows them instead of the manual figures above (falling back to the manual figures if Hubbub is unreachable). The goal still comes from "Goal amount".',
+      type: 'url',
+      validation: (rule) => rule.uri({scheme: ['http', 'https']}),
+    }),
     defineField({name: 'seo', title: 'SEO', type: 'seo'}),
   ],
   preview: {

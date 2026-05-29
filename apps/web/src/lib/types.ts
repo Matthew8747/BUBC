@@ -396,6 +396,8 @@ export interface CampaignData {
   raisedAmount: number;
   donorCount?: number;
   donateUrl: string;
+  /** Optional Hubbub project page; when set, raised/donors are pulled from it at build time. */
+  hubbubUrl?: string;
   heroImage?: SanityImage;
 }
 
