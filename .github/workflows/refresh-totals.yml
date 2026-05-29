@@ -1,0 +1,37 @@
+name: Refresh campaign totals
+
+# The site is static, so the live Hubbub fundraising totals (raised + donor
+# count) are read at *build time*. This scheduled job rebuilds the site daily
+# so those figures stay current without anyone pushing or publishing.
+#
+# One-time setup to activate:
+#   1. Vercel → Project → Settings → Git → Deploy Hooks → create a hook for the
+#      production branch (e.g. "daily-refresh").
+#   2. GitHub → repo Settings → Secrets and variables → Actions → New secret:
+#      name VERCEL_DEPLOY_HOOK_URL, value = the hook URL from step 1.
+# Until the secret is set, this job runs and harmlessly no-ops.
+
+on:
+  schedule:
+    - cron: '17 6 * * *' # 06:17 UTC daily
+  workflow_dispatch: {}
+
+# Avoid overlapping runs if a previous one is somehow still going.
+concurrency:
+  group: refresh-totals
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel deploy hook
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "VERCEL_DEPLOY_HOOK_URL is not set — skipping."
+            echo "Add it in repo secrets to enable the daily rebuild (see this file's header)."
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK" > /dev/null && echo "Triggered a Vercel rebuild."
