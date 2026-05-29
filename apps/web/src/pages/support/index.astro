@@ -12,10 +12,11 @@ import Picture from '../../components/content/Picture.astro';
 import DonationThermometer from '../../components/support/DonationThermometer.astro';
 import { safeFetch } from '../../lib/sanity';
 import { activeCampaignsQuery } from '../../lib/queries';
+import { withLiveTotals } from '../../lib/hubbub';
 import type { CampaignData } from '../../lib/types';
 
 const activeCampaigns = (await safeFetch<CampaignData[]>(activeCampaignsQuery)) ?? [];
-const featured = activeCampaigns[0];
+const featured = activeCampaigns[0] ? await withLiveTotals(activeCampaigns[0]) : undefined;
 
 const sections = [
   {

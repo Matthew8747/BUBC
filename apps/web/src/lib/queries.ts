@@ -278,7 +278,7 @@ export const boatBySlugQuery = /* groq */ `
 export const activeCampaignsQuery = /* groq */ `
   *[_type == "campaign" && status == "active"] | order(_createdAt desc) {
     _id, title, "slug": slug.current, shortDescription,
-    goalAmount, raisedAmount, donorCount, donateUrl,
+    goalAmount, raisedAmount, donorCount, donateUrl, hubbubUrl,
     heroImage { ${imageBlockFields} }
   }
 `;
@@ -289,7 +289,7 @@ export const allCampaignsQuery = /* groq */ `
     _createdAt desc
   ) {
     _id, title, "slug": slug.current, shortDescription, status,
-    goalAmount, raisedAmount, donorCount, donateUrl,
+    goalAmount, raisedAmount, donorCount, donateUrl, hubbubUrl,
     heroImage { ${imageBlockFields} }
   }
 `;
@@ -303,7 +303,7 @@ export const allCampaignSlugsQuery = /* groq */ `
 export const campaignBySlugQuery = /* groq */ `
   *[_type == "campaign" && slug.current == $slug][0] {
     _id, title, "slug": slug.current, status,
-    shortDescription, story, donateUrl,
+    shortDescription, story, donateUrl, hubbubUrl,
     goalAmount, raisedAmount, donorCount,
     heroImage { ${imageBlockFields} },
     gallery[] { ${imageBlockFields} },

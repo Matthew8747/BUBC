@@ -18,6 +18,7 @@ import ShareButtons from '../../../components/news/ShareButtons.astro';
 import JsonLd from '../../../components/seo/JsonLd.astro';
 import { safeFetch } from '../../../lib/sanity';
 import { allCampaignSlugsQuery, campaignBySlugQuery } from '../../../lib/queries';
+import { withLiveTotals } from '../../../lib/hubbub';
 import { SITE } from '../../../lib/seo';
 import { ogImage } from '../../../lib/og/url';
 import type { CampaignDetail } from '../../../lib/types';
@@ -28,11 +29,14 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 const { slug } = Astro.params;
-const campaign = await safeFetch<CampaignDetail>(campaignBySlugQuery, { slug });
+const raw = await safeFetch<CampaignDetail>(campaignBySlugQuery, { slug });
 
-if (!campaign) {
+if (!raw) {
   return Astro.redirect('/support/campaigns/');
 }
+// Override raised/donors with the live Hubbub total when the campaign has a
+// hubbubUrl set; otherwise the manual Sanity figures stand.
+const campaign = await withLiveTotals(raw);
 
 const isActive = campaign.status === 'active';
 const isReached = campaign.status === 'reached';
