@@ -88,6 +88,8 @@ const articleSchema = {
     title: post.seo?.title ?? post.title,
     description: post.seo?.description ?? post.excerpt,
     image: ogImage,
+    imageAlt: post.heroImage?.alt ?? post.title,
+    type: 'article',
     canonical: canonicalUrl,
     noIndex: post.seo?.noIndex,
   }}

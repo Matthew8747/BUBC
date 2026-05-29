@@ -19,6 +19,8 @@ import ConditionsPanel from '../../components/boathouse/ConditionsPanel.astro';
 import { safeFetch } from '../../lib/sanity';
 import { settingsQuery, fleetQuery } from '../../lib/queries';
 import type { Settings, BoatCardData } from '../../lib/types';
+import JsonLd from '../../components/seo/JsonLd.astro';
+import { SITE } from '../../lib/seo';
 
 const [settings, fleet] = await Promise.all([
   safeFetch<Settings>(settingsQuery),
@@ -38,9 +40,43 @@ const seo = {
   description:
     "The BUBC boathouse on the River Avon — facilities, fleet, and how to find us. Bath's racing programme is built here.",
 };
+
+// SportsActivityLocation + BreadcrumbList JSON-LD — gives the boathouse a real
+// place entity for "Bath rowing" / local searches, and helps Google understand
+// where the club actually rows.
+const boathouseJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsActivityLocation',
+  '@id': `${SITE.url}/boathouse/#location`,
+  name: 'BUBC Boathouse',
+  description:
+    "University of Bath Boat Club's rowing boathouse on the River Avon, between Bath and Saltford.",
+  url: `${SITE.url}/boathouse/`,
+  sport: 'Rowing',
+  geo: { '@type': 'GeoCoordinates', latitude: lat, longitude: lng },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Newbridge',
+    addressRegion: 'Somerset',
+    addressCountry: 'GB',
+  },
+  containedInPlace: { '@type': 'City', name: 'Bath' },
+  parentOrganization: { '@id': `${SITE.url}/#organization` },
+};
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'Boathouse', item: `${SITE.url}/boathouse/` },
+  ],
+};
 ---
 
 <PageLayout seo={seo}>
+  <JsonLd data={breadcrumbJsonLd} slot="head" />
+  <JsonLd data={boathouseJsonLd} slot="head" />
   <PageHero
     eyebrow="Boathouse"
     headline="On the water at Newbridge."
