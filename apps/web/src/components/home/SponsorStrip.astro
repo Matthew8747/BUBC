@@ -14,13 +14,7 @@ interface Props {
   sponsors?: SponsorData[];
 }
 
-const placeholderSponsors = [
-  'University of Bath',
-  'British Rowing',
-  'Hubbub Foundation',
-  'Empacher',
-  'Concept2',
-];
+const placeholderSponsors = ['University of Bath', 'British Rowing', 'Silvertonic', 'Embecosm'];
 
 // `??` instead of destructuring default — Sanity returns `null` for empty arrays.
 const { heading = 'With thanks to our sponsors' } = Astro.props;
