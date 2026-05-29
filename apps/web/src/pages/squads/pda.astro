@@ -29,10 +29,19 @@ import Button from '../../components/ui/Button.astro';
 import JsonLd from '../../components/seo/JsonLd.astro';
 import { SITE } from '../../lib/seo';
 import { ogImage } from '../../lib/og/url';
+import PhotoGallery from '../../components/content/PhotoGallery.astro';
+import { safeFetch } from '../../lib/sanity';
+import { squadGalleryBySlugQuery } from '../../lib/queries';
+import type { SquadGallery } from '../../lib/types';
 
 const PDA_BR_URL =
   'https://www.britishrowing.org/gb-rowing-team/olympic-pathway/performance-development-academies/';
+
+const PDA_APPLICATION_URL = 'https://www.britishrowing.org/gb-rowing-team/rowing-for-gb/Talent-id/';
 const TEAM_BATH_ROWING_URL = 'https://www.teambath.com/sport/rowing/';
+
+// PDA photos are editable in Studio on the "PDA" squad document (slug: pda).
+const gallery = await safeFetch<SquadGallery>(squadGalleryBySlugQuery, { slug: 'pda' });
 
 const seo = {
   title: 'GB Performance Development Academy — South West',
@@ -68,7 +77,7 @@ const breadcrumbJsonLd = {
       {
         label: 'Apply via British Rowing',
         variant: 'gold',
-        link: { label: 'Apply', url: PDA_BR_URL, external: true },
+        link: { label: 'Apply', url: PDA_APPLICATION_URL, external: true },
       },
       {
         label: 'British Rowing — PDA programme',
@@ -143,8 +152,9 @@ const breadcrumbJsonLd = {
         <div>
           <dt class="font-display text-2xl">Becky Wilde</dt>
           <dd class="mt-2 text-sm text-(--color-paper)/85 leading-relaxed">
-            Started her rowing career at the University of Bath and represented Team GB at the Paris
-            2024 Olympics — one of the most recent Bath PDA alumni to reach the senior team.
+            Took up rowing at the University of Bath in 2017, having arrived as a swimmer. Won
+            Olympic bronze in the women's double sculls at Paris 2024 with Mathilda Hodgkins-Byrne —
+            among the most recent Bath academy alumni to reach the Olympic podium.
           </dd>
         </div>
       </dl>
@@ -342,6 +352,26 @@ const breadcrumbJsonLd = {
       </p>
     </Container>
   </Section>
+
+  {/* Gallery */}
+  {
+    gallery?.photos && gallery.photos.length > 0 && (
+      <Section spacing="md">
+        <Container>
+          <Eyebrow>Gallery</Eyebrow>
+          <h2 class="mt-4 font-display text-3xl sm:text-4xl">
+            {gallery.galleryHeading ?? 'The Bath academy in pictures.'}
+          </h2>
+          {gallery.galleryIntro && (
+            <p class="mt-4 max-w-2xl text-(--color-mute) leading-relaxed">{gallery.galleryIntro}</p>
+          )}
+          <div class="mt-10">
+            <PhotoGallery images={gallery.photos} />
+          </div>
+        </Container>
+      </Section>
+    )
+  }
 
   {/* CTA */}
   <Section tone="navy" spacing="md">

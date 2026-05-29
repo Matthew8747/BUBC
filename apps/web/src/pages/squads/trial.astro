@@ -43,15 +43,17 @@ const isConfigured = Boolean(formId);
       <p class="mt-6 text-lg text-(--color-mute)">
         Whether you rowed at school or have never sat in a boat, we want to hear from you. Drop your
         details below and we'll be in touch with your trial date, what to bring, and where to meet.
+        These dates are not strict, you can come and join the boat club partway through the year,
+        just let us know your availability in the form and we'll do our best to accommodate.
       </p>
 
       <div class="mt-10 p-5 sm:p-6 border-l-2 border-(--color-gold) bg-(--color-bone)">
         <h2 class="font-display text-xl">What to expect</h2>
         <ul class="mt-3 space-y-1.5 text-sm text-(--color-ink) list-disc pl-5">
-          <li>2-kilometre ergo (rowing machine) under supervision</li>
-          <li>A 100-metre swim test in the university pool</li>
+          <li>Technical assessment on the water or an ergo</li>
+          <li>A 100-metre swim test in the university pool (safety protocol, not intense)</li>
           <li>A short chat with the captains and head coach</li>
-          <li>Around 90 minutes start to finish</li>
+          <li>Around 60 minutes start to finish</li>
         </ul>
       </div>
 
@@ -106,12 +108,12 @@ const isConfigured = Boolean(formId);
             {
               value: 'september',
               label: 'September (Fresher)',
-              description: 'Main intake — six weeks of learn-to-row before Christmas Head.',
+              description: 'Main intake — bedding in or learn-to-row before head races begin.',
             },
             {
               value: 'january',
               label: 'January (Second intake)',
-              description: 'Shorter on-water programme, focused on BUCS regatta.',
+              description: 'Shorter on-water programme, focused on gearing up for regatta season.',
             },
             { value: 'unsure', label: 'Not sure yet' },
           ]}

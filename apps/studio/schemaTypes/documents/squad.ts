@@ -167,8 +167,23 @@ export const squad = defineType({
       ],
     }),
     defineField({
+      name: 'galleryHeading',
+      title: 'Gallery heading',
+      description:
+        'Heading for the photo section. Defaults to "The season so far." Rename it (e.g. "Silverware & seasons") to show medal photos from previous years.',
+      type: 'string',
+    }),
+    defineField({
+      name: 'galleryIntro',
+      title: 'Gallery intro',
+      description: 'Optional sentence shown under the gallery heading.',
+      type: 'text',
+      rows: 2,
+    }),
+    defineField({
       name: 'photos',
       title: 'Photo gallery',
+      description: 'Add a caption to any photo (e.g. "BUCS gold, 2024") — it shows when enlarged.',
       type: 'array',
       of: [{type: 'imageBlock'}],
       options: {layout: 'grid'},

@@ -17,6 +17,20 @@
 | Sanity → Vercel   | ⏸ Deploy webhook documented in DEPLOYMENT.md, not yet wired.                                                           |
 | Custom domain     | ❌ `bubc.co.uk` not yet pointed at Vercel (launch-day cutover).                                                        |
 
+## Recent additions (2026-05-29)
+
+- **Photo lightbox** — `PhotoGallery` thumbnails open a full-screen, keyboard-accessible viewer (Esc / backdrop to close, prev / next, arrow keys, caption + credit shown). Used on squad pages, the PDA page, and the boathouse galleries.
+- **Editable squad gallery** — squad docs now have **Gallery heading** + **Gallery intro** fields (replaces the hard-coded "The season so far."). Add a caption to any gallery photo (e.g. "BUCS gold, 2024") and it shows when enlarged — use this for medal / past-season photos.
+- **Boathouse & STV photos** — new **Site settings → Boathouse & STV** group: _Boathouse photos_ (facilities section) and _STV photos_ (land-training section).
+- **PDA gallery** — the static `/squads/pda/` page now pulls editable photos from the **PDA squad doc** (slug `pda`).
+- **Boathouse copy** — removed the on-site erg suite / weights room (they live at the STV, not the boathouse); honest facilities bullets + an STV cross-reference. New-boathouse capital project section confirmed accurate and kept.
+- **`novice@bubc.co.uk`** added to the Contact page.
+- **Events page** — new `/events/` lists every upcoming event (regattas, heads, camps, socials, fundraisers, alumni) + a recent archive, from the `event` schema. Linked in the header nav and footer; the legacy `/events/` → `/alumni/events/` redirect was removed so the page is reachable (map updated in [plan.md](plan.md) §1).
+- **Footer sponsors** — the footer "partners" strip now reads `sponsor` docs from Sanity (ordered by tier, linked to each website), falling back to the core partners when none exist.
+- **Thermometer on /support/** — the support landing now features the active campaign with the live `DonationThermometer` (already present on the campaign list + detail pages).
+
+> **Action — redeploy Studio** (`pnpm --filter @bubc/studio deploy`) so editors see the new fields, then add content: **Boathouse & STV** photos (Site settings), **squad galleries** (each squad), **PDA photos** (PDA squad doc), and **sponsor** docs (to populate the footer strip). New schema fields are already live in local Studio (`pnpm studio`).
+
 ## Launch checklist (remaining manual steps)
 
 Most of these cross dashboards (Vercel / Sanity / Cloudflare) and can't be scripted from the repo. Order is roughly priority.

@@ -11,6 +11,7 @@ export const settings = defineType({
   groups: [
     {name: 'general', title: 'General', default: true},
     {name: 'contact', title: 'Contact'},
+    {name: 'boathouse', title: 'Boathouse & STV'},
     {name: 'nav', title: 'Navigation'},
     {name: 'footer', title: 'Footer'},
     {name: 'social', title: 'Social'},
@@ -71,6 +72,28 @@ export const settings = defineType({
         {name: 'lng', type: 'number', title: 'Longitude'},
         {name: 'what3words', type: 'string', title: 'what3words address'},
       ],
+    }),
+
+    // Boathouse & STV --------------------------------------------------------
+    defineField({
+      name: 'boathousePhotos',
+      title: 'Boathouse photos',
+      description:
+        'Photos of the boathouse and the reach. Shown in a gallery on the Boathouse page. Click to enlarge on the site.',
+      type: 'array',
+      group: 'boathouse',
+      of: [{type: 'imageBlock'}],
+      options: {layout: 'grid'},
+    }),
+    defineField({
+      name: 'stvPhotos',
+      title: 'STV photos',
+      description:
+        'Photos of the Sports Training Village — land training, gym, erg room. Shown in the STV section of the Boathouse page.',
+      type: 'array',
+      group: 'boathouse',
+      of: [{type: 'imageBlock'}],
+      options: {layout: 'grid'},
     }),
 
     // Navigation -------------------------------------------------------------

@@ -7,6 +7,15 @@ import PageHero from '../../components/layout/PageHero.astro';
 import Section from '../../components/ui/Section.astro';
 import Container from '../../components/ui/Container.astro';
 import Eyebrow from '../../components/ui/Eyebrow.astro';
+import Button from '../../components/ui/Button.astro';
+import Picture from '../../components/content/Picture.astro';
+import DonationThermometer from '../../components/support/DonationThermometer.astro';
+import { safeFetch } from '../../lib/sanity';
+import { activeCampaignsQuery } from '../../lib/queries';
+import type { CampaignData } from '../../lib/types';
+
+const activeCampaigns = (await safeFetch<CampaignData[]>(activeCampaignsQuery)) ?? [];
+const featured = activeCampaigns[0];
 
 const sections = [
   {
@@ -44,6 +53,47 @@ const seo = {
     headline="Back a club that's been backed before."
     lead="BUBC is a charity run entirely by the people who row in it. Every pound from outside the membership extends what the club can do — and who it can do it with."
   />
+
+  {
+    featured && (
+      <Section spacing="md">
+        <Container>
+          <div class="grid lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-14 items-center bg-(--color-bone) p-6 sm:p-10">
+            <div class="order-2 lg:order-1">
+              <Eyebrow>Live campaign</Eyebrow>
+              <h2 class="mt-3 font-display text-3xl sm:text-4xl">{featured.title}</h2>
+              <p class="mt-3 text-(--color-mute)">{featured.shortDescription}</p>
+              <div class="mt-6 max-w-md">
+                <DonationThermometer
+                  goal={featured.goalAmount}
+                  raised={featured.raisedAmount}
+                  donorCount={featured.donorCount}
+                />
+              </div>
+              <div class="mt-6 flex flex-wrap gap-3">
+                <Button href={featured.donateUrl} variant="gold" external>
+                  Donate now
+                </Button>
+                <Button href={`/support/campaigns/${featured.slug}/`} variant="ghost">
+                  Read the story
+                </Button>
+              </div>
+            </div>
+            {featured.heroImage && (
+              <div class="order-1 lg:order-2">
+                <Picture
+                  image={featured.heroImage}
+                  ratio="3/2"
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                  fallbackLabel={featured.title}
+                />
+              </div>
+            )}
+          </div>
+        </Container>
+      </Section>
+    )
+  }
 
   <Section spacing="lg">
     <Container>

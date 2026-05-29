@@ -43,7 +43,7 @@ Wired in `apps/web/astro.config.mjs` (`redirects:`).
 | `/coaching-team/`      | `/coaching/`            | `/bubc-alumni/`     | `/alumni/`               |
 | `/facilities-fleet/`   | `/boathouse/`           | `/meles-boat-club/` | `/alumni/meles/`         |
 | `/sponsors/`           | `/support/sponsor/`     | `/join-meles-bc/`   | `/alumni/meles#join`     |
-| `/history-2/`          | `/about/history/`       | `/events/`          | `/alumni/events/`        |
+| `/history-2/`          | `/about/history/`       | `/events/`          | _(now a live page)_      |
 | `/senior-squad/`       | `/squads/senior-men/`   | `/our-impact/`      | `/support/campaigns/`    |
 | `/women-senior-squad/` | `/squads/senior-women/` | `/buy-a-boat/`      | `/support/buy-a-boat/`   |
 | `/fundraising/`        | `/support/campaigns/`   | `/chairs-of-bubc/`  | `/about/chairs/`         |
