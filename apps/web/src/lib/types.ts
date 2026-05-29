@@ -65,6 +65,8 @@ export interface Settings {
   contactEmail?: string;
   address?: string;
   boathouseLocation?: { lat: number; lng: number; what3words?: string };
+  boathousePhotos?: SanityImage[];
+  stvPhotos?: SanityImage[];
   primaryNav?: Link[];
   utilityNav?: Link[];
   primaryCta?: Cta;
@@ -312,9 +314,18 @@ export interface SquadDetail {
   trainingSchedule?: TrainingSession[];
   expectedStandards?: unknown;
   achievements?: Achievement[];
+  galleryHeading?: string;
+  galleryIntro?: string;
   photos?: SanityImage[];
   contactEmail?: string;
   seo?: Seo;
+}
+
+/** Gallery-only squad projection (e.g. for the static PDA page). */
+export interface SquadGallery {
+  galleryHeading?: string;
+  galleryIntro?: string;
+  photos?: SanityImage[];
 }
 
 // ---------------------------------------------------------------------------

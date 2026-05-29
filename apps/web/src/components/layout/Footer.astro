@@ -7,6 +7,9 @@
 import Container from '../ui/Container.astro';
 import NewsletterSignup from './NewsletterSignup.astro';
 import SportUniBadge from './SportUniBadge.astro';
+import { safeFetch } from '../../lib/sanity';
+import { allSponsorsQuery } from '../../lib/queries';
+import type { SponsorData } from '../../lib/types';
 
 interface Link {
   label: string;
@@ -43,6 +46,7 @@ const columns: Column[] = [
       { label: 'Coaching', href: '/coaching/' },
       { label: 'Boathouse fleet', href: '/boathouse/fleet/' },
       { label: 'Race results', href: '/results/' },
+      { label: 'Events', href: '/events/' },
     ],
   },
   {
@@ -60,8 +64,8 @@ const columns: Column[] = [
       { label: 'Alumni', href: '/alumni/' },
       { label: 'Meles BC', href: '/alumni/meles/' },
       { label: 'Alumni events', href: '/alumni/events/' },
-      { label: 'Instagram', href: 'https://instagram.com/bathuniboatclub', external: true },
-      { label: 'YouTube', href: 'https://youtube.com/@bathuniboatclub', external: true },
+      { label: 'Instagram', href: 'https://instagram.com/crewbath_', external: true },
+      { label: 'YouTube', href: 'https://youtube.com/@bubc', external: true },
       { label: 'Strava', href: 'https://www.strava.com/clubs/bubc', external: true },
       { label: 'Contact', href: '/contact/' },
     ],
@@ -69,12 +73,17 @@ const columns: Column[] = [
 ];
 
 const year = new Date().getFullYear();
+
+// Sponsor strip — pulled from Sanity sponsor docs (ordered by tier in the query).
+// Falls back to the club's core partners so the strip is never empty pre-content.
+const sponsors = (await safeFetch<SponsorData[]>(allSponsorsQuery)) ?? [];
+const fallbackPartners = ['University of Bath', 'British Rowing', 'Hubbub Foundation'];
 ---
 
 <footer class="bg-(--color-navy) text-(--color-paper)">
   <SportUniBadge />
 
-  {/* Sponsor strip placeholder — will read from settings.social or sponsor docs */}
+  {/* Sponsor strip — sponsor docs from Sanity, ordered by tier; falls back to core partners */}
   <div class="border-b border-(--color-paper)/10">
     <Container
       class="py-6 flex flex-wrap items-center gap-x-10 gap-y-4 justify-center sm:justify-between"
@@ -82,10 +91,25 @@ const year = new Date().getFullYear();
       <span class="text-xs uppercase tracking-[0.18em] text-(--color-paper)/60">
         With thanks to our partners
       </span>
-      <div class="flex items-center gap-8 text-sm text-(--color-paper)/70">
-        <span>University of Bath</span>
-        <span>British Rowing</span>
-        <span>Hubbub Foundation</span>
+      <div class="flex items-center flex-wrap gap-x-8 gap-y-3 text-sm text-(--color-paper)/70">
+        {
+          sponsors.length > 0
+            ? sponsors.map((s) =>
+                s.website ? (
+                  <a
+                    href={s.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="hover:text-(--color-paper) transition-colors"
+                  >
+                    {s.name}
+                  </a>
+                ) : (
+                  <span>{s.name}</span>
+                ),
+              )
+            : fallbackPartners.map((p) => <span>{p}</span>)
+        }
       </div>
     </Container>
   </div>
@@ -124,7 +148,7 @@ const year = new Date().getFullYear();
     >
       <div class="text-xs text-(--color-paper)/60 leading-relaxed">
         <p>© {year} University of Bath Boat Club. All rights reserved.</p>
-        <p class="mt-1">Registered charity in England & Wales (number TBD).</p>
+        <p class="mt-1">Registered charity in England & Wales (1206187).</p>
       </div>
       <div class="text-xs text-(--color-paper)/60 flex flex-wrap gap-x-6 gap-y-2">
         <a href="/welfare/" class="hover:text-(--color-paper)">Welfare</a>

@@ -26,7 +26,6 @@ const legacyRedirects = {
   '/bubc-alumni/': '/alumni/',
   '/meles-boat-club/': '/alumni/meles/',
   '/join-meles-bc/': '/alumni/meles/#join',
-  '/events/': '/alumni/events/',
   '/our-impact/': '/support/campaigns/',
   '/buy-a-boat/': '/support/buy-a-boat/',
   '/chairs-of-bubc/': '/about/chairs/',

@@ -45,6 +45,8 @@ export const settingsQuery = /* groq */ `
     contactEmail,
     address,
     boathouseLocation { lat, lng, what3words },
+    boathousePhotos[] { ${imageBlockFields} },
+    stvPhotos[] { ${imageBlockFields} },
     primaryNav[] { label, url, external },
     utilityNav[] { label, url, external },
     primaryCta { ${ctaBlockFields} },
@@ -129,9 +131,20 @@ export const squadBySlugQuery = /* groq */ `
     trainingSchedule[] { day, startTime, endTime, type, location },
     expectedStandards,
     achievements[] { year, title, detail },
+    galleryHeading,
+    galleryIntro,
     photos[] { ${imageBlockFields} },
     contactEmail,
     seo { ${seoFields} }
+  }
+`;
+
+/** Just the gallery fields — used by the static PDA page to pull editable photos. */
+export const squadGalleryBySlugQuery = /* groq */ `
+  *[_type == "squad" && slug.current == $slug][0] {
+    galleryHeading,
+    galleryIntro,
+    photos[] { ${imageBlockFields} }
   }
 `;
 
@@ -409,6 +422,22 @@ export const upcomingAlumniEventsQuery = /* groq */ `
 
 export const pastAlumniEventsQuery = /* groq */ `
   *[_type == "event" && type == "alumni" && date < now()] | order(date desc)[0..11] {
+    _id, title, "slug": slug.current, type, date, endDate, location,
+    heroImage { ${imageBlockFields} }
+  }
+`;
+
+/** All upcoming events (every type) — drives the general /events/ page. Pass $today as YYYY-MM-DD. */
+export const upcomingEventsQuery = /* groq */ `
+  *[_type == "event" && coalesce(endDate, date) >= $today] | order(date asc) {
+    _id, title, "slug": slug.current, type, date, endDate, location,
+    description, registerUrl,
+    heroImage { ${imageBlockFields} }
+  }
+`;
+
+export const pastEventsQuery = /* groq */ `
+  *[_type == "event" && coalesce(endDate, date) < $today] | order(date desc)[0..15] {
     _id, title, "slug": slug.current, type, date, endDate, location,
     heroImage { ${imageBlockFields} }
   }

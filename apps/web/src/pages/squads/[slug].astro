@@ -237,7 +237,12 @@ const breadcrumbJsonLd = {
       <Section tone="bone" spacing="md">
         <Container>
           <Eyebrow>Squad gallery</Eyebrow>
-          <h2 class="mt-4 font-display text-3xl sm:text-4xl">The season so far.</h2>
+          <h2 class="mt-4 font-display text-3xl sm:text-4xl">
+            {data.galleryHeading ?? 'The season so far.'}
+          </h2>
+          {data.galleryIntro && (
+            <p class="mt-4 max-w-2xl text-(--color-mute) leading-relaxed">{data.galleryIntro}</p>
+          )}
           <div class="mt-10">
             <PhotoGallery images={data.photos} />
           </div>
