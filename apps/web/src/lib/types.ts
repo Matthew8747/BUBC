@@ -301,6 +301,16 @@ export interface Achievement {
   detail?: string;
 }
 
+export interface RecentResult {
+  date: string;
+  regatta: string;
+  event?: string;
+  crewLabel?: string;
+  finish: string;
+  externalUrl?: string;
+  raceReport?: { title: string; slug: string };
+}
+
 export interface SquadDetail {
   _id: string;
   name: string;
@@ -311,9 +321,11 @@ export interface SquadDetail {
   captain?: PersonRef;
   captainBio?: string;
   coaches?: CoachRef[];
+  trainingNarrative?: string;
   trainingSchedule?: TrainingSession[];
   expectedStandards?: unknown;
   achievements?: Achievement[];
+  recentResults?: RecentResult[];
   galleryHeading?: string;
   galleryIntro?: string;
   photos?: SanityImage[];
