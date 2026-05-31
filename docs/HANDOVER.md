@@ -16,13 +16,13 @@ You do not need to write code to update the site. Almost everything an editor ne
 
 Pick the document that matches your role:
 
-| You are…                                              | Read                                                                                           |
-| ----------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| **Comms officer / captain — publishing news, etc.**   | [CONTENT-EDITING.md](CONTENT-EDITING.md)                                                       |
-| **President / treasurer — overseeing the site**       | This file + [DEPLOYMENT.md](DEPLOYMENT.md) sections "Vercel" and "Sanity → Vercel deploy hook" |
-| **Developer-successor — taking over the code**        | [plan.md](plan.md), then [PROGRESS.md](PROGRESS.md), then [DEPLOYMENT.md](DEPLOYMENT.md)       |
-| **Concerned about security / a vulnerability report** | [SECURITY.md](SECURITY.md)                                                                     |
-| **Just looking at what features exist**               | [FEATURES.md](FEATURES.md)                                                                     |
+| You are…                                              | Read                                                                                                                                      |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| **Comms officer / captain — publishing news, etc.**   | [CONTENT-EDITING.md](CONTENT-EDITING.md) + [CONTENT-CADENCE.md](CONTENT-CADENCE.md)                                                       |
+| **President / treasurer — overseeing the site**       | This file + [DEPLOYMENT.md](DEPLOYMENT.md) sections "Vercel" and "Sanity → Vercel deploy hook" + [REVIEW-WORKFLOW.md](REVIEW-WORKFLOW.md) |
+| **Developer-successor — taking over the code**        | [plan.md](plan.md), then [PROGRESS.md](PROGRESS.md), then [DEPLOYMENT.md](DEPLOYMENT.md) + [STUDIO-HOSTING.md](STUDIO-HOSTING.md)         |
+| **Concerned about security / a vulnerability report** | [SECURITY.md](SECURITY.md)                                                                                                                |
+| **Just looking at what features exist**               | [FEATURES.md](FEATURES.md)                                                                                                                |
 
 ## 3. The stack at a glance
 
@@ -121,7 +121,7 @@ If the site is still on `bubc-web.vercel.app` and you're taking it live on `bubc
 
 1. Vercel env vars (`SANITY_PROJECT_ID`, `SANITY_DATASET`)
 2. Formspree form ID (trial form) + Buttondown username (newsletter)
-3. Deploy Sanity Studio (`pnpm --filter @bubc/studio deploy`) + invite editors
+3. Deploy Sanity Studio (`pnpm --filter @bubc/studio run deploy`) + invite editors
 4. Sanity → Vercel deploy webhook (see [DEPLOYMENT.md](DEPLOYMENT.md))
 5. Cloudflare DNS + email + DNS cutover to Vercel (launch day)
 6. _(optional)_ Cloudflare Web Analytics token, Sentry DSN

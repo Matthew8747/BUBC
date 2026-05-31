@@ -1,6 +1,6 @@
 # Deployment
 
-> The technical handover for whoever is doing dev work on the site after the current maintainer. If you're a non-developer committee member looking to edit content, read [CONTENT-EDITING.md](CONTENT-EDITING.md) instead. For an audience-agnostic orientation across the whole stack, read [HANDOVER.md](HANDOVER.md) first.
+> The technical handover for whoever is doing dev work on the site after the current maintainer. If you're a non-developer committee member looking to edit content, read [CONTENT-EDITING.md](CONTENT-EDITING.md) instead. For an audience-agnostic orientation across the whole stack, read [HANDOVER.md](HANDOVER.md) first. For publishing the Sanity Studio to a hosted URL editors can visit, see [STUDIO-HOSTING.md](STUDIO-HOSTING.md).
 
 ## TL;DR
 

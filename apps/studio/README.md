@@ -36,7 +36,9 @@ The Sanity structure (left-hand nav) is customised in `structure.ts` so singleto
 ```bash
 pnpm dev              # start studio at localhost:3333
 pnpm build            # build static studio bundle
-pnpm deploy           # deploy to Sanity-hosted URL
+pnpm run deploy       # deploy to Sanity-hosted URL
+                      # ("run" is required — `pnpm deploy` triggers pnpm's own
+                      # workspace-deploy command, not this package script)
 pnpm typecheck        # tsc --noEmit
 pnpm typegen          # generate TS types from schemas into ./sanity.types.ts
 pnpm manage           # open this project in sanity.io/manage
