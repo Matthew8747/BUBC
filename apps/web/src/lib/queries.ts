@@ -125,7 +125,7 @@ export const squadBySlugQuery = /* groq */ `
   *[_type == "squad" && slug.current == $slug][0] {
     _id, name, tier, gender, shortDescription,
     heroImage { ${imageBlockFields} },
-    captain->{ name, role, photo { ${imageBlockFields} } },
+    captains[]->{ name, role, photo { ${imageBlockFields} } },
     captainBio,
     coaches[]->{ name, role, photo { ${imageBlockFields} } },
     trainingNarrative,

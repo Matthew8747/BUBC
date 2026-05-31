@@ -63,9 +63,10 @@ These pages all read from Sanity. Edit in Studio, click Publish, refresh.
 
 ### Squads — `/squads/`, `/squads/senior-men/`, `/squads/senior-women/`, `/squads/novice/`
 
-- **What it controls:** hero image, captain (reference to a committee member), captain bio, training week (paragraph or structured schedule), expected standards (rich text), achievements, **recent results** (race-by-race scoreboard, optionally linked to a news-post race report), photo gallery, contact email.
+- **What it controls:** hero image, captain(s) (1–3 references to committee members), shared captain(s) bio, training week (paragraph or structured schedule), expected standards (rich text), achievements, **recent results** (race-by-race scoreboard, optionally linked to a news-post race report), photo gallery, contact email.
 - **Where:** Studio → **Squads** → pick a squad.
-- **Already in Sanity.** Captain and coach are references to committee-member and coach docs.
+- **Already in Sanity.** Captains and coaches are references to committee-member and coach docs.
+- **Co-captains:** squads with co-captains (novice, senior men) list multiple in the **Captains** field. The page automatically pluralises "Captain → Captains" and "Email the captain → Email the captains" once you add a second.
 - **Watch out:** the squad's `photos` field (the gallery) is empty by default. Pick 4-8 action shots from the asset library when you're ready.
 - **Recent results vs achievements:** _Recent results_ is race-by-race ("HRR 2026 Temple — semi-final, lost to Leander"). _Achievements_ is headline milestones ("BUCS overall champions", "Promoted to senior squad"). See [CONTENT-CADENCE.md](CONTENT-CADENCE.md) for who updates which.
 - **Training week — paragraph or schedule:** captains can fill in the **Training week — paragraph** field (a short blurb, e.g. "Pre-season is mostly erg blocks; we add water sessions from week 3...") **or** the **Training schedule** rows (day / time / type / location). Whichever is filled wins — if both are filled, the paragraph shows. Useful when the week doesn't pin neatly to fixed slots.

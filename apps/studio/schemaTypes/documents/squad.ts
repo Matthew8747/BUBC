@@ -74,16 +74,19 @@ export const squad = defineType({
         }),
     }),
     defineField({
-      name: 'captain',
-      title: 'Captain',
-      type: 'reference',
-      to: [{type: 'committeeMember'}, {type: 'athlete'}],
+      name: 'captains',
+      title: 'Captains',
+      description:
+        'Add one captain, or up to three for squads with co-captains (e.g. novice and senior men). The public page pluralises labels and the email CTA automatically.',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'committeeMember'}, {type: 'athlete'}]}],
+      validation: (rule) => rule.max(3),
     }),
     defineField({
       name: 'captainBio',
-      title: 'Captain bio',
+      title: 'Captain(s) bio',
       description:
-        'Shown in a callout on the squad page (max 400 chars). Required unless this squad uses an External link.',
+        "A short paragraph about the squad's leadership — shown in the captain callout (max 400 chars). One shared paragraph even when there are co-captains. Required unless this squad uses an External link.",
       type: 'text',
       rows: 4,
       validation: (rule) =>

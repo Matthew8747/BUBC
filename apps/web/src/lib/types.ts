@@ -318,7 +318,7 @@ export interface SquadDetail {
   gender?: 'men' | 'women' | 'mixed';
   shortDescription: string;
   heroImage?: SanityImage;
-  captain?: PersonRef;
+  captains?: PersonRef[];
   captainBio?: string;
   coaches?: CoachRef[];
   trainingNarrative?: string;

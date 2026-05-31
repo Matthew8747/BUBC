@@ -66,6 +66,11 @@ const seo = {
 
 const tierLabel = `${tier}${gender && gender !== 'mixed' ? ` · ${gender}` : ''}`;
 
+const captains = data?.captains ?? [];
+const hasMultipleCaptains = captains.length > 1;
+const captainEyebrow = hasMultipleCaptains ? 'Captains' : 'Captain';
+const emailCaptainLabel = hasMultipleCaptains ? 'Email the captains' : 'Email the captain';
+
 const sortedAchievements = (data?.achievements ?? []).slice().sort((a, b) => b.year - a.year);
 
 const sortedRecentResults = (data?.recentResults ?? [])
@@ -129,7 +134,7 @@ const breadcrumbJsonLd = {
       ...(data?.contactEmail
         ? [
             {
-              label: 'Email the captain',
+              label: emailCaptainLabel,
               variant: 'ghost' as const,
               link: {
                 label: 'Email',
@@ -148,27 +153,29 @@ const breadcrumbJsonLd = {
       <Section spacing="md">
         <Container width="narrow">
           <div class="border-l-2 border-(--color-gold) pl-6 sm:pl-8 py-2">
-            <Eyebrow>Captain</Eyebrow>
-            {data.captain && (
-              <div class="mt-4 flex items-center gap-4">
-                <div class="h-14 w-14 overflow-hidden rounded-full flex-shrink-0">
-                  <Picture
-                    image={data.captain.photo}
-                    ratio="1/1"
-                    sizes="56px"
-                    fallbackLabel={data.captain.name
-                      .split(' ')
-                      .map((p) => p[0])
-                      .join('')}
-                    class="h-14 w-14"
-                  />
-                </div>
-                <div>
-                  <p class="font-display text-xl leading-tight">{data.captain.name}</p>
-                  {data.captain.role && (
-                    <p class="text-sm text-(--color-mute)">{data.captain.role}</p>
-                  )}
-                </div>
+            <Eyebrow>{captainEyebrow}</Eyebrow>
+            {captains.length > 0 && (
+              <div class="mt-4 flex flex-wrap gap-x-8 gap-y-4">
+                {captains.map((c) => (
+                  <div class="flex items-center gap-4">
+                    <div class="h-14 w-14 overflow-hidden rounded-full flex-shrink-0">
+                      <Picture
+                        image={c.photo}
+                        ratio="1/1"
+                        sizes="56px"
+                        fallbackLabel={c.name
+                          .split(' ')
+                          .map((p) => p[0])
+                          .join('')}
+                        class="h-14 w-14"
+                      />
+                    </div>
+                    <div>
+                      <p class="font-display text-xl leading-tight">{c.name}</p>
+                      {c.role && <p class="text-sm text-(--color-mute)">{c.role}</p>}
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
             <p class="mt-5 text-lg leading-relaxed">{data.captainBio}</p>
@@ -184,8 +191,8 @@ const breadcrumbJsonLd = {
       <Eyebrow>Training week</Eyebrow>
       <h2 class="mt-4 font-display text-3xl sm:text-4xl">A typical week.</h2>
       <p class="mt-3 text-(--color-mute)">
-        Sessions are mandatory unless the captain or coach signs you off. Times shift slightly term
-        by term — the captain confirms the latest at the start of each term.
+        Sessions are mandatory unless a captain or coach signs you off. Times shift slightly term by
+        term — confirmed at the start of each term.
       </p>
       <div class="mt-8">
         {
@@ -360,7 +367,7 @@ const breadcrumbJsonLd = {
                 external
                 class="!border-(--color-paper) !text-(--color-paper) hover:!bg-(--color-paper) hover:!text-(--color-ink)"
               >
-                Email the captain
+                {emailCaptainLabel}
               </Button>
             )
           }
