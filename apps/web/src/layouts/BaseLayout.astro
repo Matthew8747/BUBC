@@ -48,24 +48,32 @@ const sentryEnabled = !!import.meta.env.PUBLIC_SENTRY_DSN;
     {meta.noIndex && <meta name="robots" content="noindex,nofollow" />}
 
     {/* Open Graph */}
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={meta.type} />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:title" content={meta.title} />
     <meta property="og:description" content={meta.description} />
     <meta property="og:image" content={new URL(meta.image, SITE.url).toString()} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={meta.imageAlt} />
     <meta property="og:url" content={meta.canonical} />
     <meta property="og:locale" content="en_GB" />
 
     {/* Twitter */}
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content={SITE.twitter} />
+    <meta name="twitter:url" content={meta.canonical} />
     <meta name="twitter:title" content={meta.title} />
     <meta name="twitter:description" content={meta.description} />
     <meta name="twitter:image" content={new URL(meta.image, SITE.url).toString()} />
+    <meta name="twitter:image:alt" content={meta.imageAlt} />
 
-    {/* Favicons */}
+    {/* Favicons + PWA manifest */}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
 
     {/* RSS — wired up in Phase 4 */}
     <link rel="alternate" type="application/rss+xml" title="BUBC News" href="/news/rss.xml" />
@@ -84,10 +92,34 @@ const sentryEnabled = !!import.meta.env.PUBLIC_SENTRY_DSN;
             alternateName: SITE.shortName,
             url: SITE.url,
             sport: 'Rowing',
+            description: SITE.defaultDescription,
             logo: new URL('/favicon.svg', SITE.url).toString(),
+            foundingDate: '1966',
+            address: {
+              '@type': 'PostalAddress',
+              addressLocality: 'Bath',
+              addressRegion: 'Somerset',
+              addressCountry: 'GB',
+            },
+            areaServed: { '@type': 'Country', name: 'United Kingdom' },
+            parentOrganization: {
+              '@type': 'CollegeOrUniversity',
+              name: 'University of Bath',
+              url: 'https://www.bath.ac.uk/',
+            },
+            memberOf: {
+              '@type': 'SportsOrganization',
+              name: 'British Rowing',
+              url: 'https://www.britishrowing.org/',
+            },
+            contactPoint: {
+              '@type': 'ContactPoint',
+              contactType: 'general enquiries',
+              email: 'info@bubc.co.uk',
+            },
             sameAs: [
-              'https://instagram.com/bathuniboatclub',
-              'https://youtube.com/@bathuniboatclub',
+              'https://www.instagram.com/crewbath_/',
+              'https://www.youtube.com/@bubc',
               'https://www.strava.com/clubs/bubc',
             ],
           },

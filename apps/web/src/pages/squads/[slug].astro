@@ -68,6 +68,23 @@ const tierLabel = `${tier}${gender && gender !== 'mixed' ? ` · ${gender}` : ''}
 
 const sortedAchievements = (data?.achievements ?? []).slice().sort((a, b) => b.year - a.year);
 
+const sortedRecentResults = (data?.recentResults ?? [])
+  .slice()
+  .sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''));
+
+const resultDateFmt = new Intl.DateTimeFormat('en-GB', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+});
+const formatResultDate = (iso?: string) => {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? iso : resultDateFmt.format(d);
+};
+const resultHref = (r: (typeof sortedRecentResults)[number]) =>
+  r.raceReport?.slug ? `/news/${r.raceReport.slug}/` : r.externalUrl;
+
 const squadJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'SportsTeam',
@@ -161,7 +178,7 @@ const breadcrumbJsonLd = {
     )
   }
 
-  {/* Training schedule */}
+  {/* Training schedule — paragraph if the captain supplied one, otherwise the table */}
   <Section tone="bone" spacing="md">
     <Container width="narrow">
       <Eyebrow>Training week</Eyebrow>
@@ -171,7 +188,15 @@ const breadcrumbJsonLd = {
         by term — the captain confirms the latest at the start of each term.
       </p>
       <div class="mt-8">
-        <TrainingScheduleTable sessions={data?.trainingSchedule} />
+        {
+          data?.trainingNarrative ? (
+            <div class="max-w-2xl text-lg leading-relaxed whitespace-pre-line">
+              {data.trainingNarrative}
+            </div>
+          ) : (
+            <TrainingScheduleTable sessions={data?.trainingSchedule} />
+          )
+        }
       </div>
     </Container>
   </Section>
@@ -203,6 +228,66 @@ const breadcrumbJsonLd = {
           <div class="mt-10">
             <CoachStrip coaches={data.coaches} />
           </div>
+        </Container>
+      </Section>
+    )
+  }
+
+  {/* Recent results */}
+  {
+    sortedRecentResults.length > 0 && (
+      <Section spacing="md">
+        <Container width="narrow">
+          <Eyebrow>Recent results</Eyebrow>
+          <h2 class="mt-4 font-display text-3xl sm:text-4xl">On the water lately.</h2>
+          <p class="mt-3 text-(--color-mute)">
+            The scoreboard, kept current. Race reports linked where written up.
+          </p>
+          <ul class="mt-8 divide-y divide-(--color-ink)/10">
+            {sortedRecentResults.map((r) => {
+              const href = resultHref(r);
+              const isExternal = !r.raceReport && !!r.externalUrl;
+              const meta = [r.event, r.crewLabel].filter(Boolean).join(' · ');
+              const rowInner = (
+                <>
+                  <span class="font-mono text-xs uppercase tracking-wide text-(--color-mute) pt-1">
+                    {formatResultDate(r.date)}
+                  </span>
+                  <div>
+                    <p class="font-medium leading-snug">
+                      {r.regatta}
+                      <span class="text-(--color-gold)"> · {r.finish}</span>
+                    </p>
+                    {meta && <p class="mt-1 text-sm text-(--color-mute)">{meta}</p>}
+                    {href && (
+                      <p class="mt-1 text-sm">
+                        <span class="text-(--color-avon) underline-offset-2 group-hover:underline">
+                          {r.raceReport ? 'Read race report' : 'Results page'}
+                          <span aria-hidden="true"> →</span>
+                        </span>
+                      </p>
+                    )}
+                  </div>
+                </>
+              );
+              return (
+                <li class="py-4">
+                  {href ? (
+                    <a
+                      href={href}
+                      class="group grid grid-cols-[6rem_1fr] gap-4 items-start no-underline"
+                      target={isExternal ? '_blank' : undefined}
+                      rel={isExternal ? 'noopener noreferrer' : undefined}
+                    >
+                      {rowInner}
+                    </a>
+                  ) : (
+                    <div class="grid grid-cols-[6rem_1fr] gap-4 items-start">{rowInner}</div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
         </Container>
       </Section>
     )

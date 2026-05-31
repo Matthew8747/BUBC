@@ -3,6 +3,8 @@
 > A practical guide for the Comms Officer, Captains, and anyone else publishing content. No coding knowledge required.
 >
 > The website pulls all of its content from a separate tool called **Sanity Studio**. You edit there; the live site rebuilds itself within ~60 seconds of you hitting Publish.
+>
+> **What to publish and how often** is in [CONTENT-CADENCE.md](CONTENT-CADENCE.md). This file covers **how** to publish each thing once you've decided to.
 
 ---
 
@@ -41,7 +43,7 @@ You never edit the website's HTML directly. You never have to think about "deplo
 
 ## 2. Logging in
 
-1. Open <https://bubc.sanity.studio>.
+1. Open <https://bubc.sanity.studio>. (If that URL doesn't load, the Studio hasn't been deployed yet — ask the developer; the procedure is in [STUDIO-HOSTING.md](STUDIO-HOSTING.md).)
 2. You'll see a "Continue with…" screen. Pick the option that matches the account you were invited under — usually **Google** or **GitHub**.
 3. If you've never been invited, ask the President or current Comms Officer. Sanity invites by email; check your spam folder if it doesn't arrive.
 
@@ -94,6 +96,8 @@ This is the most common task. It takes 5–10 minutes once you have the copy and
 
 - **Save** happens automatically every few seconds while you type — you'll see the status pill move between _Saving_ and _Edited_.
 - **Publish** when you're ready. The site rebuilds in the background; the new post is live at `bubc.co.uk/news/<slug>/` within ~60 seconds. You'll also see it appear on the home page's news rail and at the top of `/news/`.
+
+> **If you're an Editor (not an Administrator), you won't see a Publish button.** That's intentional — drafts go to an Administrator (President / outgoing maintainer) for review first. Save your draft, then tell the Admin it's ready (Slack / WhatsApp / email). Full process: [REVIEW-WORKFLOW.md](REVIEW-WORKFLOW.md).
 
 ### Editing a post after it's published
 

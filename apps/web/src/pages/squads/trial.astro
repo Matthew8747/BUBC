@@ -23,9 +23,60 @@ import Textarea from '../../components/form/Textarea.astro';
 import RadioGroup from '../../components/form/RadioGroup.astro';
 import Checkbox from '../../components/form/Checkbox.astro';
 import { ogImage } from '../../lib/og/url';
+import JsonLd from '../../components/seo/JsonLd.astro';
 
 const formId = import.meta.env.PUBLIC_FORMSPREE_TRIAL_ID;
 const isConfigured = Boolean(formId);
+
+// FAQPage JSON-LD — eligible for Google's FAQ rich result on the trial page.
+// Answers lifted verbatim from the page copy so they stay in sync with what
+// prospective rowers actually see.
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'When are BUBC trials?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'BUBC runs two intakes a year — September for incoming students (the main fresher intake) and a second intake in January. You can also join the club partway through the year; just let us know your availability in the trial form.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Do I need any rowing experience to trial?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No — both first-time rowers and athletes with previous experience are welcome. The novice programme teaches you to row from scratch in your first term.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What does the BUBC trial involve?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'A technical assessment on the water or an ergometer, a 100-metre swim test in the university pool (a safety protocol, not an intensity test), and a short conversation with the captains and head coach. The whole thing typically takes about an hour.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Where does BUBC row?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: "From a boathouse on the River Avon between Bath and Saltford, with land training at the University's Sports Training Village on campus.",
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I contact the novice programme?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Email novice@bubc.co.uk for novice-specific questions, or info@bubc.co.uk for general enquiries.',
+      },
+    },
+  ],
+};
 ---
 
 <PageLayout
@@ -36,6 +87,7 @@ const isConfigured = Boolean(formId);
     image: ogImage({ kind: 'page', slug: 'trial' }),
   }}
 >
+  <JsonLd data={faqJsonLd} slot="head" />
   <Section spacing="lg">
     <Container width="narrow">
       <Eyebrow>Sign up</Eyebrow>

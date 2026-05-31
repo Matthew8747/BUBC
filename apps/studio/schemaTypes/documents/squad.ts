@@ -100,9 +100,19 @@ export const squad = defineType({
       of: [{type: 'reference', to: [{type: 'coach'}]}],
     }),
     defineField({
+      name: 'trainingNarrative',
+      title: 'Training week — paragraph',
+      description:
+        'Optional. A short paragraph describing the training week. Use this instead of the structured schedule below when the rhythm is hard to pin to fixed weekly slots — e.g. pre-season erg block, weather-dependent water sessions, varied novice timetable. When this is filled in, the public page shows the paragraph in place of the schedule table.',
+      type: 'text',
+      rows: 4,
+      validation: (rule) => rule.max(800),
+    }),
+    defineField({
       name: 'trainingSchedule',
       title: 'Training schedule',
-      description: 'Weekly outline — one row per session.',
+      description:
+        'Weekly outline — one row per session. Skip this if you filled in the paragraph above; the page will show the paragraph instead.',
       type: 'array',
       of: [
         {
@@ -149,6 +159,8 @@ export const squad = defineType({
     defineField({
       name: 'achievements',
       title: 'Recent achievements',
+      description:
+        'Headline milestones for the squad — promotions, overall titles, season summaries. For race-by-race results, use the Recent results field below.',
       type: 'array',
       of: [
         {
@@ -162,6 +174,79 @@ export const squad = defineType({
           preview: {
             select: {year: 'year', title: 'title'},
             prepare: ({year, title}) => ({title, subtitle: year?.toString()}),
+          },
+        },
+      ],
+    }),
+    defineField({
+      name: 'recentResults',
+      title: 'Recent results',
+      description:
+        'Race-by-race results shown on the squad page so visitors can see the scoreboard without digging through news posts. Keep this list short — 4-8 most recent. Optionally link a race report (news post) or external results page; the result row becomes a link if either is set.',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          name: 'recentResult',
+          fields: [
+            {
+              name: 'date',
+              type: 'date',
+              title: 'Race date',
+              validation: (r) => r.required(),
+            },
+            {
+              name: 'regatta',
+              type: 'string',
+              title: 'Regatta',
+              description: 'e.g. "BUCS Regatta", "Henley Royal Regatta", "Bristol Avon Head".',
+              validation: (r) => r.required(),
+            },
+            {
+              name: 'event',
+              type: 'string',
+              title: 'Event / boat class',
+              description: 'e.g. "Champ 8+", "Beginner 4+", "Temple Challenge Cup".',
+            },
+            {
+              name: 'crewLabel',
+              type: 'string',
+              title: 'Crew label',
+              description: 'Optional — e.g. "Bath A", "Senior 1st VIII".',
+            },
+            {
+              name: 'finish',
+              type: 'string',
+              title: 'Finish',
+              description: 'e.g. "Gold", "Winners", "Semi-final", "3rd, 1.4s back".',
+              validation: (r) => r.required(),
+            },
+            {
+              name: 'raceReport',
+              type: 'reference',
+              title: 'Race report (news post)',
+              description: 'Optional — link a news post that covers this race in detail.',
+              to: [{type: 'newsPost'}],
+            },
+            {
+              name: 'externalUrl',
+              type: 'url',
+              title: 'External link',
+              description:
+                'Optional fallback — e.g. the British Rowing / regatta-organiser results page. Used only if no race report is linked above.',
+            },
+          ],
+          preview: {
+            select: {
+              date: 'date',
+              regatta: 'regatta',
+              event: 'event',
+              finish: 'finish',
+            },
+            prepare: ({date, regatta, event, finish}) => ({
+              title: `${regatta}${event ? ` — ${event}` : ''}`,
+              subtitle: [date, finish].filter(Boolean).join(' · '),
+            }),
           },
         },
       ],
