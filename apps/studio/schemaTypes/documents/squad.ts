@@ -90,7 +90,7 @@ export const squad = defineType({
       type: 'text',
       rows: 4,
       validation: (rule) =>
-        rule.max(400).custom((value, context) => {
+        rule.max(10000).custom((value, context) => {
           const doc = context.document as {externalUrl?: string} | undefined
           if (doc?.externalUrl) return true
           return value ? true : 'Required for squads with a detail page'
@@ -158,6 +158,19 @@ export const squad = defineType({
       title: 'Expected standards',
       description: 'PB targets, attendance, attitude — set expectations clearly.',
       type: 'portableText',
+    }),
+    defineField({
+      name: 'whatYouCanExpect',
+      title: 'What you can expect',
+      description:
+        "Optional. Bullet points for what squad members can expect (e.g. coaching, equipment, team support). If empty, this section won't appear on the public page.",
+      type: 'array',
+      of: [
+        {
+          type: 'string',
+          title: 'Expectation',
+        },
+      ],
     }),
     defineField({
       name: 'achievements',

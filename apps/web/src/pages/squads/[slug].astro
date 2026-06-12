@@ -223,6 +223,26 @@ const breadcrumbJsonLd = {
     )
   }
 
+  {/* What you can expect */}
+  {
+    data?.whatYouCanExpect && data.whatYouCanExpect.length > 0 && (
+      <Section tone="bone" spacing="md">
+        <Container width="narrow">
+          <Eyebrow>Commitment</Eyebrow>
+          <h2 class="mt-4 font-display text-3xl sm:text-4xl">What you can expect.</h2>
+          <ul class="mt-6 space-y-3">
+            {data.whatYouCanExpect.map((expectation) => (
+              <li class="flex gap-3 items-start">
+                <span class="text-(--color-gold) font-bold mt-0.5 flex-shrink-0">•</span>
+                <span class="text-lg leading-relaxed">{expectation}</span>
+              </li>
+            ))}
+          </ul>
+        </Container>
+      </Section>
+    )
+  }
+
   {/* Coaches */}
   {
     data?.coaches && data.coaches.length > 0 && (

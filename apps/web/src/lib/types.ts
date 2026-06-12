@@ -324,6 +324,7 @@ export interface SquadDetail {
   trainingNarrative?: string;
   trainingSchedule?: TrainingSession[];
   expectedStandards?: unknown;
+  whatYouCanExpect?: string[];
   achievements?: Achievement[];
   recentResults?: RecentResult[];
   galleryHeading?: string;
