@@ -63,6 +63,7 @@ export default defineConfig({
     }),
   ],
   vite: {
+    // @ts-expect-error vite version conflict between workspace dependencies
     plugins: [tailwindcss()],
   },
   image: {
