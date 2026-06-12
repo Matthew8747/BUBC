@@ -131,6 +131,7 @@ export const squadBySlugQuery = /* groq */ `
     trainingNarrative,
     trainingSchedule[] { day, startTime, endTime, type, location },
     expectedStandards,
+    whatYouCanExpect,
     achievements[] { year, title, detail },
     recentResults[] {
       date,
