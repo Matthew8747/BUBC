@@ -1,6 +1,7 @@
 {
   "name": "bubc-site",
   "private": true,
+  "packageManager": "pnpm@11.1.3",
   "engines": {
     "node": ">=22.12.0",
     "pnpm": ">=9"
