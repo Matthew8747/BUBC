@@ -25,8 +25,19 @@ const campaigns = await Promise.all(
 
 // Primary destination for the headline donate button.
 const HUBBUB_URL = 'https://bath.hubbub.net/p/BUBC/';
+// Hubbub's pledge form — this is where "Regular by Direct Debit → Monthly" lives.
+// Alumni set up the Direct Debit here; bank details are collected and processed
+// by Hubbub/PayGate under the Direct Debit Guarantee, never by this site.
+const HUBBUB_PLEDGE_URL = 'https://bath.hubbub.net/p/BUBC/pledge/';
 
 const waysToGive = [
+  {
+    title: 'Give monthly',
+    body: 'The strongest support an alum can give. On the Hubbub pledge form choose "Regular by Direct Debit", pick monthly, and set an amount — that steady income is what lets the club plan a season ahead. Cancel any time with your bank under the Direct Debit Guarantee.',
+    href: HUBBUB_PLEDGE_URL,
+    cta: 'Set up a monthly gift',
+    external: true,
+  },
   {
     title: 'One-off donation',
     body: 'Quickest route in. Hubbub adds Gift Aid where eligible so every pound is worth a quarter more to the club.',

@@ -114,6 +114,22 @@ Vercel's free Hobby tier counts deploy invocations against a monthly limit (curr
 
 ---
 
+## Daily rebuild — Hubbub fundraising totals
+
+The donate / campaign pages show live Hubbub figures (amount raised + donor count). Hubbub has **no public API**, so `apps/web/src/lib/hubbub.ts` reads those two numbers from the Hubbub project page's server-rendered markup **at build time**. That means the totals only move when the site rebuilds — a Sanity publish or a git push will refresh them, but if nothing is published for a week the numbers sit still.
+
+`.github/workflows/refresh-totals.yml` closes that gap by triggering a rebuild once a day (06:17 UTC). **It no-ops until you give it a deploy hook to call**, which is why totals currently look stuck.
+
+### One-time setup
+
+1. **Deploy hook** — reuse the one from the Sanity webhook above, or create a fresh one: Vercel → Project → Settings → Git → **Deploy Hooks** → Create Hook, branch `main`. Copy the URL.
+2. **GitHub secret** — GitHub → repo → Settings → Secrets and variables → **Actions** → New repository secret. Name `VERCEL_DEPLOY_HOOK_URL`, value = the hook URL. Treat it as secret (anyone with it can trigger a deploy).
+3. **Verify** — GitHub → Actions → "Refresh campaign totals" → Run workflow. It should POST the hook and print `Triggered a Vercel rebuild.` (not the "skipping" message), and a build should appear in Vercel.
+
+> No scraper-as-a-service (e.g. maxun) is needed — the totals reader already works; it just needs something to trigger the daily rebuild.
+
+---
+
 ## Cloudflare
 
 Cloudflare's role in the BUBC stack is **DNS + Email Routing + Web Analytics**. Not hosting. Don't create a Cloudflare Pages project — that would be a competing host.
