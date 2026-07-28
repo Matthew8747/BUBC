@@ -4,9 +4,14 @@
  *
  * The site collects:
  *   - Trial form submissions via Formspree
+ *   - Newsletter sign-ups via Buttondown (email address, consent basis)
+ *   - Error diagnostics via Sentry (IP + browser data, when a DSN is configured)
  *   - Cloudflare Web Analytics (cookieless)
  *
- * That's it. This page makes that explicit so we satisfy the lawful-basis
+ * No non-essential cookies are set; only first-party functional storage (e.g. the
+ * dismiss state of the live-race banner), so no PECR consent banner is required.
+ *
+ * This page makes all of the above explicit so we satisfy the lawful-basis
  * notice and rights-of-the-data-subject requirements of UK GDPR.
  */
 import PageLayout from '../layouts/PageLayout.astro';
@@ -53,6 +58,14 @@ const seo = {
             and delivered to the relevant captain's BUBC email address.
           </li>
           <li>
+            <strong>Newsletter.</strong> If you sign up for the BUBC newsletter, we collect your email
+            address. Sign-up is processed via{' '}
+            <a href="https://buttondown.com" target="_blank" rel="noopener noreferrer">Buttondown</a
+            >{' '}
+            (double opt-in — you confirm via a link we email you). You can unsubscribe at any time using
+            the link in the footer of every newsletter, or by emailing us.
+          </li>
+          <li>
             <strong>Email enquiries.</strong> If you email an inbox listed on the
             <a href="/contact/">contact page</a>, the recipient stores your message in their email
             account for as long as is needed to handle the enquiry.
@@ -60,8 +73,12 @@ const seo = {
         </ul>
 
         <p>
-          The website does <strong>not</strong> use advertising cookies. Cloudflare Web Analytics is in
-          use for aggregated, cookieless visitor statistics — no personal data is collected by analytics.
+          The website does <strong>not</strong> use advertising cookies and sets no non-essential cookies.
+          Cloudflare Web Analytics is in use for aggregated, cookieless visitor statistics — no personal
+          data is collected by analytics. If a diagnostic error occurs we may send technical error data
+          (including your IP address and browser details) to{' '}
+          <a href="https://sentry.io" target="_blank" rel="noopener noreferrer">Sentry</a>{' '}
+          to help us keep the site working; this is used only for reliability and security.
         </p>
 
         <h2>Why we process it</h2>
@@ -73,6 +90,14 @@ const seo = {
           <li>
             To meet our safeguarding and welfare obligations (lawful basis: legitimate interest).
           </li>
+          <li>
+            To send you the newsletter you signed up for (lawful basis: consent — you can withdraw
+            it at any time by unsubscribing).
+          </li>
+          <li>
+            To keep the website secure and working (lawful basis: legitimate interest) — this covers
+            the technical error diagnostics described above.
+          </li>
         </ul>
 
         <h2>How long we keep it</h2>
@@ -82,6 +107,14 @@ const seo = {
             held by Formspree for up to 60 days as part of their service.
           </li>
           <li>
+            Newsletter: your email address is kept by Buttondown until you unsubscribe, after which
+            it is removed from the mailing list.
+          </li>
+          <li>
+            Error diagnostics: retained by Sentry only for a short rolling window (their default is
+            90 days) and used solely for debugging.
+          </li>
+          <li>
             Email enquiries: kept by the individual recipient until the matter is resolved, then
             deleted within 12 months.
           </li>
@@ -89,13 +122,35 @@ const seo = {
 
         <h2>Who we share it with</h2>
         <p>
-          We do not sell or rent personal data. Trial-form submissions pass through Formspree (data
-          processor; see <a
-            href="https://formspree.io/legal/privacy-policy"
-            target="_blank"
-            rel="noopener noreferrer">Formspree's privacy policy</a
-          >). Email is hosted via the relevant providers used by the committee members concerned.
+          We do not sell or rent personal data. We use the following data processors, each under
+          their own privacy terms:
         </p>
+        <ul>
+          <li>
+            <a
+              href="https://formspree.io/legal/privacy-policy"
+              target="_blank"
+              rel="noopener noreferrer">Formspree</a
+            > — trial-form submissions.
+          </li>
+          <li>
+            <a href="https://buttondown.com/legal/privacy" target="_blank" rel="noopener noreferrer"
+              >Buttondown</a
+            > — newsletter email addresses.
+          </li>
+          <li>
+            <a href="https://sentry.io/privacy/" target="_blank" rel="noopener noreferrer">Sentry</a
+            > — technical error diagnostics.
+          </li>
+          <li>
+            <a
+              href="https://www.cloudflare.com/privacypolicy/"
+              target="_blank"
+              rel="noopener noreferrer">Cloudflare</a
+            > — cookieless, aggregated web analytics.
+          </li>
+        </ul>
+        <p>Email is hosted via the relevant providers used by the committee members concerned.</p>
 
         <h2>Your rights</h2>
         <p>Under UK GDPR you have the right to:</p>
@@ -120,7 +175,7 @@ const seo = {
           a revised "last updated" date below.
         </p>
 
-        <p class="text-sm opacity-75">Last updated: May 2026.</p>
+        <p class="text-sm opacity-75">Last updated: July 2026.</p>
       </article>
     </Container>
   </Section>
