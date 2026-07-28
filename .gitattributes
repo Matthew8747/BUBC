@@ -2,6 +2,11 @@
 # Prettier, CI (Linux), and Husky all expect LF — this keeps them in sync.
 * text=auto eol=lf
 
+# Lockfile — keep it tracked (reproducible installs) but treat it as generated:
+# GitHub collapses it in PR diffs and it's excluded from language stats, so it
+# stops dominating code review. `-diff` suppresses the local textual diff too.
+pnpm-lock.yaml linguist-generated=true -diff
+
 # Binary files — no line-ending conversion
 *.png binary
 *.jpg binary

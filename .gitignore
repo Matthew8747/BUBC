@@ -32,6 +32,9 @@ Thumbs.db
 **/test-results/
 **/playwright/.cache/
 
+# Local QA / dogfooding screenshots (generated, not source)
+screenshots/
+
 # Local tool output
 graphify-out/
 ruvector.db
