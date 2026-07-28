@@ -84,7 +84,7 @@ export const campaign = defineType({
       name: 'hubbubUrl',
       title: 'Hubbub project URL (auto-update)',
       description:
-        'Optional. A Hubbub project page, e.g. https://bath.hubbub.net/p/BUBC/. If set, the site reads the live raised total + donor count from this page at build time and shows them instead of the manual figures above (falling back to the manual figures if Hubbub is unreachable). The goal still comes from "Goal amount".',
+        'Optional. The Hubbub PROJECT page, e.g. https://bath.hubbub.net/p/BUBC/ — NOT the /pledge/ donate form (the pledge form has no totals to read, so the live figures will silently fall back to the manual ones above). If set, the site reads the live raised total + donor count from this page at build time and shows them instead of the manual figures (falling back to the manual figures if Hubbub is unreachable). The goal still comes from "Goal amount"; the donate button uses "Donate URL".',
       type: 'url',
       validation: (rule) => rule.uri({scheme: ['http', 'https']}),
     }),
