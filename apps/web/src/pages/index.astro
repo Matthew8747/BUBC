@@ -5,6 +5,7 @@ import StatStrip from '../components/home/StatStrip.astro';
 import NewsRail from '../components/home/NewsRail.astro';
 import SquadPathway from '../components/home/SquadPathway.astro';
 import SponsorStrip from '../components/home/SponsorStrip.astro';
+import InstagramCta from '../components/home/InstagramCta.astro';
 import ClosingCtas from '../components/home/ClosingCtas.astro';
 import { safeFetch } from '../lib/sanity';
 import { homePageQuery } from '../lib/queries';
@@ -37,5 +38,6 @@ const seo = {
   <NewsRail posts={data?.featuredNews} />
   <SquadPathway intro={data?.pathwayIntro} squads={data?.pathwaySquads} />
   <SponsorStrip heading={data?.sponsorStripHeading} sponsors={data?.sponsorStrip ?? []} />
+  <InstagramCta />
   <ClosingCtas ctas={data?.closingCtas} />
 </PageLayout>
