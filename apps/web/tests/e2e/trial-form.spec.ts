@@ -16,6 +16,16 @@ import { expect, test } from '@playwright/test';
  * The Formspree POST is intercepted, so running this never sends a real
  * application.
  */
+/** Fill everything except experience/squad, which each test drives itself. */
+async function fillCommonFields(page: import('@playwright/test').Page) {
+  await page.getByLabel(/First name/).fill('Testy');
+  await page.getByLabel(/Last name/).fill('McTestface');
+  await page.getByLabel(/Bath email address/).fill('testy@bath.ac.uk');
+  await page.getByLabel(/Mobile/).fill('07000000000');
+  await page.getByLabel(/Course & year/).fill('Mechanical Engineering, 3rd year');
+  await page.getByRole('radio', { name: /September \(Fresher\)/ }).check();
+}
+
 test.describe('trial form', () => {
   test('a fully filled form clears client-side validation and submits', async ({ page }) => {
     let submittedBody = '';
@@ -96,5 +106,118 @@ test.describe('trial form', () => {
     // Native `required` validation stops it; the success state must not appear.
     await expect(page.locator('#trial-success')).toBeHidden();
     await expect(page.locator('#trial-form')).toBeVisible();
+  });
+});
+
+/**
+ * Recipient routing. `coaches@bubc.co.uk` is the Formspree form's target
+ * address, so it is set in the dashboard and never appears in the payload —
+ * what we assert here is the second recipient, the CC'd squad contact.
+ */
+test.describe('trial form routing', () => {
+  /**
+   * Read one field out of a request body.
+   *
+   * The page submits a `FormData`, so fetch encodes it as `multipart/form-data`
+   * rather than url-encoded. Reading it as a query string silently returns null
+   * for every field, which would make "no CC expected" assertions pass for
+   * entirely the wrong reason. Handles both encodings.
+   */
+  function readField(body: string, name: string): string | null {
+    const multipart = new RegExp(`name="${name}"\\r?\\n\\r?\\n([\\s\\S]*?)\\r?\\n--`).exec(body);
+    if (multipart) return multipart[1];
+
+    const urlencoded = new RegExp(`(?:^|&)${name}=([^&]*)`).exec(body);
+    return urlencoded ? decodeURIComponent(urlencoded[1].replace(/\+/g, ' ')) : null;
+  }
+
+  /** Submit a filled form and return the `_cc` value that went over the wire. */
+  async function submitAndReadCc(
+    page: import('@playwright/test').Page,
+    experience: RegExp,
+    squad?: RegExp,
+  ): Promise<string | null> {
+    let body = '';
+    await page.route('https://formspree.io/**', async (route) => {
+      body = route.request().postData() ?? '';
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: '{"ok":true}',
+      });
+    });
+
+    await page.goto('/squads/trial/');
+
+    // The CC is attached after the "is Formspree configured?" check, so an
+    // unconfigured build never reaches it and there is no request to inspect.
+    // CI builds with a dummy form ID precisely so these run; a local build
+    // without one skips instead of failing misleadingly.
+    const configured =
+      (await page.locator('#trial-form').getAttribute('data-formspree')) === 'true';
+    test.skip(!configured, 'build has no PUBLIC_FORMSPREE_TRIAL_ID; run pnpm build with one set');
+
+    await fillCommonFields(page);
+    await page.getByRole('radio', { name: experience }).check();
+    if (squad) await page.getByRole('radio', { name: squad }).check();
+    await page.getByRole('checkbox', { name: /I confirm I have read the welfare/ }).check();
+
+    await page.waitForTimeout(2500);
+    await page.getByRole('button', { name: 'Send my application' }).click();
+    await expect(page.locator('#trial-success')).toBeVisible();
+
+    // Prove the body parser works before trusting a null `_cc` to mean
+    // "nobody was copied" rather than "the parser found nothing".
+    expect(readField(body, 'firstName')).toBe('Testy');
+
+    return readField(body, '_cc');
+  }
+
+  test('the squad question is hidden until prior experience is selected', async ({ page }) => {
+    await page.goto('/squads/trial/');
+    const squadField = page.locator('#squad-field');
+
+    // Nothing selected yet.
+    await expect(squadField).toBeHidden();
+
+    await page.getByRole('radio', { name: /None at all/ }).check();
+    await expect(squadField).toBeHidden();
+
+    await page.getByRole('radio', { name: /School \/ club rowing/ }).check();
+    await expect(squadField).toBeVisible();
+
+    // Going back to novice must clear the answer, not leave a stale one set —
+    // otherwise a novice silently carries a squad into the payload.
+    await page.getByRole('radio', { name: /Men's squad/ }).check();
+    await page.getByRole('radio', { name: /None at all/ }).check();
+    await expect(squadField).toBeHidden();
+
+    // Addressed by selector, not by role: once hidden and `inert`, the radio
+    // is out of the accessibility tree and getByRole cannot resolve it.
+    await expect(page.locator('input[name="squad"][value="mens"]')).not.toBeChecked();
+  });
+
+  test('a novice is not blocked by the hidden squad question', async ({ page }) => {
+    const cc = await submitAndReadCc(page, /None at all/);
+    expect(cc).toBe('novice@bubc.co.uk');
+  });
+
+  test("an experienced applicant choosing men's is copied to the men's captain", async ({
+    page,
+  }) => {
+    const cc = await submitAndReadCc(page, /School \/ club rowing/, /Men's squad/);
+    expect(cc).toBe('captain.m@bubc.co.uk');
+  });
+
+  test("an experienced applicant choosing women's is copied to the women's captain", async ({
+    page,
+  }) => {
+    const cc = await submitAndReadCc(page, /GB \/ national pathway/, /Women's squad/);
+    expect(cc).toBe('captain.w@bubc.co.uk');
+  });
+
+  test('"prefer not to say" copies nobody beyond the coaches', async ({ page }) => {
+    const cc = await submitAndReadCc(page, /School \/ club rowing/, /Prefer not to say/);
+    expect(cc).toBeNull();
   });
 });

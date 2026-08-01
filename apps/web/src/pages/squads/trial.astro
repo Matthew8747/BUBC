@@ -183,6 +183,28 @@ const faqJsonLd = {
           ]}
         />
 
+        {
+          /*
+          Only relevant to applicants who have rowed before — it picks which
+          captain is copied on the application. Hidden by script until they
+          select prior experience. Rendered visible and answerable without
+          JavaScript, where "Prefer not to say" keeps a novice from being
+          blocked by a question that doesn't apply to them.
+        */
+        }
+        <div id="squad-field">
+          <RadioGroup
+            name="squad"
+            legend="Which squad would you be looking to compete with?"
+            required
+            options={[
+              { value: 'mens', label: "Men's squad" },
+              { value: 'womens', label: "Women's squad" },
+              { value: 'unspecified', label: 'Prefer not to say' },
+            ]}
+          />
+        </div>
+
         <div class="grid sm:grid-cols-3 gap-5">
           <Field
             name="height"
@@ -271,10 +293,13 @@ const faqJsonLd = {
 
 <script>
   import { parseTrialForm } from '../../lib/validation';
+  import { routeTrialSubmission } from '../../lib/trial-routing';
+  import type { TrialExperience, TrialSquad } from '../../lib/trial-routing';
 
   const form = document.getElementById('trial-form') as HTMLFormElement | null;
   const status = document.getElementById('trial-form-status');
   const success = document.getElementById('trial-success');
+  const squadField = document.getElementById('squad-field');
 
   // Form must be on screen for at least this long before we accept a submit.
   // Real humans take seconds to fill the form; most bots submit instantly.
@@ -284,6 +309,32 @@ const faqJsonLd = {
 
   if (form && status && success) {
     const isFormspree = form.dataset.formspree === 'true';
+
+    // Progressive disclosure for the squad question. The markup ships visible
+    // and `required` so the form still works with scripting off; here we take
+    // over and show it only once prior rowing experience is selected. The
+    // `required` attribute has to move with the visibility — a hidden required
+    // radio makes `reportValidity()` fail on a control the user cannot see or
+    // reach, which is a dead end with no visible error.
+    const squadInputs = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="squad"]'));
+
+    const syncSquadField = () => {
+      if (!squadField) return;
+      const experience = new FormData(form).get('experience');
+      const show = typeof experience === 'string' && experience !== 'none';
+
+      squadField.classList.toggle('hidden', !show);
+      squadField.toggleAttribute('inert', !show);
+      // Only the first radio carries `required`; that is enough to make the
+      // whole group required natively.
+      if (squadInputs[0]) squadInputs[0].required = show;
+      if (!show) squadInputs.forEach((input) => (input.checked = false));
+    };
+
+    form.querySelectorAll<HTMLInputElement>('input[name="experience"]').forEach((input) => {
+      input.addEventListener('change', syncSquadField);
+    });
+    syncSquadField();
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -314,6 +365,15 @@ const faqJsonLd = {
         status.classList.add('text-(--color-blade)');
         return;
       }
+
+      // Copy the relevant squad contact. The coaches are the form's target
+      // address in Formspree, so they receive every application whether or not
+      // this runs — this only adds the second recipient.
+      const { cc } = routeTrialSubmission({
+        experience: parsed.data.experience as TrialExperience,
+        squad: parsed.data.squad as TrialSquad | undefined,
+      });
+      if (cc) data.set('_cc', cc);
 
       const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
       if (submitBtn) {

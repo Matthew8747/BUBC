@@ -129,4 +129,35 @@ describe('parseTrialForm', () => {
     const out = parseTrialForm(fd);
     expect(out.ok).toBe(false);
   });
+
+  // The squad question decides which captain gets CC'd. It is only shown to
+  // applicants with prior rowing, so it must be required for them and ignored
+  // for novices — a novice blocked by an unanswered hidden field is the same
+  // class of bug as the welfare checkbox.
+  describe('squad', () => {
+    it('accepts a novice who never saw the squad question', () => {
+      const out = parseTrialForm(makeData({ experience: 'none' }));
+      expect(out.ok).toBe(true);
+    });
+
+    it.each(['school', 'gb', 'other'])(
+      'rejects a %s applicant who did not pick a squad',
+      (experience) => {
+        const out = parseTrialForm(makeData({ experience }));
+        expect(out.ok).toBe(false);
+        if (!out.ok) expect(out.errors.join(' ')).toMatch(/squad/i);
+      },
+    );
+
+    it.each(['mens', 'womens', 'unspecified'])('accepts squad %s', (squad) => {
+      const out = parseTrialForm(makeData({ experience: 'school', squad }));
+      expect(out.ok).toBe(true);
+      if (out.ok) expect(out.data.squad).toBe(squad);
+    });
+
+    it('rejects a squad value that is not one of the options', () => {
+      const out = parseTrialForm(makeData({ experience: 'school', squad: 'mixed' }));
+      expect(out.ok).toBe(false);
+    });
+  });
 });
