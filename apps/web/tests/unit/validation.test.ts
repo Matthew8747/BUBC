@@ -76,7 +76,9 @@ describe('parseTrialForm', () => {
       course: 'Mathematics, 1st year',
       intake: 'september',
       experience: 'none',
-      welfare: 'on',
+      // Must match what `Checkbox.astro` actually renders — see the regression
+      // test below.
+      welfare: 'yes',
       _gotcha: '',
     };
     for (const [k, v] of Object.entries({ ...base, ...overrides })) fd.set(k, v);
@@ -110,6 +112,21 @@ describe('parseTrialForm', () => {
 
   it('rejects an out-of-range weight', () => {
     const out = parseTrialForm(makeData({ weight: '500' }));
+    expect(out.ok).toBe(false);
+  });
+
+  // Regression: the schema used to only accept `welfare === 'on'`, while
+  // `Checkbox.astro` renders `value="yes"`. Every real submission was rejected
+  // with "You must agree to the welfare policy" even with the box ticked.
+  it.each(['yes', 'on', 'true', '1'])('accepts a ticked welfare box valued %s', (value) => {
+    const out = parseTrialForm(makeData({ welfare: value }));
+    expect(out.ok).toBe(true);
+  });
+
+  it('rejects an unticked welfare box', () => {
+    const fd = makeData();
+    fd.delete('welfare');
+    const out = parseTrialForm(fd);
     expect(out.ok).toBe(false);
   });
 });

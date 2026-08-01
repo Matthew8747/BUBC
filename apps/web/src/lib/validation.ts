@@ -141,8 +141,12 @@ export const trialFormSchema = z
     weight: optionalIntInRange(40, 140, 'Weight seems too low', 'Weight seems too high'),
     pb2k: optionalString(20),
     message: optionalString(1000),
+    // An unchecked checkbox is omitted from FormData entirely, so *presence*
+    // is the consent signal. Deliberately not matched against a specific
+    // string: hard-coding `'on'` here silently rejected every real submission
+    // once `Checkbox.astro` started rendering `value="yes"`.
     welfare: z.preprocess(
-      (val) => (val === 'on' || val === 'true' || val === true ? true : undefined),
+      (val) => (val == null || val === '' || val === false || val === 'false' ? undefined : true),
       z.literal(true, { message: 'You must agree to the welfare policy' }),
     ),
     _gotcha: z.preprocess(blankToUndefined, z.undefined({ message: 'Spam detected' })),
