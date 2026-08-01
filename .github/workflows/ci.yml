@@ -64,6 +64,13 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
+        env:
+          # Not a real form ID. Without one the trial form renders in its
+          # "not configured" state and the e2e suite can only reach the early
+          # return, never the submit path — which is precisely where the
+          # welfare-checkbox outage lived. Playwright intercepts the POST, so
+          # nothing leaves CI.
+          PUBLIC_FORMSPREE_TRIAL_ID: ci-e2e-dummy-form-id
       - uses: actions/upload-artifact@v4
         with:
           name: web-dist

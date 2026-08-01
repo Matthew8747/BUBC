@@ -137,6 +137,10 @@ export const trialFormSchema = z
     experience: z.enum(['none', 'school', 'gb', 'other'], {
       message: 'Select an experience level',
     }),
+    // Only asked of applicants with prior rowing — it decides which captain is
+    // copied. Optional here, then required conditionally in the refinement
+    // below, so a novice is never blocked by a question they never saw.
+    squad: z.preprocess(blankToUndefined, z.enum(['mens', 'womens', 'unspecified']).optional()),
     height: optionalIntInRange(140, 220, 'Height seems too low', 'Height seems too high'),
     weight: optionalIntInRange(40, 140, 'Weight seems too low', 'Weight seems too high'),
     pb2k: optionalString(20),
@@ -151,7 +155,16 @@ export const trialFormSchema = z
     ),
     _gotcha: z.preprocess(blankToUndefined, z.undefined({ message: 'Spam detected' })),
   })
-  .strip();
+  .strip()
+  .superRefine((val, ctx) => {
+    if (val.experience !== 'none' && val.squad === undefined) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['squad'],
+        message: 'Select which squad you would be looking to compete with',
+      });
+    }
+  });
 
 export type TrialFormInput = z.infer<typeof trialFormSchema>;
 
@@ -172,6 +185,7 @@ export function parseTrialForm(
     'course',
     'intake',
     'experience',
+    'squad',
     'height',
     'weight',
     'pb2k',
