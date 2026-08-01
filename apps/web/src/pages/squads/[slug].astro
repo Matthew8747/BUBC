@@ -233,7 +233,7 @@ const breadcrumbJsonLd = {
           <ul class="mt-6 space-y-3">
             {data.whatYouCanExpect.map((expectation) => (
               <li class="flex gap-3 items-start">
-                <span class="text-(--color-gold) font-bold mt-0.5 flex-shrink-0">•</span>
+                <span class="text-(--color-gold-text) font-bold mt-0.5 flex-shrink-0">•</span>
                 <span class="text-lg leading-relaxed">{expectation}</span>
               </li>
             ))}
@@ -283,7 +283,7 @@ const breadcrumbJsonLd = {
                   <div>
                     <p class="font-medium leading-snug">
                       {r.regatta}
-                      <span class="text-(--color-gold)"> · {r.finish}</span>
+                      <span class="text-(--color-gold-text)"> · {r.finish}</span>
                     </p>
                     {meta && <p class="mt-1 text-sm text-(--color-mute)">{meta}</p>}
                     {href && (
@@ -330,7 +330,9 @@ const breadcrumbJsonLd = {
           <ul class="mt-8 divide-y divide-(--color-ink)/10">
             {sortedAchievements.map((a) => (
               <li class="py-4 grid grid-cols-[5rem_1fr] gap-4 items-start">
-                <span class="font-display text-2xl tabular-nums text-(--color-gold)">{a.year}</span>
+                <span class="font-display text-2xl tabular-nums text-(--color-gold-text)">
+                  {a.year}
+                </span>
                 <div>
                   <p class="font-medium">{a.title}</p>
                   {a.detail && <p class="mt-1 text-sm text-(--color-mute)">{a.detail}</p>}

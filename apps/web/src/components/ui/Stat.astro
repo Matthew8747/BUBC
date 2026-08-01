@@ -12,10 +12,18 @@ interface Props {
   label: string;
   suffix?: string;
   divider?: boolean;
+  /**
+   * Which surface the stat sits on. The label and suffix are muted, and a mute
+   * that reads on paper (#5a6878) drops to 3.05:1 on ink — so the dark bands
+   * need the inverted mute instead. Stat strips are dark, hence the default.
+   */
+  surface?: 'dark' | 'light';
   class?: string;
 }
 
-const { value, label, suffix, divider = true, class: className } = Astro.props;
+const { value, label, suffix, divider = true, surface = 'dark', class: className } = Astro.props;
+
+const muteClass = surface === 'dark' ? 'text-(--color-mute-invert)' : 'text-(--color-mute)';
 
 // If a unit was baked into the value (e.g. "60yrs", "200+") and no explicit
 // suffix prop was passed, peel the trailing non-numeric part off so it renders
@@ -38,9 +46,9 @@ if (!displaySuffix && typeof value === 'string') {
     <span class="font-display tabular text-4xl sm:text-5xl">{displayValue}</span>
     {
       displaySuffix && (
-        <span class="font-body text-xs sm:text-sm text-(--color-mute)">{displaySuffix}</span>
+        <span class={clsx('font-body text-xs sm:text-sm', muteClass)}>{displaySuffix}</span>
       )
     }
   </div>
-  <span class="text-sm uppercase tracking-[0.1em] text-(--color-mute)">{label}</span>
+  <span class={clsx('text-sm uppercase tracking-[0.1em]', muteClass)}>{label}</span>
 </div>

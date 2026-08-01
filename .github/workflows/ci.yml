@@ -147,6 +147,13 @@ jobs:
       # ubuntu-latest GitHub runners ship Google Chrome pre-installed at
       # /usr/bin/google-chrome — point puppeteer at it via env, avoiding a
       # ~50 MB download and matching whatever Chrome version the runner ships.
+      #
+      # .pa11yci.json ignores two axe rules, since JSON takes no comments:
+      #   color-contrast — the htmlcs runner already covers contrast, and running
+      #     both double-reports every finding.
+      #   frame-tested   — axe cannot inject itself into the cross-origin
+      #     OpenStreetMap embed on /boathouse/, so it reports "could not test"
+      #     rather than an actual defect. Nothing on our side can satisfy it.
       - name: Run pa11y-ci
         working-directory: apps/web
         env:

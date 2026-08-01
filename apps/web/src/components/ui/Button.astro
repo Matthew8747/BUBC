@@ -4,6 +4,7 @@
  *
  *   solid — navy background, paper text. Primary action.
  *   ghost — navy border on transparent, navy text. Secondary action.
+ *   gold  — gold background, ink text. Standout action (trial, donate).
  *
  * Pass `href` to render an <a>, omit it for a <button>.
  */
@@ -39,7 +40,9 @@ const variantClass: Record<NonNullable<Props['variant']>, string> = {
     'bg-(--color-navy) text-(--color-paper) hover:bg-(--color-ink) disabled:bg-(--color-mute) disabled:cursor-not-allowed',
   ghost:
     'border border-(--color-navy) text-(--color-navy) hover:bg-(--color-navy) hover:text-(--color-paper)',
-  gold: 'bg-(--color-gold) text-(--color-paper) hover:bg-[#a08040] disabled:bg-(--color-mute) disabled:cursor-not-allowed',
+  // Ink label, not paper: paper-on-gold is 2.57:1. Ink-on-gold is 5.99:1 and
+  // 4.68:1 against the darker hover fill, so the brand gold survives intact.
+  gold: 'bg-(--color-gold) text-(--color-ink) hover:bg-[#a08040] disabled:bg-(--color-mute) disabled:cursor-not-allowed',
 };
 
 const sizeClass: Record<NonNullable<Props['size']>, string> = {

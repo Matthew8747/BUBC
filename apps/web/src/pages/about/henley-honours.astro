@@ -129,9 +129,12 @@ function athleteLink(name?: string, slug?: string) {
               </div>
             </div>
 
+            {/* `group`, not `tablist`: these are aria-pressed toggle buttons that
+                 filter a single list, not tabs swapping between tabpanels. A
+                 tablist is required to contain role="tab" children. */}
             <div
               class="flex flex-wrap items-center gap-2 mb-10"
-              role="tablist"
+              role="group"
               aria-label="Filter by regatta"
             >
               <button
@@ -203,7 +206,7 @@ function athleteLink(name?: string, slug?: string) {
                                       {link.href ? (
                                         <a
                                           href={link.href}
-                                          class="hover:text-(--color-gold) underline decoration-transparent hover:decoration-(--color-gold) underline-offset-2"
+                                          class="hover:text-(--color-gold-text) underline decoration-transparent hover:decoration-(--color-gold) underline-offset-2"
                                         >
                                           {link.name}
                                         </a>

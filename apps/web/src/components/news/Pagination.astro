@@ -52,7 +52,7 @@ const nextHref = current < total ? pageHref(current + 1) : null;
         class:list={[
           'inline-flex h-10 items-center gap-2 px-4 text-sm font-medium',
           prevHref
-            ? 'text-(--color-navy) hover:text-(--color-gold)'
+            ? 'text-(--color-navy) hover:text-(--color-gold-text)'
             : 'pointer-events-none text-(--color-mute)/50',
         ]}
       >
@@ -104,7 +104,7 @@ const nextHref = current < total ? pageHref(current + 1) : null;
         class:list={[
           'inline-flex h-10 items-center gap-2 px-4 text-sm font-medium',
           nextHref
-            ? 'text-(--color-navy) hover:text-(--color-gold)'
+            ? 'text-(--color-navy) hover:text-(--color-gold-text)'
             : 'pointer-events-none text-(--color-mute)/50',
         ]}
       >

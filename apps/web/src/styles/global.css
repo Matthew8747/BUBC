@@ -19,11 +19,26 @@
   --color-bone: #ece5d8; /* slightly warmer surface tone */
   --color-gold: #b8924a; /* blazer-trim accent — used sparingly */
   --color-avon: #2d4a3e; /* deep green — secondary accent */
-  --color-blade: #c8312a; /* signal red — race day / live indicators only */
+  --color-blade: #b82d26; /* signal red — race day / live indicators only */
 
   /* Subtle UI greys derived from ink */
-  --color-mute: #5a6878; /* muted body text */
+  --color-mute: #5a6878; /* muted body text on paper/bone */
+  --color-mute-invert: #8795a5; /* muted body text on navy/ink */
   --color-line: #d8d0c2; /* hairlines on paper bg */
+
+  /* --------------------------------------------------------------------------
+   * Text-safe accent. `--color-gold` is a *surface* colour: it only clears
+   * WCAG AA against the dark tones. Measured against our light surfaces it is
+   * 2.57:1 on paper and 2.31:1 on bone — under the 4.5:1 body-text minimum and
+   * under even the 3:1 large-text minimum, so size does not rescue it.
+   *
+   * Rule of thumb:
+   *   --color-gold       fills, hairlines, focus rings, gold-on-navy/ink text
+   *   --color-gold-text  any gold *text* sitting on paper or bone, at any size
+   *
+   * 5.34:1 on paper, 4.80:1 on bone.
+   * ----------------------------------------------------------------------- */
+  --color-gold-text: #7a5f28;
 
   /* Typography */
   --font-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
@@ -138,7 +153,7 @@
   /* Selection */
   ::selection {
     background: var(--color-gold);
-    color: var(--color-paper);
+    color: var(--color-ink);
   }
 
   /* Skip link — visible on focus only */
@@ -204,7 +219,7 @@
     text-decoration-thickness: 1.5px;
   }
   .prose a:hover {
-    color: var(--color-gold);
+    color: var(--color-gold-text);
   }
   .prose blockquote {
     border-top: 1px solid var(--color-gold);

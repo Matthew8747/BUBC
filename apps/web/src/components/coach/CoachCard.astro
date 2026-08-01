@@ -24,7 +24,9 @@ const { coach } = Astro.props;
     />
   </div>
   <div>
-    <p class="text-xs uppercase tracking-[0.12em] text-(--color-gold) font-medium">{coach.role}</p>
+    <p class="text-xs uppercase tracking-[0.12em] text-(--color-gold-text) font-medium">
+      {coach.role}
+    </p>
     <h2 class="mt-2 font-display text-2xl sm:text-3xl">{coach.name}</h2>
     {
       coach.qualifications && coach.qualifications.length > 0 && (
@@ -47,7 +49,7 @@ const { coach } = Astro.props;
         <p class="mt-5 text-sm">
           <a
             href={`mailto:${coach.email}`}
-            class="underline decoration-(--color-gold) underline-offset-4 hover:text-(--color-gold)"
+            class="underline decoration-(--color-gold) underline-offset-4 hover:text-(--color-gold-text)"
           >
             {coach.email}
           </a>
