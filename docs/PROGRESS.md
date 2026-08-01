@@ -10,12 +10,12 @@
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | Astro frontend    | ✅ All pages built. Design system, chrome, news/RSS/search, OG images, 301 redirects, JSON-LD.                         |
 | Sanity Studio     | ✅ Schemas complete (project `j7zcx618`, dataset `production`). Content populated and being edited directly in Studio. |
-| Hosting           | ✅ Live on the Vercel preview at <https://bubc-web.vercel.app/>. Auto-deploys on push to `main`.                       |
+| Hosting           | ✅ Live at <https://bubc.co.uk/> (served by Vercel). Auto-deploys on push to `main`.                                   |
 | Build / typecheck | ✅ Green.                                                                                                              |
 | Newsletter        | ⏸ Buttondown — code ready, needs `PUBLIC_BUTTONDOWN_USERNAME`.                                                         |
-| Trial form        | ⏸ Formspree — code ready, needs `PUBLIC_FORMSPREE_TRIAL_ID`.                                                           |
+| Trial form        | ✅ Formspree wired (`PUBLIC_FORMSPREE_TRIAL_ID` set on Vercel) and accepting submissions.                              |
 | Sanity → Vercel   | ⏸ Deploy webhook documented in DEPLOYMENT.md, not yet wired.                                                           |
-| Custom domain     | ❌ `bubc.co.uk` not yet pointed at Vercel (launch-day cutover).                                                        |
+| Custom domain     | ✅ `bubc.co.uk` pointed at Vercel and serving.                                                                         |
 
 ## Recent additions (2026-05-29)
 
@@ -42,7 +42,7 @@ Most of these cross dashboards (Vercel / Sanity / Cloudflare) and can't be scrip
 | #   | Step                                                                                                                                                                                                              |
 | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1   | **Vercel env vars** — confirm `SANITY_PROJECT_ID=j7zcx618` + `SANITY_DATASET=production` are set (Production + Preview).                                                                                          |
-| 2   | **Formspree** — create a form, set `PUBLIC_FORMSPREE_TRIAL_ID` on Vercel (and `apps/web/.env` to test locally).                                                                                                   |
+| 2   | ~~**Formspree** — create a form, set `PUBLIC_FORMSPREE_TRIAL_ID` on Vercel.~~ Done. Set it in `apps/web/.env` only if you want local dev to post to the live form.                                                |
 | 3   | **Buttondown** — create an account, set `PUBLIC_BUTTONDOWN_USERNAME` on Vercel.                                                                                                                                   |
 | 4   | **Deploy Studio** — `pnpm --filter @bubc/studio run deploy` (first run sets the `bubc.sanity.studio` hostname), then invite committee editors as members. Step-by-step in [STUDIO-HOSTING.md](STUDIO-HOSTING.md). |
 | 5   | **Sanity → Vercel webhook** — wire it so publishes auto-deploy (~60s). Step-by-step in [DEPLOYMENT.md](DEPLOYMENT.md#sanity--vercel-deploy-webhook).                                                              |

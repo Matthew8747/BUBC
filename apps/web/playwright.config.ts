@@ -3,8 +3,10 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * Playwright config for BUBC.
  *
- * `webServer` builds the site if needed, then serves the static `dist/` folder
- * on a free port. Tests run against that. Locally and in CI use the same path.
+ * `webServer` runs `astro preview`, which serves whatever is already in
+ * `dist/` — it does NOT build. Run `pnpm build` first locally, or you'll be
+ * testing a stale bundle and chasing failures that don't exist in your source.
+ * CI avoids the trap by downloading the `web-dist` artifact from the build job.
  */
 export default defineConfig({
   testDir: './tests/e2e',
