@@ -14,9 +14,11 @@ const colours = [
   { name: 'Paper', token: '--color-paper', hex: '#F5F1EA' },
   { name: 'Bone', token: '--color-bone', hex: '#ECE5D8' },
   { name: 'Gold', token: '--color-gold', hex: '#B8924A' },
+  { name: 'Gold (text)', token: '--color-gold-text', hex: '#7A5F28' },
   { name: 'Avon', token: '--color-avon', hex: '#2D4A3E' },
-  { name: 'Blade', token: '--color-blade', hex: '#C8312A' },
+  { name: 'Blade', token: '--color-blade', hex: '#B82D26' },
   { name: 'Mute', token: '--color-mute', hex: '#5A6878' },
+  { name: 'Mute (invert)', token: '--color-mute-invert', hex: '#8795A5' },
   { name: 'Line', token: '--color-line', hex: '#D8D0C2' },
 ];
 
@@ -54,6 +56,14 @@ const typeScale = [
       <h2 class="text-3xl">Colour</h2>
       <p class="mt-2 text-(--color-mute) max-w-prose">
         Minimal palette — no decorative additions. Blade is reserved for race-day live indicators.
+      </p>
+      <p class="mt-4 max-w-prose text-sm text-(--color-mute)">
+        Two of these are paired. <strong class="font-medium">Gold</strong> is a surface colour — fills,
+        hairlines, focus rings, and gold text on navy or ink. It is 2.57:1 on paper and 2.31:1 on bone,
+        so it fails AA as text on a light surface at <em>any</em> size; use
+        <strong class="font-medium">Gold (text)</strong> there instead.
+        <strong class="font-medium">Mute</strong> is for paper and bone,
+        <strong class="font-medium">Mute (invert)</strong> for navy and ink.
       </p>
 
       <div class="mt-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">

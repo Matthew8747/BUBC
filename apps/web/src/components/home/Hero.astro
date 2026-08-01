@@ -34,8 +34,14 @@ const {
 const ctas = Astro.props.ctas ?? defaultCtas;
 ---
 
+{
+  /* Opaque ink base under the photo. Without it the paper-coloured headline has
+     nothing but the gradient behind it, so it renders over bare `body` paper
+     while the image loads — and contrast checkers, which cannot see through an
+     image, score it paper-on-paper at 1:1. */
+}
 <section
-  class="relative isolate min-h-[70vh] sm:min-h-[80vh] flex flex-col justify-end overflow-hidden"
+  class="relative isolate min-h-[70vh] sm:min-h-[80vh] flex flex-col justify-end overflow-hidden bg-(--color-ink)"
 >
   <div class="absolute inset-0 -z-10">
     <Picture
