@@ -91,7 +91,9 @@ const sponsors = (await safeFetch<SponsorData[]>(allSponsorsQuery)) ?? [];
       <span class="text-xs uppercase tracking-[0.18em] text-(--color-paper)/60">
         With thanks to our sponsors
       </span>
-      <div class="flex items-center flex-wrap gap-x-8 gap-y-3 text-sm text-(--color-paper)/70">
+      <div
+        class="flex items-center flex-wrap justify-center sm:justify-end gap-x-8 gap-y-3 text-sm text-(--color-paper)/70"
+      >
         {
           sponsors.map((s) =>
             s.website ? (
@@ -99,12 +101,12 @@ const sponsors = (await safeFetch<SponsorData[]>(allSponsorsQuery)) ?? [];
                 href={s.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="hover:text-(--color-paper) transition-colors"
+                class="inline-flex min-h-11 items-center hover:text-(--color-paper) transition-colors"
               >
                 {s.name}
               </a>
             ) : (
-              <span>{s.name}</span>
+              <span class="inline-flex min-h-11 items-center">{s.name}</span>
             ),
           )
         }
