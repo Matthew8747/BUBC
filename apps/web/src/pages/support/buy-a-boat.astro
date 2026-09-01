@@ -19,31 +19,9 @@ import type { BoatForSaleData } from '../../lib/types';
 
 const boats = (await safeFetch<BoatForSaleData[]>(buyABoatQuery)) ?? [];
 
-const fallback: BoatForSaleData[] = [
-  {
-    _id: 'ph-8',
-    boatType: 'Heavyweight 8+ (training)',
-    priceRange: '£25,000 – £35,000',
-    status: 'needed',
-    notes: 'Replaces an ageing training eight used daily across senior and novice squads.',
-  },
-  {
-    _id: 'ph-4',
-    boatType: 'Heavyweight 4- (racing)',
-    priceRange: '£18,000 – £24,000',
-    status: 'needed',
-    notes: 'A fast, light racing four for BUCS and the Head circuit.',
-  },
-  {
-    _id: 'ph-1x',
-    boatType: 'Single sculling boat (1x)',
-    priceRange: '£5,000 – £8,000',
-    status: 'needed',
-    notes: 'Sculling boats are vital for technical development and the small-boat racing season.',
-  },
-];
-
-const items = boats.length > 0 ? boats : fallback;
+// No hardcoded fallback fleet: publishing invented boat classes and price
+// ranges would misrepresent what the club is actually raising for.
+const items = boats;
 
 const statusLabel: Record<BoatForSaleData['status'], string> = {
   needed: 'Needed',
@@ -125,7 +103,21 @@ const seo = {
         rate at the time of purchase.
       </p>
 
-      <div class="mt-8 overflow-x-auto -mx-4 sm:mx-0">
+      {
+        items.length === 0 && (
+          <div class="mt-8 rounded border border-dashed border-(--color-line) p-8 text-center">
+            <p class="text-sm text-(--color-mute)">
+              The current list of fleet needs is being agreed with the coaching team. Email{' '}
+              <a class="underline" href="mailto:treasurer@bubc.co.uk">
+                treasurer@bubc.co.uk
+              </a>{' '}
+              and the Treasurer will talk you through what the club is raising for right now.
+            </p>
+          </div>
+        )
+      }
+
+      <div class="mt-8 overflow-x-auto -mx-4 sm:mx-0" hidden={items.length === 0}>
         <table class="w-full text-left text-sm">
           <thead
             class="border-b border-(--color-ink)/20 text-xs uppercase tracking-[0.12em] text-(--color-mute)"

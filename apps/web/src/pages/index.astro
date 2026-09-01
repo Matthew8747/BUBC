@@ -8,14 +8,23 @@ import SponsorStrip from '../components/home/SponsorStrip.astro';
 import InstagramCta from '../components/home/InstagramCta.astro';
 import ClosingCtas from '../components/home/ClosingCtas.astro';
 import { safeFetch } from '../lib/sanity';
-import { homePageQuery } from '../lib/queries';
+import { homePageQuery, allSponsorsQuery } from '../lib/queries';
 import { ogImage } from '../lib/og/url';
-import type { HomePage } from '../lib/types';
+import type { HomePage, SponsorData } from '../lib/types';
 
 // Pulls the homePage singleton if it exists in Sanity. When the dataset is
 // empty (early development), `data` is null and each section falls back to its
 // sensible defaults so the page still looks finished.
 const data = (await safeFetch<HomePage>(homePageQuery)) ?? null;
+
+// The home strip shows whichever sponsors the editor has pinned on the home
+// page doc; with none pinned it shows the club's actual sponsors rather than a
+// hardcoded list. Empty in both cases means the band is simply not rendered.
+const pinnedSponsors = data?.sponsorStrip ?? [];
+const homeSponsors =
+  pinnedSponsors.length > 0
+    ? pinnedSponsors
+    : ((await safeFetch<SponsorData[]>(allSponsorsQuery)) ?? []);
 
 const seo = {
   title: data?.seo?.title,
@@ -37,7 +46,7 @@ const seo = {
   <StatStrip stats={data?.stats} />
   <NewsRail posts={data?.featuredNews} />
   <SquadPathway intro={data?.pathwayIntro} squads={data?.pathwaySquads} />
-  <SponsorStrip heading={data?.sponsorStripHeading} sponsors={data?.sponsorStrip ?? []} />
+  <SponsorStrip heading={data?.sponsorStripHeading} sponsors={homeSponsors} />
   <InstagramCta />
   <ClosingCtas ctas={data?.closingCtas} />
 </PageLayout>

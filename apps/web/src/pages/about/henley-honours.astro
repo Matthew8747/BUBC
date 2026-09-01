@@ -166,6 +166,16 @@ function athleteLink(name?: string, slug?: string) {
               </button>
             </div>
 
+            <p class="mb-10 text-sm text-(--color-mute)">
+              The archive is still being pieced together from club records, programmes and crew
+              memories, so some crew lists are incomplete. If you raced for Bath at Henley — or you
+              can fill a gap here — email{' '}
+              <a class="underline" href="mailto:alumni@bubc.co.uk">
+                alumni@bubc.co.uk
+              </a>
+              .
+            </p>
+
             <div class="space-y-16">
               {years.map((year) => {
                 const entries = byYear.get(year)!;
