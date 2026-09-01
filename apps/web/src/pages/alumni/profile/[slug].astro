@@ -21,6 +21,7 @@ import JsonLd from '../../../components/seo/JsonLd.astro';
 import { safeFetch } from '../../../lib/sanity';
 import { alumniProfilesQuery, olympianBySlugQuery } from '../../../lib/queries';
 import { SITE } from '../../../lib/seo';
+import { ordinal } from '../../../lib/results';
 import { ogImage } from '../../../lib/og/url';
 import type { AlumniProfileCard, OlympianDetail, AlumniCategory, Medal } from '../../../lib/types';
 
@@ -192,7 +193,9 @@ const breadcrumbs = {
                           </span>
                         )}
                         {a.finalPlace && a.medal === 'none' && (
-                          <span class="text-xs text-(--color-mute)">Finished {a.finalPlace}</span>
+                          <span class="text-xs text-(--color-mute)">
+                            Finished {ordinal(a.finalPlace)}
+                          </span>
                         )}
                       </li>
                     ))}
@@ -248,7 +251,7 @@ const breadcrumbs = {
         <Section tone="bone" spacing="md">
           <Container width="prose">
             <Eyebrow>Story</Eyebrow>
-            <h2 class="mt-3 font-display text-3xl">In their own words.</h2>
+            <h2 class="mt-3 font-display text-3xl">The story so far.</h2>
             <PortableText value={profile.story} class="mt-8" />
           </Container>
         </Section>

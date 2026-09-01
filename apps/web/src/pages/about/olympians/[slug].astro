@@ -16,6 +16,7 @@ import JsonLd from '../../../components/seo/JsonLd.astro';
 import { safeFetch, urlFor } from '../../../lib/sanity';
 import { olympianBySlugQuery, allOlympianSlugsQuery } from '../../../lib/queries';
 import { SITE } from '../../../lib/seo';
+import { ordinal } from '../../../lib/results';
 import { ogImage as generateOgImage } from '../../../lib/og/url';
 import type { OlympianDetail } from '../../../lib/types';
 
@@ -131,7 +132,9 @@ const breadcrumbs = {
                           {y.host && <p class="text-sm text-(--color-mute)">{y.host}</p>}
                           {y.event && <p class="font-medium">{y.event}</p>}
                           {y.finalPlace && (
-                            <p class="text-sm text-(--color-mute)">Finished {y.finalPlace}</p>
+                            <p class="text-sm text-(--color-mute)">
+                              Finished {ordinal(y.finalPlace)}
+                            </p>
                           )}
                         </div>
                         {y.medal && y.medal !== 'none' && <Tag tone="gold">{y.medal}</Tag>}
