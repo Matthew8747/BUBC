@@ -21,6 +21,7 @@ import JsonLd from '../../../components/seo/JsonLd.astro';
 import { safeFetch } from '../../../lib/sanity';
 import { alumniProfilesQuery, olympianBySlugQuery } from '../../../lib/queries';
 import { SITE } from '../../../lib/seo';
+import { ordinal } from '../../../lib/results';
 import { ogImage } from '../../../lib/og/url';
 import type { AlumniProfileCard, OlympianDetail, AlumniCategory, Medal } from '../../../lib/types';
 
@@ -192,7 +193,9 @@ const breadcrumbs = {
                           </span>
                         )}
                         {a.finalPlace && a.medal === 'none' && (
-                          <span class="text-xs text-(--color-mute)">Finished {a.finalPlace}</span>
+                          <span class="text-xs text-(--color-mute)">
+                            Finished {ordinal(a.finalPlace)}
+                          </span>
                         )}
                       </li>
                     ))}

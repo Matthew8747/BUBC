@@ -49,3 +49,25 @@ export function regattaKey(name: string): string {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
 }
+
+/**
+ * Format a finishing position as an English ordinal ("7" -> "7th").
+ *
+ * Used wherever a raw `finalPlace` number would otherwise read as
+ * "Finished 7" on an athlete profile.
+ */
+export function ordinal(n: number): string {
+  const abs = Math.abs(Math.trunc(n));
+  const tens = abs % 100;
+  if (tens >= 11 && tens <= 13) return `${n}th`;
+  switch (abs % 10) {
+    case 1:
+      return `${n}st`;
+    case 2:
+      return `${n}nd`;
+    case 3:
+      return `${n}rd`;
+    default:
+      return `${n}th`;
+  }
+}
