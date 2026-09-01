@@ -75,16 +75,16 @@ const columns: Column[] = [
 const year = new Date().getFullYear();
 
 // Sponsor strip — pulled from Sanity sponsor docs (ordered by tier in the query).
-// Falls back to the club's core partners so the strip is never empty pre-content.
+// No hardcoded fallback: an empty list hides the strip rather than naming
+// organisations that may not actually be sponsoring the club.
 const sponsors = (await safeFetch<SponsorData[]>(allSponsorsQuery)) ?? [];
-const fallbackPartners = ['University of Bath', 'British Rowing', 'Hubbub Foundation'];
 ---
 
 <footer class="bg-(--color-navy) text-(--color-paper)">
   <SportUniBadge />
 
-  {/* Sponsor strip — sponsor docs from Sanity, ordered by tier; falls back to core partners */}
-  <div class="border-b border-(--color-paper)/10">
+  {/* Sponsor strip — sponsor docs from Sanity, ordered by tier. Hidden when empty. */}
+  <div class="border-b border-(--color-paper)/10" hidden={sponsors.length === 0}>
     <Container
       class="py-6 flex flex-wrap items-center gap-x-10 gap-y-4 justify-center sm:justify-between"
     >
@@ -93,22 +93,20 @@ const fallbackPartners = ['University of Bath', 'British Rowing', 'Hubbub Founda
       </span>
       <div class="flex items-center flex-wrap gap-x-8 gap-y-3 text-sm text-(--color-paper)/70">
         {
-          sponsors.length > 0
-            ? sponsors.map((s) =>
-                s.website ? (
-                  <a
-                    href={s.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="hover:text-(--color-paper) transition-colors"
-                  >
-                    {s.name}
-                  </a>
-                ) : (
-                  <span>{s.name}</span>
-                ),
-              )
-            : fallbackPartners.map((p) => <span>{p}</span>)
+          sponsors.map((s) =>
+            s.website ? (
+              <a
+                href={s.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hover:text-(--color-paper) transition-colors"
+              >
+                {s.name}
+              </a>
+            ) : (
+              <span>{s.name}</span>
+            ),
+          )
         }
       </div>
     </Container>

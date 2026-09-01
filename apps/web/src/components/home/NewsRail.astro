@@ -1,7 +1,10 @@
 ---
 /**
- * NewsRail — 3 latest news cards. If Sanity returns nothing, renders 3
- * placeholder cards so the home page still looks finished during build-out.
+ * NewsRail — 3 latest news cards.
+ *
+ * With no posts in Sanity the rail renders an honest empty state rather than
+ * invented headlines: this is a live, public site, so nothing here may be a
+ * stand-in for real content.
  */
 import Container from '../ui/Container.astro';
 import Section from '../ui/Section.astro';
@@ -14,36 +17,8 @@ interface Props {
   posts?: NewsCardData[];
 }
 
-const placeholders: NewsCardData[] = [
-  {
-    _id: 'ph-1',
-    title: 'Senior men reach the Temple final at Henley',
-    slug: 'placeholder-1',
-    publishDate: new Date().toISOString(),
-    excerpt: 'A summer of long sessions on the Avon pays off on the Thames.',
-    category: { title: 'Race report', slug: 'race-report' },
-  },
-  {
-    _id: 'ph-2',
-    title: 'Novice intake opens 18 September',
-    slug: 'placeholder-2',
-    publishDate: new Date().toISOString(),
-    excerpt: 'No experience required. Six weeks to learn to row before Christmas Head.',
-    category: { title: 'Squad update', slug: 'squad-update' },
-  },
-  {
-    _id: 'ph-3',
-    title: 'The new eight — naming details inside',
-    slug: 'placeholder-3',
-    publishDate: new Date().toISOString(),
-    excerpt: 'Alumni-funded boat arrives in February. Ceremony at BUCS Head weekend.',
-    category: { title: 'Fundraising', slug: 'fundraising' },
-  },
-];
-
 // `??` instead of destructuring default — Sanity returns `null` for empty arrays.
-const posts = Astro.props.posts ?? placeholders;
-const items = posts.length > 0 ? posts : placeholders;
+const items = Astro.props.posts ?? [];
 
 function fmt(date: string) {
   return new Date(date).toLocaleDateString('en-GB', {
@@ -77,12 +52,36 @@ function fmt(date: string) {
       </a>
     </div>
 
+    {
+      items.length === 0 && (
+        <div class="rounded border border-dashed border-(--color-line) bg-(--color-bone)/60 p-10 text-center max-w-2xl mx-auto">
+          <h3 class="font-display text-2xl">No reports posted yet this season</h3>
+          <p class="mt-3 text-sm text-(--color-mute)">
+            Race reports and squad news land here as the season runs. Follow{' '}
+            <a
+              class="underline"
+              href="https://www.instagram.com/crewbath_/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              @crewbath_
+            </a>{' '}
+            in the meantime, or send us something for the site —{' '}
+            <a class="underline" href="mailto:press@bubc.co.uk">
+              press@bubc.co.uk
+            </a>
+            .
+          </p>
+        </div>
+      )
+    }
+
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
       {
         items.slice(0, 3).map((post) => (
           <article class="group relative flex flex-col">
             <a
-              href={post.slug.startsWith('placeholder') ? '#' : `/news/${post.slug}/`}
+              href={`/news/${post.slug}/`}
               class="absolute inset-0 z-10"
               aria-label={`Read: ${post.title}`}
             >
